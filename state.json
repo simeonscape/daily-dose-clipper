@@ -9,6 +9,9 @@
     ],
     "2927785503": [
       20366.66
+    ],
+    "2926436422": [
+      10375.0
     ]
   },
   "posted": [
@@ -58,6 +61,16 @@
       "video_id": "CestbL9S56E",
       "title": "This went so wrong for Jynxzi",
       "day": "2026-11-18"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2926436422",
+      "t": 10375.0,
+      "score": 16010,
+      "video_id": "VSleLhcEnqo",
+      "title": "This CaseOh moment is too funny",
+      "day": "2026-11-18",
+      "quota_day": "2026-11-18"
     }
   ]
 }
