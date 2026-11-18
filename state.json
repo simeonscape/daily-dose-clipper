@@ -1,1 +1,67 @@
-{"turn": 0, "used": {}, "posted": []}
+{
+  "turn": 0,
+  "used": {
+    "2926436422": [
+      10375.0
+    ],
+    "2927637212": [
+      692.57
+    ],
+    "2858049515": [
+      2665.06
+    ],
+    "2927006297": [
+      5050.8
+    ],
+    "2927785503": [
+      20366.66
+    ]
+  },
+  "posted": [
+    {
+      "streamer": "CaseOh",
+      "moment": "2926436422",
+      "t": 10375.0,
+      "score": 15986,
+      "video_id": "2hp2huUWySg",
+      "title": "This CaseOh moment is too funny",
+      "day": "2026-11-18"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2927637212",
+      "t": 692.57,
+      "score": 5459,
+      "video_id": "t0x3e8OEzBo",
+      "title": "Cs2 chicken dead (ohnepixel) \ud83d\udc80",
+      "day": "2026-11-18"
+    },
+    {
+      "streamer": "Kai Cenat",
+      "moment": "2858049515",
+      "t": 2665.06,
+      "score": 5280,
+      "video_id": "U42A6bn7cmI",
+      "title": "Kai Cenat actually pulled this off \ud83d\udd25",
+      "day": "2026-11-18"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2927006297",
+      "t": 5050.8,
+      "score": 9382,
+      "video_id": "eR8ybXYSxOg",
+      "title": "Sypher Predicts TG Finds It (TypicalGamer) \ud83d\ude33",
+      "day": "2026-11-18"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2927785503",
+      "t": 20366.66,
+      "score": 24036,
+      "video_id": "CestbL9S56E",
+      "title": "This went so wrong for Jynxzi",
+      "day": "2026-11-18"
+    }
+  ]
+}
