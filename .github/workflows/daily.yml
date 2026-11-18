@@ -34,10 +34,18 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install ffmpeg and Python packages
+      - name: Install ffmpeg
+        timeout-minutes: 5
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          pip install -r requirements.txt
+          # A ready-made ffmpeg build (with subtitles support). Much faster than apt-get.
+          curl -sSL --retry 3 -o ffmpeg.tar.xz https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
+          mkdir -p "$HOME/ffmpeg" && tar -xf ffmpeg.tar.xz -C "$HOME/ffmpeg" --strip-components=1
+          echo "$HOME/ffmpeg/bin" >> "$GITHUB_PATH"
+          "$HOME/ffmpeg/bin/ffmpeg" -hide_banner -filters | grep -q subtitles
+
+      - name: Install Python packages
+        timeout-minutes: 10
+        run: pip install -r requirements.txt
 
       - name: Install TwitchDownloaderCLI
         env:
