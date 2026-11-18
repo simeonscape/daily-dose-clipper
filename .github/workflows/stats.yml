@@ -1,0 +1,46 @@
+name: Channel stats
+
+# Reads the channel's numbers and today's Shorts from YouTube and saves them
+# to channel.json, which School OS reads. Read-only, about 3 quota units a run.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # to save channel.json
+
+concurrency:
+  group: stats
+  cancel-in-progress: true
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q google-api-python-client google-auth pyyaml tzdata
+      - name: Read the channel
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python stats.py
+      - name: Save channel.json
+        run: |
+          git config user.name "clipper-bot"
+          git config user.email "clipper-bot@users.noreply.github.com"
+          git add channel.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update channel stats"
+            for i in 1 2 3; do
+              git pull --rebase -X theirs origin main && git push && break
+              sleep 5
+            done
+          fi

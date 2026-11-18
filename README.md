@@ -56,3 +56,7 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 - **YouTube quota:** 10,000 units a day. An upload costs 1,600 and a comment 50, so 5 a day fits and 6 is the most.
 - **Runs after the stream, not live:** clips come from the last finished VOD, usually a few hours after the stream ends. This is more reliable than live capture, and it needs no computer of yours.
 - **Costs:** GitHub Actions is free for public repos. Private repos get 2,000 free minutes a month, and each run takes about 10 to 20 minutes, so 5 runs a day may go over. Titles cost nothing with the built-in writer. With the subscription option, they count toward your Claude plan's usage.
+
+## Channel stats for School OS
+The **Channel stats** workflow runs every 30 minutes. It reads the channel's subscribers, views and the Shorts posted today from YouTube (read-only, about 3 of the 10,000 daily quota units) with the same three `YT_` secrets, and saves them to `channel.json`. Apps read it from
+`https://raw.githubusercontent.com/simeonscape/daily-dose-clipper/main/channel.json`, so no API key ever goes into an app. `state.json` next to it says which streamer each Short is.
