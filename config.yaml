@@ -1,8 +1,13 @@
 channel_name: Daily Dose of Streamers
 
-# How many Shorts each scheduled run makes (a manual run can pick 1, 2, 3 or 5).
-# Always one per streamer. With fewer than 5, whoever was posted longest ago
-# goes first.
+# When the Shorts go live, every day. One Short per time, one streamer each,
+# whoever was posted longest ago goes next. Times are US Eastern (most of these
+# streamers' viewers are in the US); the workflow starts about an hour early,
+# makes the Short, and posts it right on time. Change the times here.
+post_timezone: America/New_York
+post_times: ["12:00", "15:00", "17:00", "19:00", "21:00"]
+
+# How many Shorts a manual run makes when you don't pick a number.
 clips_per_run: 1
 max_uploads_per_day: 6    # YouTube's free API quota allows about 6 uploads a day
 

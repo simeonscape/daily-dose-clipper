@@ -2,12 +2,9 @@ name: Daily clips
 
 on:
   schedule:
-    # 5 runs a day (times are UTC). Each makes clips_per_run Shorts (config.yaml).
-    - cron: "0 13 * * *"
-    - cron: "0 16 * * *"
-    - cron: "0 19 * * *"
-    - cron: "0 22 * * *"
-    - cron: "0 1 * * *"
+    # Every hour. The "check" job below only goes ahead when one of the
+    # post_times in config.yaml is coming up, so most runs stop after a few seconds.
+    - cron: "10 * * * *"
   workflow_dispatch:
     inputs:
       clips:
@@ -33,11 +30,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  clip:
+  check:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 5
+    outputs:
+      slot: ${{ steps.slot.outputs.slot }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main      # the latest state.json, even if this run waited in line
+      - name: Is a posting time coming up?
+        id: slot
+        run: |
+          pip install -q pyyaml tzdata
+          echo "slot=$(python slots.py)" >> "$GITHUB_OUTPUT"
+
+  clip:
+    needs: check
+    if: github.event_name == 'workflow_dispatch' || needs.check.outputs.slot != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -94,7 +110,7 @@ jobs:
           TWITCHDOWNLOADER_CLI: ./TwitchDownloaderCLI
           PYTHONUNBUFFERED: "1"
         run: |
-          args=""
+          args="--slot ${{ needs.check.outputs.slot }}"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             args="--clips ${{ inputs.clips }} --streamer ${{ inputs.streamer }}"
             [ "${{ inputs.dry_run }}" = "true" ] && args="$args --dry-run"

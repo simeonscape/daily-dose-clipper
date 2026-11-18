@@ -4,11 +4,17 @@
     python run.py --clips 5              # one Short for each of the 5 streamers
     python run.py --streamer kaicenat    # only this streamer
     python run.py --clips 5 --dry-run    # make the videos but don't upload them
+    python run.py --slot 2026-11-19T17:00:00+00:00   # one Short, posted at that time
+
+Every day the hourly workflow posts one Short at each of the post_times in
+config.yaml (see slots.py), so they go out spread over the day.
 
 How a moment is picked, per streamer:
   1. Their most-viewed Twitch clips from the last few days. Clips are what
      viewers saved and shared, so views are the best sign a moment went viral.
-     Clips of the same moment are added together.
+     Clips of the same moment are added together. A moment that was already
+     posted (same part of the stream, same clip, or same clip title) is skipped,
+     so a clip that stays popular for days isn't posted twice.
   2. If they have no recent clips: the biggest chat spike in their latest
      finished stream, weighted toward LOL spam and CLIP IT.
 With fewer than 5 Shorts, the streamers who were posted longest ago go first,
@@ -31,6 +37,7 @@ import yaml
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "engine"))
 import editor, layout, metadata, spikes, twitch  # noqa: E402
+from slots import posted_today, quota_day  # noqa: E402
 
 STATE = os.path.join(HERE, "state.json")
 WORK = os.path.join(HERE, "work")
@@ -46,6 +53,7 @@ class Moment:
     clip_id: str = None          # for clips whose VOD is gone: download the clip itself
     title: str = ""              # title viewers gave the clip
     clips: int = 1               # how many clips were made of this moment
+    clip_ids: list = field(default_factory=list)
     messages: list = field(default_factory=list)
 
     @property
@@ -57,7 +65,7 @@ def load_state():
     if os.path.exists(STATE):
         with open(STATE) as f:
             return json.load(f)
-    return {"turn": 0, "used": {}, "posted": []}
+    return {"turn": 0, "used": {}, "used_clips": [], "posted": []}
 
 
 def save_state(state):
@@ -67,6 +75,22 @@ def save_state(state):
 
 def is_used(state, key, t):
     return any(abs(t - u) < 90 for u in state["used"].get(key, []))
+
+
+def _norm(title):
+    return " ".join("".join(ch for ch in (title or "").lower() if ch.isalnum() or ch == " ").split())
+
+
+def is_repeat(state, s, m):
+    """Was this moment posted already? Same part of the stream, any of the same
+    clips, or a clip with the same title (deleted Shorts don't count)."""
+    if is_used(state, m.key, m.t):
+        return True
+    if set(m.clip_ids) & set(state.get("used_clips", [])):
+        return True
+    t = _norm(m.title)
+    return bool(t) and any(_norm(p.get("clip_title")) == t for p in state["posted"]
+                           if p["streamer"] == s["name"] and p.get("video_id") and not p.get("deleted"))
 
 
 def clip_moments(s, cfg, state):
@@ -82,14 +106,19 @@ def clip_moments(s, cfg, state):
             t = c["vod_offset"] + 0.7 * c["duration"]
             same = next((m for m in moments if m.vod and m.vod["id"] == c["video_id"] and abs(m.t - t) < 40), None)
             if same:
-                same.score += c["view_count"]; same.clips += 1
+                same.score += c["view_count"]; same.clips += 1; same.clip_ids.append(c["id"])
                 continue
             vods.setdefault(c["video_id"], {"id": c["video_id"], "duration": None})
             moments.append(Moment(score=c["view_count"], source="clips", vod=vods[c["video_id"]], t=t,
-                                  title=c["title"], clip_id=c["id"]))
+                                  title=c["title"], clip_id=c["id"], clip_ids=[c["id"]]))
         else:
-            moments.append(Moment(score=c["view_count"], source="clips", clip_id=c["id"], title=c["title"]))
-    return [m for m in sorted(moments, key=lambda m: -m.score) if not is_used(state, m.key, m.t)]
+            moments.append(Moment(score=c["view_count"], source="clips", clip_id=c["id"], title=c["title"],
+                                  clip_ids=[c["id"]]))
+    moments.sort(key=lambda m: -m.score)
+    fresh = [m for m in moments if not is_repeat(state, s, m)]
+    if moments and moments[0] not in fresh:
+        print(f"{s['name']}: top moment \"{moments[0].title}\" was already posted, picking the next one")
+    return fresh
 
 
 def chat_moments(s, cfg, state):
@@ -124,20 +153,8 @@ def moments_for(s, cfg, state):
     return chat_moments(s, cfg, state)
 
 
-def quota_day(when=None):
-    """YouTube's daily API quota resets at midnight Pacific time."""
-    from zoneinfo import ZoneInfo
-    return (when or datetime.now(timezone.utc)).astimezone(ZoneInfo("America/Los_Angeles")).date().isoformat()
-
-
-def posted_today(state):
-    # deleted Shorts still count: deleting a video doesn't give the quota back
-    today = quota_day()
-    return sum(1 for p in state["posted"] if p.get("video_id") and p.get("quota_day", p.get("day")) == today)
-
-
 def last_posted(state, s):
-    times = [p.get("day", "") for p in state["posted"]
+    times = [p.get("at", p.get("day", "")) for p in state["posted"]
              if p.get("video_id") and not p.get("deleted") and p["streamer"] == s["name"]]
     return max(times) if times else ""
 
@@ -185,7 +202,7 @@ def get_segment(m, cfg, tag):
     return seg, []
 
 
-def run_one(s, m, cfg, state, dry_run=False):
+def run_one(s, m, cfg, state, dry_run=False, slot=None):
     print(f"\n== {s['name']}: {m.score:,.0f} {'views' if m.source == 'clips' else 'chat score'}"
           + (f", \"{m.title}\"" if m.title else ""))
     tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
@@ -210,12 +227,21 @@ def run_one(s, m, cfg, state, dry_run=False):
     video_id = None
     if not dry_run:
         import youtube
+        if slot:
+            wait = (slot - datetime.now(timezone.utc)).total_seconds()
+            if wait > 0:
+                print(f"  waiting {wait / 60:.0f} min to post at {slot:%H:%M} UTC")
+                time.sleep(wait)
         video_id = youtube.upload(out, meta, privacy=cfg.get("privacy", "public"))
         print(f"  uploaded: https://youtube.com/shorts/{video_id}")
         state["used"].setdefault(m.key, []).append(m.t)
+        state.setdefault("used_clips", []).extend(m.clip_ids)
         state["posted"].append({"streamer": s["name"], "moment": m.key, "t": m.t, "score": m.score,
                                 "video_id": video_id, "title": meta["title"],
+                                "clip_title": m.title, "clip_ids": m.clip_ids,
                                 "day": datetime.now(timezone.utc).date().isoformat(),
+                                "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                "slot": slot.isoformat() if slot else None,
                                 "quota_day": quota_day()})
     return out
 
@@ -225,6 +251,7 @@ def main():
     ap.add_argument("--clips", type=int, help="how many Shorts (default: clips_per_run in config.yaml)")
     ap.add_argument("--streamer", help="Twitch login, or 'all' (default)")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--slot", help="posting time (ISO, from slots.py): make one Short and post it then")
     ap.add_argument("--next", action="store_true", help=argparse.SUPPRESS)   # old name, same as default
     args = ap.parse_args()
 
@@ -237,6 +264,13 @@ def main():
             sys.exit(f"No enabled streamer with login {args.streamer} in config.yaml")
     state = load_state()
     want = min(args.clips or cfg.get("clips_per_run", 1), len(streamers))
+    slot = None
+    if args.slot:
+        slot = datetime.fromisoformat(args.slot)
+        if any(p.get("slot") == slot.isoformat() and p.get("video_id") for p in state["posted"]):
+            print(f"A Short is already posted for {args.slot}. Nothing to do.")
+            return
+        want = 1
 
     if not args.dry_run:
         left = cfg.get("max_uploads_per_day", 6) - posted_today(state)
@@ -263,7 +297,7 @@ def main():
             continue
         for m in found[:3]:                  # if the best one fails, try the next
             try:
-                if run_one(s, m, cfg, state, dry_run=args.dry_run):
+                if run_one(s, m, cfg, state, dry_run=args.dry_run, slot=slot):
                     made.append(s["name"])
                     if not args.dry_run:
                         save_state(state)    # save after each upload, in case a later one fails

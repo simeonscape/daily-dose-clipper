@@ -43,7 +43,7 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 
 ### 6. Test, then go live
 - Under **Actions > Daily clips > Run workflow**, pick how many Shorts (1, 2, 3 or 5) and which streamer (or all), and leave "dry run" ticked. When it finishes, download the video from the run's **Artifacts** and check it.
-- Once it looks right, the schedule takes over: 5 runs a day (times in `.github/workflows/daily.yml`, in UTC), each making `clips_per_run` Shorts (set in `config.yaml`). It never uploads more than 6 a day, which is YouTube's free quota.
+- Once it looks right, the schedule takes over: one Short at each of the `post_times` in `config.yaml` (12:00, 15:00, 17:00, 19:00 and 21:00 US Eastern), one streamer each, so all five get a Short every day, spread out. The workflow checks every hour; about an hour before a posting time it makes the Short, waits, and posts it on time. It never uploads more than 6 a day, which is YouTube's free quota, and never posts a moment that was already posted.
 
 ## Settings (`config.yaml`)
 - `privacy: private` makes uploads private so you can check each one first.
