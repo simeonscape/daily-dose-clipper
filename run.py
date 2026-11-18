@@ -182,6 +182,7 @@ def run_one(s, m, cfg, state, dry_run=False):
           + (f", \"{m.title}\"" if m.title else ""))
     tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
     seg, msgs = get_segment(m, cfg, tag)
+    seg = editor.normalize(seg)
 
     words, text = editor.transcribe(seg, cfg.get("whisper_model", "small"))
     stream_url = f"https://twitch.tv/{s['login']}"

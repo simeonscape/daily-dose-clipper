@@ -166,6 +166,32 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         f.write(head + "\n".join(lines) + "\n")
 
 
+def normalize(segment):
+    """Make video and sound both start at 0 with a picture on the very first frame.
+
+    Downloaded VOD parts often have sound starting before the first video frame,
+    which showed up as empty white panels at the start of the Short (and as a
+    blank thumbnail). Trim to where the picture starts and re-time both streams."""
+    import json
+    probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,start_time",
+                            "-of", "json", segment], capture_output=True, text=True, check=True)
+    starts = {}
+    for st in json.loads(probe.stdout).get("streams", []):
+        try:
+            starts.setdefault(st["codec_type"], float(st.get("start_time", 0)))
+        except (TypeError, ValueError):
+            pass
+    v0 = starts.get("video", 0.0)
+    a0 = starts.get("audio", v0)
+    skip = max(0.0, v0 - min(v0, a0)) + 0.05      # a hair more, past any partial first frame
+    fixed = segment.replace(".mp4", "_n.mp4")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", segment, "-ss", f"{skip:.3f}",
+                    "-vf", "setpts=PTS-STARTPTS", "-af", "asetpts=PTS-STARTPTS",
+                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "14", "-c:a", "aac", "-b:a", "192k",
+                    fixed], check=True)
+    return fixed
+
+
 def transcribe(video, model_size="small"):
     """Word timestamps with faster-whisper. Returns (words, full_text)."""
     import numpy as np
@@ -215,7 +241,7 @@ def render(segment, out, hook, streamer, words, layout_info, login=None, workdir
         vf = (f"[0:v]split=2[a][b];"
               f"[a]crop={w}:{h}:{x}:{y},{_upscale(w, cw, ch)}{lift}[cam];"
               f"[b]crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale={gw}:{gh}:flags=lanczos,setsar=1[game];"
-              f"[1:v][cam]overlay={cx0}:{cy0}:shortest=1[t];"
+              f"[1:v][cam]overlay={cx0}:{cy0}:shortest=1:eof_action=endall[t];"
               f"[t][game]overlay={gx0}:{gy0}:shortest=1,{subs}")
     else:
         (x0, y0, bw, bh), = boxes
