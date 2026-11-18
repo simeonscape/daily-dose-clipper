@@ -154,7 +154,15 @@ def get_segment(m, cfg, tag):
         if m.vod.get("duration"):
             end = min(end, m.vod["duration"])
         print(f"  clipping {start:.0f}-{end:.0f}s of VOD {m.vod['id']}")
-        twitch.download_segment(m.vod["id"], start, end, seg, quality=cfg.get("quality"))
+        try:
+            twitch.download_segment(m.vod["id"], start, end, seg, quality=cfg.get("quality"))
+        except Exception as e:
+            if not m.clip_id:
+                raise
+            # e.g. subscriber-only VODs: the clip itself is still public
+            print(f"  can't download the VOD ({e}); using clip {m.clip_id} itself")
+            twitch.download_clip(m.clip_id, seg)
+            return seg, []
         msgs = m.messages
         if not msgs:
             try:
