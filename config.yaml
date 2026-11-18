@@ -39,8 +39,8 @@ streamers:
   - name: Kai Cenat
     login: kaicenat
     platform: twitch
-  - name: TheBurntPeanut
-    login: theburntpeanut
+  - name: TypicalGamer
+    login: typicalgamer
     platform: twitch
   - name: Jynxzi
     login: jynxzi

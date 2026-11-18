@@ -18,7 +18,7 @@ on:
       streamer:
         description: "Which streamer (all = one Short each, up to the number above)"
         type: choice
-        options: [all, caseoh_, ohnepixel, kaicenat, jynxzi, theburntpeanut]
+        options: [all, caseoh_, ohnepixel, kaicenat, jynxzi, typicalgamer]
         default: all
       dry_run:
         description: "Make the video but don't upload it"
