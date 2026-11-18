@@ -1,5 +1,14 @@
 channel_name: Daily Dose of Streamers
 
+# How many Shorts each scheduled run makes (a manual run can pick 1, 2, 3 or 5).
+# Every run looks at all streamers and takes the most viral moments: the
+# biggest chat spikes, ranked higher the more chat spammed LOL (KEKW, LMAO,
+# OMEGALUL, 💀...) and CLIP IT.
+clips_per_run: 1
+max_per_streamer: 2       # per run, so one streamer can't take every slot
+max_uploads_per_day: 6    # YouTube's free API quota allows about 6 uploads a day
+vods_per_streamer: 2      # how many recent finished streams to look through
+
 # Clip window around a chat spike
 before_s: 30        # seconds before the spike
 after_s: 30         # seconds after the spike
@@ -16,8 +25,7 @@ privacy: public        # set to private to check videos before they go live
 # If it picks the wrong spot for a streamer, set it by hand:
 #   cam: [x, y, width, height]   # fractions of the screen, e.g. [0, 0.25, 0.25, 0.3]
 #   layout: game                 # or cam, to force one big panel
-# Check each login on twitch.tv. Streamers who mainly stream on YouTube or Kick
-# need another source, so they're turned off until that's added.
+# Check each login on twitch.tv. A streamer with no Twitch VODs is skipped.
 streamers:
   - name: CaseOh
     login: caseoh_
@@ -30,8 +38,7 @@ streamers:
     platform: twitch
   - name: IShowSpeed
     login: ishowspeed
-    platform: twitch
-    enabled: false     # mainly streams on YouTube
+    platform: twitch   # mostly streams on YouTube; only his Twitch streams are used
   - name: Jynxzi
     login: jynxzi
     platform: twitch

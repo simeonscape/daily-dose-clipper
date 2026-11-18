@@ -8,19 +8,36 @@ import json
 import re
 from dataclasses import dataclass, field
 
-# Messages that mean "something just happened". Weighted higher than normal chat.
-HYPE = re.compile(
-    r"\b(KEKW|OMEGALUL|LUL|LULW|LMAO+|LMFAO|ICANT|ICANT|PogU?|POGGERS|W+|L+|CLIP|"
-    r"monkaS|monkaW|Aware|Clueless|NAHH+|NAH+|BRO+|WTF|HOLY|DEAD|💀|😂|🤣|😭)\b",
-    re.IGNORECASE,
-)
+# What chat spams when a moment is worth clipping. Emoji have no word
+# boundaries, so they're matched on their own.
+LOL = re.compile(r"\b(KEKW|KEKL|OMEGALUL|LULW?|LMA+O+|LMFAO|ICANT|HA(HA)+|XD+|pepeLaugh|"
+                 r"DEAD|CRYING|DYING)\b|😂|🤣|💀|😭", re.IGNORECASE)
+CLIP_IT = re.compile(r"\bCLIP+\b|\bCLIP+(ED|PED)\b|CLIP\s*(IT|THAT|THIS)|\bclipp+", re.IGNORECASE)
+HYPE = re.compile(r"\b(Pog\w*|POGGERS|W+|L+|monka\w*|NAH+|BRO+|WTF|HOLY|OMG|NO WAY|WHAT+|INSANE)\b|🔥|😳|😱",
+                  re.IGNORECASE)
+
+# How much each kind of message counts toward a spike
+WEIGHTS = {"clip": 5.0, "lol": 4.0, "hype": 2.0, "chat": 1.0}
+
+
+def kind(body):
+    if CLIP_IT.search(body):
+        return "clip"
+    if LOL.search(body):
+        return "lol"
+    if HYPE.search(body):
+        return "hype"
+    return "chat"
 
 
 @dataclass
 class Spike:
     t: float                     # seconds into the VOD where chat peaked
-    score: float                 # how far above normal chat was
+    score: float                 # how far above normal chat was (weighted)
     messages: list = field(default_factory=list)
+    lol: int = 0                 # LOL-type messages around the peak
+    clip: int = 0                # "CLIP IT" messages around the peak
+    viral: float = 0.0           # ranking score, comparable between streamers
 
 
 def load_chat(path):
@@ -41,9 +58,13 @@ def find_spikes(chat, bin_s=2.0, window_s=10.0, baseline_s=300.0,
                 min_gap_s=120.0, top=5, min_score=3.0):
     """Rank chat spikes.
 
-    Chat is counted in small bins, with hype messages counted 3x. A spike is
-    a 10 s window whose activity is far above the median of the 5 minutes
-    around it (robust z-score), so busy streams and quiet streams both work.
+    Chat is counted in small bins, weighted by what people type: "CLIP IT" 5x,
+    LOL spam (KEKW, OMEGALUL, LMAO, 💀...) 4x, other hype 2x, normal chat 1x.
+    A spike is a 10 s window far above the median of the 5 minutes around it
+    (robust z-score), so busy and quiet streams compare fairly.
+
+    `viral` ranks spikes across streamers: the z-score, boosted by how much of
+    chat around the peak was LOL or CLIP IT.
     """
     if not chat:
         return []
@@ -51,7 +72,7 @@ def find_spikes(chat, bin_s=2.0, window_s=10.0, baseline_s=300.0,
     n = int(end // bin_s) + 1
     bins = [0.0] * n
     for t, body in chat:
-        bins[int(t // bin_s)] += 3.0 if HYPE.search(body) else 1.0
+        bins[int(t // bin_s)] += WEIGHTS[kind(body)]
 
     w = max(1, int(window_s // bin_s))
     act = [sum(bins[i:i + w]) for i in range(n)]
@@ -73,8 +94,13 @@ def find_spikes(chat, bin_s=2.0, window_s=10.0, baseline_s=300.0,
             break
         t = (i + w / 2) * bin_s
         if all(abs(t - p.t) >= min_gap_s for p in picked):
-            msgs = [m for (tt, m) in chat if t - 15 <= tt <= t + 15][:60]
-            picked.append(Spike(t=t, score=round(z, 2), messages=msgs))
+            around = [m for (tt, m) in chat if t - 15 <= tt <= t + 15]
+            kinds = [kind(m) for m in around]
+            lol, clip = kinds.count("lol"), kinds.count("clip")
+            share = (lol + clip) / max(1, len(around))
+            viral = z * (1 + 2 * share) + 0.5 * min(clip, 20)
+            picked.append(Spike(t=t, score=round(z, 2), messages=around[:60],
+                                lol=lol, clip=clip, viral=round(viral, 2)))
     return picked
 
 
@@ -95,4 +121,5 @@ if __name__ == "__main__":
     import sys
     for s in find_spikes(load_chat(sys.argv[1])):
         a, b = clip_window(s)
-        print(f"spike at {s.t:8.1f}s  score {s.score:6.2f}  clip {a:.0f}-{b:.0f}s")
+        print(f"spike at {s.t:8.1f}s  viral {s.viral:6.2f}  z {s.score:5.2f}  "
+              f"LOL {s.lol:4d}  CLIP IT {s.clip:3d}  clip {a:.0f}-{b:.0f}s")

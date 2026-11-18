@@ -2,9 +2,9 @@
 
 [Privacy Policy](PRIVACY.md) · [Terms of Service](TERMS.md) · Uses **YouTube API Services**. By using this tool you agree to the [YouTube Terms of Service](https://www.youtube.com/t/terms) and the [Google Privacy Policy](https://policies.google.com/privacy).
 
-Posts one branded Short to the Daily Dose of Streamers channel per run, five runs a day.
+Posts the most viral streamer moments to the Daily Dose of Streamers channel as branded Shorts. It runs five times a day, and you can start a run by hand that makes 1, 2, 3 or 5 Shorts.
 
-**How it picks a clip:** it downloads the chat of the streamer's latest finished Twitch stream (VOD) with [TwitchDownloader](https://github.com/lay295/TwitchDownloader). It finds the moments where chat spikes (lots of KEKW, OMEGALUL, CLIP IT, 💀) compared with normal chat around them, and takes the biggest spike it hasn't posted yet. Then it downloads 30 seconds before and 30 seconds after that moment.
+**How it picks a clip:** it downloads the chat of every streamer's latest finished Twitch streams (VODs) with [TwitchDownloader](https://github.com/lay295/TwitchDownloader). It finds the moments where chat spikes compared with normal chat around them, and ranks them higher the more chat spammed LOL (KEKW, OMEGALUL, LMAO, 💀) and CLIP IT. Then it takes the top moments across all streamers that it hasn't posted yet, at most 2 per streamer per run. Then it downloads 30 seconds before and 30 seconds after that moment.
 
 **How it edits:** it makes a 1080x1920 vertical video with an orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. It finds the streamer's facecam by itself and puts the camera on top with the whole screen below. Audio is levelled to YouTube loudness.
 
@@ -42,8 +42,8 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 | `YT_REFRESH_TOKEN` | step 4 |
 
 ### 6. Test, then go live
-- Under **Actions > Daily clips > Run workflow**, leave "dry run" ticked. When it finishes, download the video from the run's **Artifacts** and check it.
-- Once it looks right, the schedule takes over: 5 runs a day (times in `.github/workflows/daily.yml`, in UTC), one Short each, rotating through the streamers.
+- Under **Actions > Daily clips > Run workflow**, pick how many Shorts (1, 2, 3 or 5) and which streamer (or all), and leave "dry run" ticked. When it finishes, download the video from the run's **Artifacts** and check it.
+- Once it looks right, the schedule takes over: 5 runs a day (times in `.github/workflows/daily.yml`, in UTC), each making `clips_per_run` Shorts (set in `config.yaml`). It never uploads more than 6 a day, which is YouTube's free quota.
 
 ## Settings (`config.yaml`)
 - `privacy: private` makes uploads private so you can check each one first.

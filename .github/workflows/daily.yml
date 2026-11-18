@@ -2,7 +2,7 @@ name: Daily clips
 
 on:
   schedule:
-    # 5 runs a day, one Short each (times are UTC). Change to suit your audience.
+    # 5 runs a day (times are UTC). Each makes clips_per_run Shorts (config.yaml).
     - cron: "0 13 * * *"
     - cron: "0 16 * * *"
     - cron: "0 19 * * *"
@@ -10,6 +10,16 @@ on:
     - cron: "0 1 * * *"
   workflow_dispatch:
     inputs:
+      clips:
+        description: "How many Shorts to make"
+        type: choice
+        options: ["1", "2", "3", "5"]
+        default: "1"
+      streamer:
+        description: "Which streamer (all = the most viral moments across everyone)"
+        type: choice
+        options: [all, caseoh_, ohnepixel, kaicenat, ishowspeed, jynxzi]
+        default: all
       dry_run:
         description: "Make the video but don't upload it"
         type: boolean
@@ -25,7 +35,7 @@ concurrency:
 jobs:
   clip:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
 
@@ -66,7 +76,14 @@ jobs:
           path: ~/.cache/huggingface
           key: whisper-small
 
-      - name: Make and post a Short
+      - name: Reuse chats downloaded by earlier runs
+        uses: actions/cache@v4
+        with:
+          path: work/chat_*.json
+          key: chats-${{ github.run_id }}
+          restore-keys: chats-
+
+      - name: Make and post Shorts
         env:
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
@@ -77,16 +94,17 @@ jobs:
           TWITCHDOWNLOADER_CLI: ./TwitchDownloaderCLI
           PYTHONUNBUFFERED: "1"
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
-            python run.py --next --dry-run
-          else
-            python run.py --next
+          args=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            args="--clips ${{ inputs.clips }} --streamer ${{ inputs.streamer }}"
+            [ "${{ inputs.dry_run }}" = "true" ] && args="$args --dry-run"
           fi
+          python run.py $args
 
       - name: Keep the video as a download
         uses: actions/upload-artifact@v4
         with:
-          name: short
+          name: shorts
           path: output/
           retention-days: 7
 
