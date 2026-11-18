@@ -37,14 +37,51 @@ def parse_duration(s):
     return total
 
 
+_ids = {}
+
+
+def user_id(login):
+    if login not in _ids:
+        u = requests.get(f"{HELIX}/users", params={"login": login}, headers=_headers(), timeout=30)
+        u.raise_for_status()
+        data = u.json()["data"]
+        if not data:
+            raise ValueError(f"Twitch user not found: {login}")
+        _ids[login] = data[0]["id"]
+    return _ids[login]
+
+
+def top_clips(login, days=7, n=100):
+    """The streamer's most-viewed clips from the last few days, most views first.
+
+    Clips are what viewers chose to save and share, so their view counts are
+    the best sign of which moments went viral."""
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone.utc)
+    r = requests.get(f"{HELIX}/clips", headers=_headers(), timeout=30, params={
+        "broadcaster_id": user_id(login), "first": n,
+        "started_at": (now - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "ended_at": now.strftime("%Y-%m-%dT%H:%M:%SZ")})
+    r.raise_for_status()
+    clips = r.json()["data"]
+    clips.sort(key=lambda c: -c["view_count"])
+    return clips
+
+
+def download_clip(clip_id, out):
+    subprocess.run([CLI, "clipdownload", "--id", str(clip_id), "-o", out, "--ffmpeg-path", FFMPEG], check=True)
+    return out
+
+
+def download_chat_window(vod_id, start, end, out):
+    subprocess.run([CLI, "chatdownload", "--id", str(vod_id), "-b", str(int(start)), "-e", str(int(end)),
+                    "-o", out], check=True)
+    return out
+
+
 def latest_vods(login, n=3):
     h = _headers()
-    u = requests.get(f"{HELIX}/users", params={"login": login}, headers=h, timeout=30)
-    u.raise_for_status()
-    data = u.json()["data"]
-    if not data:
-        raise ValueError(f"Twitch user not found: {login}")
-    v = requests.get(f"{HELIX}/videos", params={"user_id": data[0]["id"], "type": "archive", "first": n},
+    v = requests.get(f"{HELIX}/videos", params={"user_id": user_id(login), "type": "archive", "first": n},
                      headers=h, timeout=30)
     v.raise_for_status()
     return [{"id": x["id"], "url": x["url"], "title": x["title"], "created_at": x["created_at"],
@@ -62,11 +99,15 @@ def download_chat(vod_id, out):
     return out
 
 
-def download_segment(vod_id, start, end, out, quality="1080p60"):
+def download_segment(vod_id, start, end, out, quality=None):
+    """Part of a VOD. With no quality given, TwitchDownloader takes the best (source)."""
     base = [CLI, "videodownload", "--id", str(vod_id), "-b", str(int(start)), "-e", str(int(end)),
             "-o", out, "--ffmpeg-path", FFMPEG]
-    try:
-        subprocess.run(base + ["-q", quality], check=True)
-    except subprocess.CalledProcessError:
-        subprocess.run(base, check=True)   # fall back to the best quality available
+    if quality:
+        try:
+            subprocess.run(base + ["-q", quality], check=True)
+            return out
+        except subprocess.CalledProcessError:
+            pass
+    subprocess.run(base, check=True)
     return out

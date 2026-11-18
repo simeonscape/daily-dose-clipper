@@ -16,9 +16,9 @@ on:
         options: ["1", "2", "3", "5"]
         default: "1"
       streamer:
-        description: "Which streamer (all = the most viral moments across everyone)"
+        description: "Which streamer (all = one Short each, up to the number above)"
         type: choice
-        options: [all, caseoh_, ohnepixel, kaicenat, ishowspeed, jynxzi]
+        options: [all, caseoh_, ohnepixel, kaicenat, jynxzi, theburntpeanut]
         default: all
       dry_run:
         description: "Make the video but don't upload it"
@@ -76,7 +76,7 @@ jobs:
           path: ~/.cache/huggingface
           key: whisper-small
 
-      - name: Reuse chats downloaded by earlier runs
+      - name: Reuse chats downloaded by earlier runs (only needed when a streamer has no clips)
         uses: actions/cache@v4
         with:
           path: work/chat_*.json

@@ -252,6 +252,8 @@ def crop_box(res, aspect, face_y=0.42):
     face = res.get("face")
     if res["mode"] == "split":
         x, y, w, h = res["cam"]
+        # stay just inside the overlay's border
+        x, y, w, h = x + 0.015 * w, y + 0.015 * h, 0.97 * w, 0.97 * h
     else:
         x, y, w, h = 0, 0, W, H
     if w / h > aspect:            # too wide: trim the sides, keep the face in view

@@ -2,9 +2,9 @@
 
 [Privacy Policy](PRIVACY.md) · [Terms of Service](TERMS.md) · Uses **YouTube API Services**. By using this tool you agree to the [YouTube Terms of Service](https://www.youtube.com/t/terms) and the [Google Privacy Policy](https://policies.google.com/privacy).
 
-Posts the most viral streamer moments to the Daily Dose of Streamers channel as branded Shorts. It runs five times a day, and you can start a run by hand that makes 1, 2, 3 or 5 Shorts.
+Posts each streamer's most viral moment to the Daily Dose of Streamers channel as branded Shorts. It runs five times a day, and you can start a run by hand that makes 1, 2, 3 or 5 Shorts (one per streamer).
 
-**How it picks a clip:** it downloads the chat of every streamer's latest finished Twitch streams (VODs) with [TwitchDownloader](https://github.com/lay295/TwitchDownloader). It finds the moments where chat spikes compared with normal chat around them, and ranks them higher the more chat spammed LOL (KEKW, OMEGALUL, LMAO, 💀) and CLIP IT. Then it takes the top moments across all streamers that it hasn't posted yet, at most 2 per streamer per run. Then it downloads 30 seconds before and 30 seconds after that moment.
+**How it picks a clip:** one Short per streamer. For each streamer it looks at their most-viewed Twitch clips from the last 7 days, the moments viewers actually saved and shared, and adds up clips of the same moment. It takes the top one it hasn't posted yet, then downloads 30 seconds before and 30 seconds after it from the stream. If a streamer has no recent clips, it falls back to the biggest chat spike in their last stream, weighted toward LOL spam and CLIP IT. The viewer's clip title is used for the hook and title when it says something about the moment.
 
 **How it edits:** it makes a 1080x1920 vertical video with an orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. It finds the streamer's facecam by itself and puts the camera on top with the whole screen below. Audio is levelled to YouTube loudness.
 

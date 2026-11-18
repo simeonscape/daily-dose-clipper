@@ -1,13 +1,20 @@
-"""Daily Dose of Streamers: one run = 1 to 5 finished Shorts on the channel.
+"""Daily Dose of Streamers: one run = 1 to 5 finished Shorts, one per streamer.
 
-    python run.py                        # the most viral moments across all streamers
-    python run.py --clips 3              # make 3 Shorts this run
-    python run.py --streamer kaicenat    # only look at one streamer
+    python run.py                        # clips_per_run Shorts (config.yaml)
+    python run.py --clips 5              # one Short for each of the 5 streamers
+    python run.py --streamer kaicenat    # only this streamer
     python run.py --clips 5 --dry-run    # make the videos but don't upload them
 
-Each run: every streamer's latest finished VODs -> chat spikes, ranked by how
-hard chat spammed LOL and CLIP IT -> the top moments nobody has posted yet ->
-download 30 s before and after -> subtitles -> branded vertical edit ->
+How a moment is picked, per streamer:
+  1. Their most-viewed Twitch clips from the last few days. Clips are what
+     viewers saved and shared, so views are the best sign a moment went viral.
+     Clips of the same moment are added together.
+  2. If they have no recent clips: the biggest chat spike in their latest
+     finished stream, weighted toward LOL spam and CLIP IT.
+With fewer than 5 Shorts, the streamers who were posted longest ago go first,
+so everyone gets their turn.
+
+Then: 30 s before and after the moment -> subtitles -> branded vertical edit ->
 title/description/hashtags/first comment -> upload.
 """
 import argparse
@@ -16,7 +23,9 @@ import os
 import sys
 import time
 import traceback
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
+
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -26,6 +35,22 @@ import editor, layout, metadata, spikes, twitch  # noqa: E402
 STATE = os.path.join(HERE, "state.json")
 WORK = os.path.join(HERE, "work")
 OUT = os.path.join(HERE, "output")
+
+
+@dataclass
+class Moment:
+    score: float                 # clip views (or chat spike score for the fallback)
+    source: str                  # "clips" or "chat"
+    vod: dict = None             # VOD it's in, if the VOD is still up
+    t: float = 0.0               # seconds into the VOD
+    clip_id: str = None          # for clips whose VOD is gone: download the clip itself
+    title: str = ""              # title viewers gave the clip
+    clips: int = 1               # how many clips were made of this moment
+    messages: list = field(default_factory=list)
+
+    @property
+    def key(self):
+        return self.vod["id"] if self.vod else f"clip:{self.clip_id}"
 
 
 def load_state():
@@ -40,33 +65,73 @@ def save_state(state):
         json.dump(state, f, indent=2)
 
 
-def candidates(s, cfg, state):
-    """Unused chat spikes from a streamer's latest finished VODs."""
-    vods = twitch.latest_vods(s["login"], n=3)
-    if not vods:
-        print(f"{s['name']}: no Twitch VODs found")
-        return []
-    if twitch.is_live(s["login"]):
-        print(f"{s['name']} is live right now, using their last finished stream")
+def is_used(state, key, t):
+    return any(abs(t - u) < 90 for u in state["used"].get(key, []))
+
+
+def clip_moments(s, cfg, state):
+    """The streamer's recent clips, grouped by moment, most views first."""
+    clips = twitch.top_clips(s["login"], days=cfg.get("clip_days", 7))
+    vods = {}
+    moments = []
+    for c in clips:
+        if c["view_count"] < cfg.get("min_clip_views", 200):
+            continue
+        if c.get("video_id") and c.get("vod_offset") is not None:
+            # the moment is usually near the end of a clip
+            t = c["vod_offset"] + 0.7 * c["duration"]
+            same = next((m for m in moments if m.vod and m.vod["id"] == c["video_id"] and abs(m.t - t) < 40), None)
+            if same:
+                same.score += c["view_count"]; same.clips += 1
+                continue
+            vods.setdefault(c["video_id"], {"id": c["video_id"], "duration": None})
+            moments.append(Moment(score=c["view_count"], source="clips", vod=vods[c["video_id"]], t=t,
+                                  title=c["title"], clip_id=c["id"]))
+        else:
+            moments.append(Moment(score=c["view_count"], source="clips", clip_id=c["id"], title=c["title"]))
+    return [m for m in sorted(moments, key=lambda m: -m.score) if not is_used(state, m.key, m.t)]
+
+
+def chat_moments(s, cfg, state):
+    """Fallback: chat spikes in the latest finished stream."""
+    vods = twitch.latest_vods(s["login"], n=2)
+    if vods and twitch.is_live(s["login"]):
         vods = vods[1:]          # the newest VOD is still being recorded
-    out = []
+    if not vods:
+        return []
+    vod = vods[0]
     os.makedirs(WORK, exist_ok=True)
-    for vod in vods[:cfg.get("vods_per_streamer", 2)]:
-        chat_path = os.path.join(WORK, f"chat_{vod['id']}.json")
-        if not os.path.exists(chat_path):
-            print(f"Downloading chat for {s['name']}, VOD {vod['id']} ...")
-            twitch.download_chat(vod["id"], chat_path)
-        chat = spikes.load_chat(chat_path)
-        used = state["used"].get(vod["id"], [])
-        for sp in spikes.find_spikes(chat, top=10, min_score=cfg.get("min_spike_score", 3.0)):
-            if all(abs(sp.t - u) > 120 for u in used):
-                out.append((sp.viral, s, vod, sp))
-    return out
+    chat_path = os.path.join(WORK, f"chat_{vod['id']}.json")
+    if not os.path.exists(chat_path):
+        print(f"Downloading chat for {s['name']}, VOD {vod['id']} ...")
+        twitch.download_chat(vod["id"], chat_path)
+    found = spikes.find_spikes(spikes.load_chat(chat_path), top=10, min_score=cfg.get("min_spike_score", 3.0))
+    return [Moment(score=sp.viral, source="chat", vod=vod, t=sp.t, messages=sp.messages)
+            for sp in found if not is_used(state, vod["id"], sp.t)]
+
+
+def moments_for(s, cfg, state):
+    try:
+        found = clip_moments(s, cfg, state)
+    except Exception as e:
+        print(f"Couldn't read {s['name']}'s clips ({e}), using chat instead")
+        found = []
+    if found:
+        print(f"{s['name']}: {len(found)} clipped moments, top: "
+              + "; ".join(f"{m.score:,.0f} views ({m.clips} clips) \"{m.title}\"" for m in found[:3]))
+        return found
+    print(f"{s['name']}: no recent clips, looking at chat spikes")
+    return chat_moments(s, cfg, state)
 
 
 def posted_today(state):
     today = datetime.now(timezone.utc).date().isoformat()
     return sum(1 for p in state["posted"] if p.get("video_id") and p.get("day") == today)
+
+
+def last_posted(state, s):
+    times = [p.get("day", "") for p in state["posted"] if p.get("video_id") and p["streamer"] == s["name"]]
+    return max(times) if times else ""
 
 
 def prune_chats(keep_days=4):
@@ -79,46 +144,67 @@ def prune_chats(keep_days=4):
             os.remove(path)
 
 
-def run_one(s, vod, sp, cfg, state, dry_run=False):
-    start, end = spikes.clip_window(sp, before=cfg["before_s"], after=cfg["after_s"],
-                                    chat_delay=cfg["chat_delay_s"], vod_len=vod["duration"])
-    print(f"\n== {s['name']}: spike at {sp.t:.0f}s, viral {sp.viral} (LOL {sp.lol}, CLIP IT {sp.clip}), "
-          f"clipping {start:.0f}-{end:.0f}s")
-
-    tag = f"{s['login']}_{vod['id']}_{int(sp.t)}"
+def get_segment(m, cfg, tag):
+    """Download the moment. Returns (video path, chat lines around it)."""
+    os.makedirs(WORK, exist_ok=True)
     seg = os.path.join(WORK, f"seg_{tag}.mp4")
-    twitch.download_segment(vod["id"], start, end, seg, quality=cfg.get("quality", "1080p60"))
+    if m.vod:
+        start = max(0.0, m.t - cfg["chat_delay_s"] * (m.source == "chat") - cfg["before_s"])
+        end = start + cfg["before_s"] + cfg["after_s"]
+        if m.vod.get("duration"):
+            end = min(end, m.vod["duration"])
+        print(f"  clipping {start:.0f}-{end:.0f}s of VOD {m.vod['id']}")
+        twitch.download_segment(m.vod["id"], start, end, seg, quality=cfg.get("quality"))
+        msgs = m.messages
+        if not msgs:
+            try:
+                chat_path = os.path.join(WORK, f"chatwin_{tag}.json")
+                twitch.download_chat_window(m.vod["id"], start, end, chat_path)
+                msgs = [b for _, b in spikes.load_chat(chat_path)]
+            except Exception as e:
+                print(f"  (couldn't get chat for this moment: {e})")
+        return seg, msgs
+    print(f"  the stream's VOD is gone, using clip {m.clip_id} itself")
+    twitch.download_clip(m.clip_id, seg)
+    return seg, []
+
+
+def run_one(s, m, cfg, state, dry_run=False):
+    print(f"\n== {s['name']}: {m.score:,.0f} {'views' if m.source == 'clips' else 'chat score'}"
+          + (f", \"{m.title}\"" if m.title else ""))
+    tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
+    seg, msgs = get_segment(m, cfg, tag)
 
     words, text = editor.transcribe(seg, cfg.get("whisper_model", "small"))
     stream_url = f"https://twitch.tv/{s['login']}"
-    meta = metadata.write_metadata(s["name"], "Twitch", stream_url, text, sp.messages,
-                                   channel=cfg["channel_name"], seed=tag)
+    meta = metadata.write_metadata(s["name"], "Twitch", stream_url, text, msgs,
+                                   channel=cfg["channel_name"], seed=tag, clip_title=m.title)
     os.makedirs(OUT, exist_ok=True)
     out = os.path.join(OUT, f"{tag}.mp4")
     lay = layout.find_layout(seg, override=s.get("cam"), debug_path=out.replace(".mp4", "_camera.jpg"))
     if s.get("layout") in ("cam", "game"):
         lay["mode"] = s["layout"]
-    print(f"Layout: {lay['mode']} ({lay['how']})")
+    print(f"  layout: {lay['mode']} ({lay['how']})")
     editor.render(seg, out, meta["hook"], s["name"], words, lay, login=s["login"], workdir=WORK)
     with open(out.replace(".mp4", ".json"), "w") as f:
-        json.dump(meta, f, indent=2)
-    print(f"Rendered {out}\n  title: {meta['title']}\n  hook:  {meta['hook']}")
+        json.dump(meta, f, indent=2, ensure_ascii=False)
+    print(f"  rendered {os.path.basename(out)}\n  title: {meta['title']}\n  hook:  {meta['hook']}")
 
     video_id = None
     if not dry_run:
         import youtube
         video_id = youtube.upload(out, meta, privacy=cfg.get("privacy", "public"))
-        print(f"Uploaded: https://youtube.com/shorts/{video_id}")
-    state["used"].setdefault(vod["id"], []).append(sp.t)
-    state["posted"].append({"streamer": s["name"], "vod": vod["id"], "t": sp.t, "viral": sp.viral,
-                            "video_id": video_id, "title": meta["title"],
-                            "day": datetime.now(timezone.utc).date().isoformat()})
+        print(f"  uploaded: https://youtube.com/shorts/{video_id}")
+        state["used"].setdefault(m.key, []).append(m.t)
+        state["posted"].append({"streamer": s["name"], "moment": m.key, "t": m.t, "score": m.score,
+                                "video_id": video_id, "title": meta["title"],
+                                "day": datetime.now(timezone.utc).date().isoformat()})
     return out
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--clips", type=int, help="how many Shorts to make (default: clips_per_run in config.yaml)")
+    ap.add_argument("--clips", type=int, help="how many Shorts (default: clips_per_run in config.yaml)")
     ap.add_argument("--streamer", help="Twitch login, or 'all' (default)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--next", action="store_true", help=argparse.SUPPRESS)   # old name, same as default
@@ -132,7 +218,7 @@ def main():
         if not streamers:
             sys.exit(f"No enabled streamer with login {args.streamer} in config.yaml")
     state = load_state()
-    want = args.clips or cfg.get("clips_per_run", 1)
+    want = min(args.clips or cfg.get("clips_per_run", 1), len(streamers))
 
     if not args.dry_run:
         left = cfg.get("max_uploads_per_day", 6) - posted_today(state)
@@ -144,40 +230,34 @@ def main():
             want = left
 
     prune_chats()
-    pool, errors = [], 0
-    for s in streamers:
+    # streamers posted longest ago go first, so everyone gets turns
+    order = sorted(streamers, key=lambda s: last_posted(state, s))
+    made, errors = [], 0
+    for s in order:
+        if len(made) >= want:
+            break
         try:
-            pool += candidates(s, cfg, state)
-        except Exception as e:  # one broken streamer shouldn't stop the day
+            found = moments_for(s, cfg, state)
+        except Exception as e:
             errors += 1
             print(f"Couldn't read {s['name']}'s streams: {e}")
             traceback.print_exc()
-    pool.sort(key=lambda c: -c[0])
-    print(f"\nTop moments across {len(streamers)} streamer(s):")
-    for v, s, vod, sp in pool[:10]:
-        print(f"  {v:7.2f}  {s['name']:<11} VOD {vod['id']} at {sp.t:6.0f}s  LOL {sp.lol:4d}  CLIP IT {sp.clip:3d}")
-
-    cap = cfg.get("max_per_streamer", 2)
-    made, per = [], {}
-    for v, s, vod, sp in pool:
-        if len(made) >= want:
-            break
-        if per.get(s["login"], 0) >= cap:
             continue
-        if any(m[1]["id"] == vod["id"] and abs(m[2].t - sp.t) < 120 for m in made):
-            continue
-        try:
-            if run_one(s, vod, sp, cfg, state, dry_run=args.dry_run):
-                made.append((s, vod, sp))
-                per[s["login"]] = per.get(s["login"], 0) + 1
-                if not args.dry_run:
-                    save_state(state)     # save after each upload, in case a later one fails
-        except Exception as e:  # try the next-best moment instead
-            errors += 1
-            print(f"Failed for {s['name']}: {e}")
-            traceback.print_exc()
+        for m in found[:3]:                  # if the best one fails, try the next
+            try:
+                if run_one(s, m, cfg, state, dry_run=args.dry_run):
+                    made.append(s["name"])
+                    if not args.dry_run:
+                        save_state(state)    # save after each upload, in case a later one fails
+                    break
+            except Exception as e:
+                errors += 1
+                print(f"Failed for {s['name']}: {e}")
+                traceback.print_exc()
+        else:
+            print(f"Nothing usable for {s['name']} this time.")
 
-    print(f"\nMade {len(made)} of {want} Short(s): " + ", ".join(s["name"] for s, _, _ in made))
+    print(f"\nMade {len(made)} of {want} Short(s): " + ", ".join(made))
     if args.dry_run:
         print("Dry run: nothing uploaded, so the list of posted clips stays as it was.")
     else:

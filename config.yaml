@@ -1,13 +1,16 @@
 channel_name: Daily Dose of Streamers
 
 # How many Shorts each scheduled run makes (a manual run can pick 1, 2, 3 or 5).
-# Every run looks at all streamers and takes the most viral moments: the
-# biggest chat spikes, ranked higher the more chat spammed LOL (KEKW, LMAO,
-# OMEGALUL, 💀...) and CLIP IT.
+# Always one per streamer. With fewer than 5, whoever was posted longest ago
+# goes first.
 clips_per_run: 1
-max_per_streamer: 2       # per run, so one streamer can't take every slot
 max_uploads_per_day: 6    # YouTube's free API quota allows about 6 uploads a day
-vods_per_streamer: 2      # how many recent finished streams to look through
+
+# Picking the moment: each streamer's most-viewed Twitch clips from the last
+# few days (what viewers actually shared). If there are none, the biggest chat
+# spike in their last stream, weighted toward LOL spam and CLIP IT.
+clip_days: 7
+min_clip_views: 200
 
 # Clip window around a chat spike
 before_s: 30        # seconds before the spike
@@ -15,7 +18,7 @@ after_s: 30         # seconds after the spike
 chat_delay_s: 6     # chat reacts a few seconds after the moment, so shift back
 min_spike_score: 3.0
 
-quality: 1080p60
+# quality: leave out for the best (source) quality
 whisper_model: small   # tiny / base / small / medium (bigger = better subtitles, slower)
 privacy: public        # set to private to check videos before they go live
 
@@ -36,9 +39,9 @@ streamers:
   - name: Kai Cenat
     login: kaicenat
     platform: twitch
-  - name: IShowSpeed
-    login: ishowspeed
-    platform: twitch   # mostly streams on YouTube; only his Twitch streams are used
+  - name: TheBurntPeanut
+    login: theburntpeanut
+    platform: twitch
   - name: Jynxzi
     login: jynxzi
     platform: twitch

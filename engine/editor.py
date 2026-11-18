@@ -186,6 +186,17 @@ def transcribe(video, model_size="small"):
     return words, " ".join(text)
 
 
+def _upscale(src_w, w, h):
+    """Scale a crop to its panel. A small webcam gets blown up a lot, so clean up
+    compression noise first and sharpen after, which keeps faces crisp."""
+    f = w / max(1, src_w)
+    if f <= 1.15:
+        return f"scale={w}:{h}:flags=lanczos,setsar=1"
+    amount = min(1.4, 0.5 + 0.35 * f)
+    return (f"hqdn3d=1.5:1.5:4:4,scale={w}:{h}:flags=lanczos,"
+            f"unsharp=5:5:{amount:.2f}:5:5:0,setsar=1")
+
+
 def render(segment, out, hook, streamer, words, layout_info, login=None, workdir=None):
     """layout_info comes from layout.find_layout()."""
     import layout
@@ -202,21 +213,21 @@ def render(segment, out, hook, streamer, words, layout_info, login=None, workdir
         x, y, w, h = layout.crop_box(layout_info, cw / ch)
         lift = ",eq=gamma=1.7:saturation=1.1" if layout_info.get("dark") else ""
         vf = (f"[0:v]split=2[a][b];"
-              f"[a]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,setsar=1{lift}[cam];"
+              f"[a]crop={w}:{h}:{x}:{y},{_upscale(w, cw, ch)}{lift}[cam];"
               f"[b]crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale={gw}:{gh}:flags=lanczos,setsar=1[game];"
               f"[1:v][cam]overlay={cx0}:{cy0}:shortest=1[t];"
               f"[t][game]overlay={gx0}:{gy0}:shortest=1,{subs}")
     else:
         (x0, y0, bw, bh), = boxes
         x, y, w, h = layout.crop_box(layout_info, bw / bh)
-        vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale={bw}:{bh}:flags=lanczos,setsar=1[v];"
+        vf = (f"[0:v]crop={w}:{h}:{x}:{y},{_upscale(w, bw, bh)}[v];"
               f"[1:v][v]overlay={x0}:{y0}:shortest=1,{subs}")
     cmd = [
         "ffmpeg", "-y", "-loglevel", "error",
         "-i", segment, "-loop", "1", "-i", bg,
         "-filter_complex", vf, "-map", "[out]", "-map", "0:a?",
         "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
-        "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-r", "30",
+        "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-r", "30",
         "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", out,
     ]
     subprocess.run(cmd, check=True)
