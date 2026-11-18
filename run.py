@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import sys
+import traceback
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -110,14 +111,23 @@ def main():
     else:
         k = state["turn"] % len(streamers)
         order = streamers[k:] + streamers[:k]   # if one streamer has nothing new, try the next
+    made, errors = None, 0
     for s in order:
         try:
-            if run_one(s, cfg, state, dry_run=args.dry_run):
+            made = run_one(s, cfg, state, dry_run=args.dry_run)
+            if made:
                 break
         except Exception as e:  # one broken streamer shouldn't stop the day
+            errors += 1
             print(f"Failed for {s['name']}: {e}")
-    state["turn"] = state["turn"] + 1
-    save_state(state)
+            traceback.print_exc()
+    if args.dry_run:
+        print("Dry run: nothing uploaded, so the list of posted clips stays as it was.")
+    else:
+        state["turn"] = state["turn"] + 1
+        save_state(state)
+    if not made and errors:
+        sys.exit("No Short was made because of the errors above.")
 
 
 if __name__ == "__main__":

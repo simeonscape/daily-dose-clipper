@@ -75,6 +75,7 @@ jobs:
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
           TWITCHDOWNLOADER_CLI: ./TwitchDownloaderCLI
+          PYTHONUNBUFFERED: "1"
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
             python run.py --next --dry-run
@@ -90,8 +91,13 @@ jobs:
           retention-days: 7
 
       - name: Save state
+        if: always()
         run: |
           git config user.name "clipper-bot"
           git config user.email "clipper-bot@users.noreply.github.com"
           git add state.json
-          git diff --cached --quiet || (git commit -m "Update posted clips" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Update posted clips"
+            git pull --rebase -X theirs origin main
+            git push
+          fi

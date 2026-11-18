@@ -135,9 +135,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 def transcribe(video, model_size="small"):
     """Word timestamps with faster-whisper. Returns (words, full_text)."""
+    import numpy as np
     from faster_whisper import WhisperModel
+    # Decode the audio with ffmpeg ourselves (16 kHz mono), so faster-whisper
+    # doesn't depend on whichever PyAV version pip happened to install.
+    pcm = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-i", video,
+                          "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
-    segs, _ = model.transcribe(video, word_timestamps=True, vad_filter=True)
+    segs, _ = model.transcribe(audio, word_timestamps=True, vad_filter=True)
     words, text = [], []
     for seg in segs:
         text.append(seg.text.strip())
