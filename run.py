@@ -124,13 +124,21 @@ def moments_for(s, cfg, state):
     return chat_moments(s, cfg, state)
 
 
+def quota_day(when=None):
+    """YouTube's daily API quota resets at midnight Pacific time."""
+    from zoneinfo import ZoneInfo
+    return (when or datetime.now(timezone.utc)).astimezone(ZoneInfo("America/Los_Angeles")).date().isoformat()
+
+
 def posted_today(state):
-    today = datetime.now(timezone.utc).date().isoformat()
-    return sum(1 for p in state["posted"] if p.get("video_id") and p.get("day") == today)
+    # deleted Shorts still count: deleting a video doesn't give the quota back
+    today = quota_day()
+    return sum(1 for p in state["posted"] if p.get("video_id") and p.get("quota_day", p.get("day")) == today)
 
 
 def last_posted(state, s):
-    times = [p.get("day", "") for p in state["posted"] if p.get("video_id") and p["streamer"] == s["name"]]
+    times = [p.get("day", "") for p in state["posted"]
+             if p.get("video_id") and not p.get("deleted") and p["streamer"] == s["name"]]
     return max(times) if times else ""
 
 
@@ -207,7 +215,8 @@ def run_one(s, m, cfg, state, dry_run=False):
         state["used"].setdefault(m.key, []).append(m.t)
         state["posted"].append({"streamer": s["name"], "moment": m.key, "t": m.t, "score": m.score,
                                 "video_id": video_id, "title": meta["title"],
-                                "day": datetime.now(timezone.utc).date().isoformat()})
+                                "day": datetime.now(timezone.utc).date().isoformat(),
+                                "quota_day": quota_day()})
     return out
 
 

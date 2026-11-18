@@ -1,14 +1,8 @@
 {
   "turn": 0,
   "used": {
-    "2926436422": [
-      10375.0
-    ],
     "2927637212": [
       692.57
-    ],
-    "2858049515": [
-      2665.06
     ],
     "2927006297": [
       5050.8
@@ -25,7 +19,8 @@
       "score": 15986,
       "video_id": "2hp2huUWySg",
       "title": "This CaseOh moment is too funny",
-      "day": "2026-11-18"
+      "day": "2026-11-18",
+      "deleted": true
     },
     {
       "streamer": "ohnepixel",
@@ -43,7 +38,8 @@
       "score": 5280,
       "video_id": "U42A6bn7cmI",
       "title": "Kai Cenat actually pulled this off \ud83d\udd25",
-      "day": "2026-11-18"
+      "day": "2026-11-18",
+      "deleted": true
     },
     {
       "streamer": "TypicalGamer",
