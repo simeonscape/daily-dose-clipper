@@ -1,5 +1,7 @@
 # Daily Dose of Streamers clipper
 
+[Privacy Policy](PRIVACY.md) · [Terms of Service](TERMS.md) · Uses **YouTube API Services**. By using this tool you agree to the [YouTube Terms of Service](https://www.youtube.com/t/terms) and the [Google Privacy Policy](https://policies.google.com/privacy).
+
 Posts one branded Short to the Daily Dose of Streamers channel per run, five runs a day.
 
 **How it picks a clip:** it downloads the chat of the streamer's latest finished Twitch stream (VOD) with [TwitchDownloader](https://github.com/lay295/TwitchDownloader). It finds the moments where chat spikes (lots of KEKW, OMEGALUL, CLIP IT, 💀) compared with normal chat around them, and takes the biggest spike it hasn't posted yet. Then it downloads 30 seconds before and 30 seconds after that moment.
