@@ -1,0 +1,6 @@
+work/
+output/
+client_secret.json
+__pycache__/
+TwitchDownloaderCLI
+*.zip

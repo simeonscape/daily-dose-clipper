@@ -1,0 +1,89 @@
+name: Daily clips
+
+on:
+  schedule:
+    # 5 runs a day, one Short each (times are UTC). Change to suit your audience.
+    - cron: "0 13 * * *"
+    - cron: "0 16 * * *"
+    - cron: "0 19 * * *"
+    - cron: "0 22 * * *"
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Make the video but don't upload it"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write   # to save state.json (which moments were already posted)
+
+concurrency:
+  group: clipper
+  cancel-in-progress: false
+
+jobs:
+  clip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install ffmpeg and Python packages
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -r requirements.txt
+
+      - name: Install TwitchDownloaderCLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download -R lay295/TwitchDownloader -p "*CLI*Linux-x64.zip" -O tdl.zip
+          unzip -o tdl.zip TwitchDownloaderCLI && chmod +x TwitchDownloaderCLI
+
+      - name: Install Claude Code (only if you added CLAUDE_CODE_OAUTH_TOKEN)
+        env:
+          HAS_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        if: env.HAS_TOKEN == 'true'
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Cache subtitle model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-small
+
+      - name: Make and post a Short
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TWITCHDOWNLOADER_CLI: ./TwitchDownloaderCLI
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            python run.py --next --dry-run
+          else
+            python run.py --next
+          fi
+
+      - name: Keep the video as a download
+        uses: actions/upload-artifact@v4
+        with:
+          name: short
+          path: output/
+          retention-days: 7
+
+      - name: Save state
+        run: |
+          git config user.name "clipper-bot"
+          git config user.email "clipper-bot@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || (git commit -m "Update posted clips" && git push)
