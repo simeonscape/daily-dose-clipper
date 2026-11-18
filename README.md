@@ -6,7 +6,7 @@ Posts one branded Short to the Daily Dose of Streamers channel per run, five run
 
 **How it picks a clip:** it downloads the chat of the streamer's latest finished Twitch stream (VOD) with [TwitchDownloader](https://github.com/lay295/TwitchDownloader). It finds the moments where chat spikes (lots of KEKW, OMEGALUL, CLIP IT, 💀) compared with normal chat around them, and takes the biggest spike it hasn't posted yet. Then it downloads 30 seconds before and 30 seconds after that moment.
 
-**How it edits:** it makes a 1080x1920 vertical video with an orange brand background, the channel chip at the top, a hook in big text, the stream inside a white frame, and word-by-word subtitles. Audio is levelled to YouTube loudness.
+**How it edits:** it makes a 1080x1920 vertical video with an orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. It finds the streamer's facecam by itself and puts the camera on top with the whole screen below. Audio is levelled to YouTube loudness.
 
 **How it posts:** it writes the hook, title, description, hashtags and a first comment, then uploads the clip and posts the comment. By default a built-in writer does this with no API key: it reads what chat was spamming to tell what kind of moment it was (funny, hype, shocking, a fail or rage) and fills tested Shorts patterns, using a punchy line from the transcript when there is one. You can also let your Claude subscription write them instead (step 3). The clip is uploaded to YouTube and the comment is posted. YouTube's API can't pin comments, so pin it in YouTube Studio if you want.
 
@@ -47,7 +47,7 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 
 ## Settings (`config.yaml`)
 - `privacy: private` makes uploads private so you can check each one first.
-- `crop`: `center43` (default) suits face-cam streams. Use `full` for gameplay with a facecam corner, or `square`.
+- Layout is automatic. When the stream has a facecam, the camera goes on top and the whole screen below. A full-screen camera, or no camera, gets one big panel. Each run saves `<clip>_camera.jpg` in the download showing the box it found. If it's wrong for a streamer, set `cam: [x, y, width, height]` (fractions of the screen) for them.
 - `whisper_model`: `small` is a good balance. `medium` gives better subtitles but runs slower.
 - Each streamer's Twitch `login`. Streamers who mostly stream on YouTube or Kick are turned off (`enabled: false`) because TwitchDownloader only supports Twitch.
 

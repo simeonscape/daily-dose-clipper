@@ -1,15 +1,14 @@
 """Turn a raw 16:9 stream segment into a branded vertical Short.
 
 Layout (1080x1920, orange brand):
-  top      - logo chip + "DAILY DOSE OF STREAMERS"
-  hook     - big white hook text for the first seconds
-  middle   - the stream, cropped, inside a white frame
-  below    - word-by-word subtitles (active word in brand orange)
-  bottom   - left clear for YouTube's own buttons and title
+  top     - the streamer's picture and name, then the hook in big white text
+  split   - when the stream has a facecam: the camera on top, the whole
+            screen below, subtitles on the line between them
+  single  - full-screen camera (Just Chatting) or no camera: one big panel
+  bottom  - small channel chip, under where YouTube shows its title
 """
 import os
 import subprocess
-import textwrap
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -17,26 +16,56 @@ ASSETS = os.path.join(HERE, "..", "assets")
 W, H = 1080, 1920
 ORANGE = (217, 119, 87)
 DARK = (193, 95, 64)
+INK = (150, 66, 40)
 BLACK = os.path.join(ASSETS, "InterDisplay-Black.otf")
 SEMI = os.path.join(ASSETS, "InterDisplay-SemiBold.otf")
 
-# Video box per crop mode: (crop aspect w/h, box width)
-CROPS = {
-    "center43": (4 / 3, 1000),   # good default for facecam-in-the-middle streams
-    "square": (1.0, 1000),
-    "full": (16 / 9, 1040),      # whole frame, e.g. gameplay with a facecam corner
-}
-VIDEO_TOP = 640
+PX, PW = 30, 1020              # panels: left edge and width
+TOP = 350                      # first panel starts here
+CAM_H = 680                    # split: camera panel height (aspect 1.5)
+GAME_H = 574                   # split: whole screen, 16:9
+GAP = 26
+SINGLE_H = {"cam": 1264, "game": 1020}
 
 
-def video_box(crop):
-    aspect, bw = CROPS.get(crop, CROPS["center43"])
-    bh = int(round(bw / aspect / 2) * 2)
-    return (W - bw) // 2, VIDEO_TOP, bw, bh
+def panels(mode):
+    """[(x, y, w, h)] for the panels, and the y where subtitles are centred."""
+    if mode == "split":
+        cam = (PX, TOP, PW, CAM_H)
+        game = (PX, TOP + CAM_H + GAP, PW, GAME_H)
+        return [cam, game], TOP + CAM_H + GAP // 2
+    h = SINGLE_H.get(mode, SINGLE_H["game"])
+    sub_y = TOP + h - 230 if mode == "cam" else TOP + h + 110
+    return [(PX, TOP, PW, h)], sub_y
 
 
-def make_background(path, hook, streamer, crop, channel="DAILY DOSE OF STREAMERS"):
-    """Static layer: orange, brand chip, hook text, white frame for the video."""
+def _circle(img, size):
+    img = img.convert("RGBA").resize((size * 3, size * 3), Image.LANCZOS)
+    m = Image.new("L", img.size, 0)
+    ImageDraw.Draw(m).ellipse((0, 0, img.size[0], img.size[1]), fill=255)
+    img.putalpha(m)
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def _fit_lines(d, text, font_path, max_w, max_lines, max_h, start, stop):
+    for size in range(start, stop, -4):
+        f = ImageFont.truetype(font_path, size)
+        lines, cur = [], ""
+        for word in text.split():
+            trial = (cur + " " + word).strip()
+            if d.textlength(trial, font=f) <= max_w:
+                cur = trial
+            else:
+                lines.append(cur); cur = word
+        lines.append(cur)
+        if (len(lines) <= max_lines and len(lines) * size * 1.05 <= max_h
+                and all(d.textlength(l, font=f) <= max_w for l in lines)):
+            return f, size, lines
+    return f, size, lines
+
+
+def make_background(path, hook, streamer, mode, login=None, channel="DAILY DOSE OF STREAMERS"):
+    """Static layer: orange, streamer badge, hook, white frames for the video panels."""
     img = Image.new("RGB", (W, H), ORANGE)
     band = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(band)
@@ -46,53 +75,56 @@ def make_background(path, hook, streamer, crop, channel="DAILY DOSE OF STREAMERS
     img.paste(DARK, (0, 0), band.filter(ImageFilter.GaussianBlur(2)))
     d = ImageDraw.Draw(img)
 
-    # brand chip
-    logo = Image.open(os.path.join(ASSETS, "logo.png")).convert("RGB").resize((84, 84), Image.LANCZOS)
-    m = Image.new("L", (336, 336), 0)
-    ImageDraw.Draw(m).ellipse((0, 0, 336, 336), fill=255)
-    m = m.resize((84, 84), Image.LANCZOS)
-    f_chip = ImageFont.truetype(SEMI, 34)
-    label = channel
-    tw = d.textlength(label, font=f_chip)
-    chip_w = 84 + 20 + tw + 36
-    cx = int((W - chip_w) / 2)
-    cy = 170
-    d.rounded_rectangle((cx - 8, cy - 8, cx + chip_w, cy + 92), radius=50, fill=(255, 255, 255))
-    img.paste(logo, (cx, cy), m)
-    d.text((cx + 104, cy + 42), label, font=f_chip, fill=(170, 78, 48), anchor="lm")
+    # streamer badge: their picture + name, so viewers see who it is right away
+    pic_path = os.path.join(ASSETS, "streamers", f"{login}.png") if login else None
+    f_name = ImageFont.truetype(BLACK, 52)
+    name_w = d.textlength(streamer, font=f_name)
+    pic = 120 if pic_path and os.path.exists(pic_path) else 0
+    pill_h = 86
+    total = (pic - 26 if pic else 0) + name_w + 64
+    bx = int((W - total) / 2)
+    by = 60
+    px0 = bx + (pic - 26 if pic else 0)
+    d.rounded_rectangle((px0, by + (pic - pill_h) // 2 if pic else by, px0 + name_w + 64,
+                         (by + (pic - pill_h) // 2 if pic else by) + pill_h), radius=pill_h // 2, fill=(255, 255, 255))
+    name_cy = by + pic // 2 if pic else by + pill_h // 2
+    d.text((px0 + (26 if pic else 0) + 32, name_cy), streamer, font=f_name, fill=INK, anchor="lm")
+    if pic:
+        ring = Image.new("RGBA", (pic + 12, pic + 12), (0, 0, 0, 0))
+        ImageDraw.Draw(ring).ellipse((0, 0, pic + 11, pic + 11), fill=(255, 255, 255, 255))
+        img.paste(ring, (bx - 6, by - 6), ring)
+        c = _circle(Image.open(pic_path), pic)
+        img.paste(c, (bx, by), c)
 
-    # hook text: biggest size that fits in at most 3 lines, centred between chip and video
+    # hook: biggest size that fits in two lines between badge and video
     hook = (hook or "").upper().strip()
-    for size in range(112, 46, -4):
-        f = ImageFont.truetype(BLACK, size)
-        lines, cur = [], ""
-        for word in hook.split():
-            trial = (cur + " " + word).strip()
-            if d.textlength(trial, font=f) <= W - 110:
-                cur = trial
-            else:
-                lines.append(cur); cur = word
-        lines.append(cur)
-        if (len(lines) <= 3 and len(lines) * size * 1.06 <= VIDEO_TOP - 320
-                and all(d.textlength(l, font=f) <= W - 110 for l in lines)):
-            break
-    lh = size * 1.06
-    y = 290 + (VIDEO_TOP - 30 - 290 - lh * len(lines)) / 2
+    top, bottom = by + max(pic, pill_h) + 14, TOP - 18
+    f, size, lines = _fit_lines(d, hook, BLACK, W - 90, 2, bottom - top, 92, 46)
+    lh = size * 1.05
+    y = top + (bottom - top - lh * len(lines)) / 2
     for line in lines:
         d.text((W / 2 + 4, y + 6), line, font=f, fill=(120, 55, 35), anchor="ma")
         d.text((W / 2, y), line, font=f, fill=(255, 255, 255), anchor="ma")
         y += lh
 
-    # white frame behind the video
-    x0, y0, bw, bh = video_box(crop)
-    pad = 10
-    d.rounded_rectangle((x0 - pad, y0 - pad, x0 + bw + pad, y0 + bh + pad), radius=28, fill=(255, 255, 255))
+    # white frames behind the video panels
+    boxes, sub_y = panels(mode)
+    for x0, y0, bw, bh in boxes:
+        d.rounded_rectangle((x0 - 8, y0 - 8, x0 + bw + 8, y0 + bh + 8), radius=26, fill=(255, 255, 255))
 
-    # credit under the frame
-    f_cr = ImageFont.truetype(SEMI, 30)
-    d.text((W / 2, y0 + bh + pad + 22), f"Clip: {streamer}", font=f_cr, fill=(255, 238, 230), anchor="ma")
+    # small channel chip near the bottom
+    last = boxes[-1][1] + boxes[-1][3]
+    logo = _circle(Image.open(os.path.join(ASSETS, "logo.png")), 56)
+    f_chip = ImageFont.truetype(SEMI, 26)
+    tw = d.textlength(channel, font=f_chip)
+    cw = 56 + 14 + tw + 26
+    cx, cy = int((W - cw) / 2), max(last + 40, 1660) if mode == "split" else last + 230
+    cy = min(cy, H - 120)
+    d.rounded_rectangle((cx - 6, cy - 6, cx + cw, cy + 62), radius=34, fill=(255, 255, 255))
+    img.paste(logo, (cx, cy), logo)
+    d.text((cx + 70, cy + 28), channel, font=f_chip, fill=INK, anchor="lm")
     img.save(path)
-    return y0 + bh + pad + 80   # where subtitles can start
+    return sub_y
 
 
 def _ass_time(t):
@@ -102,7 +134,7 @@ def _ass_time(t):
     return f"{int(h)}:{int(m):02d}:{s:05.2f}"
 
 
-def make_subtitles(words, path, top_y, words_per_line=3):
+def make_subtitles(words, path, center_y, words_per_line=3):
     """Word-by-word captions. `words` is a list of (start, end, text)."""
     head = f"""[Script Info]
 ScriptType: v4.00+
@@ -112,7 +144,7 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Inter Display Black,92,&H00FFFFFF,&H00FFFFFF,&H00141414,&H64000000,0,0,0,0,100,100,3,0,1,7,3,8,60,60,{int(top_y)},1
+Style: Cap,Inter Display Black,84,&H00FFFFFF,&H00FFFFFF,&H00141414,&H64000000,0,0,0,0,100,100,3,0,1,7,3,5,60,60,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -128,7 +160,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             for k, (_, _, w) in enumerate(chunk):
                 w = w.strip().upper().replace("{", "").replace("}", "")
                 parts.append(f"{{\\c{hi}\\fscx108\\fscy108}}{w}{{\\c&HFFFFFF&\\fscx100\\fscy100}}" if k == j else w)
-            lines.append(f"Dialogue: 0,{_ass_time(s)},{_ass_time(end)},Cap,,0,0,0,,{' '.join(parts)}")
+            pos = f"{{\\an5\\pos({W // 2},{int(center_y)})}}"
+            lines.append(f"Dialogue: 0,{_ass_time(s)},{_ass_time(end)},Cap,,0,0,0,,{pos}{' '.join(parts)}")
     with open(path, "w", encoding="utf-8") as f:
         f.write(head + "\n".join(lines) + "\n")
 
@@ -153,19 +186,31 @@ def transcribe(video, model_size="small"):
     return words, " ".join(text)
 
 
-def render(segment, out, hook, streamer, words, crop="center43", workdir=None):
+def render(segment, out, hook, streamer, words, layout_info, login=None, workdir=None):
+    """layout_info comes from layout.find_layout()."""
+    import layout
     workdir = workdir or os.path.dirname(os.path.abspath(out))
     bg = os.path.join(workdir, "bg.png")
     ass = os.path.join(workdir, "subs.ass")
-    sub_top = make_background(bg, hook, streamer, crop)
-    make_subtitles(words, ass, sub_top)
-    aspect, bw = CROPS.get(crop, CROPS["center43"])
-    x0, y0, bw, bh = video_box(crop)
-    vf = (
-        f"[0:v]crop='min(iw,ih*{aspect})':'min(ih,iw/{aspect})',scale={bw}:{bh}:flags=lanczos,setsar=1[v];"
-        f"[1:v][v]overlay={x0}:{y0}:shortest=1,"
-        f"subtitles='{ass}':fontsdir='{ASSETS}',format=yuv420p[out]"
-    )
+    mode = layout_info["mode"]
+    sub_y = make_background(bg, hook, streamer, mode, login=login)
+    make_subtitles(words, ass, sub_y)
+    boxes, _ = panels(mode)
+    subs = f"subtitles='{ass}':fontsdir='{ASSETS}',format=yuv420p[out]"
+    if mode == "split":
+        (cx0, cy0, cw, ch), (gx0, gy0, gw, gh) = boxes
+        x, y, w, h = layout.crop_box(layout_info, cw / ch)
+        lift = ",eq=gamma=1.7:saturation=1.1" if layout_info.get("dark") else ""
+        vf = (f"[0:v]split=2[a][b];"
+              f"[a]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,setsar=1{lift}[cam];"
+              f"[b]crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale={gw}:{gh}:flags=lanczos,setsar=1[game];"
+              f"[1:v][cam]overlay={cx0}:{cy0}:shortest=1[t];"
+              f"[t][game]overlay={gx0}:{gy0}:shortest=1,{subs}")
+    else:
+        (x0, y0, bw, bh), = boxes
+        x, y, w, h = layout.crop_box(layout_info, bw / bh)
+        vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale={bw}:{bh}:flags=lanczos,setsar=1[v];"
+              f"[1:v][v]overlay={x0}:{y0}:shortest=1,{subs}")
     cmd = [
         "ffmpeg", "-y", "-loglevel", "error",
         "-i", segment, "-loop", "1", "-i", bg,

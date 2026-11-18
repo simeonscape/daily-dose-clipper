@@ -10,7 +10,12 @@ quality: 1080p60
 whisper_model: small   # tiny / base / small / medium (bigger = better subtitles, slower)
 privacy: public        # set to private to check videos before they go live
 
-# crop: center43 (default), square, or full (whole 16:9 frame)
+# Layout is automatic: if the stream has a facecam, the camera goes on top and
+# the whole screen below. A full-screen camera or no camera gets one big panel.
+# Each run also saves <clip>_camera.jpg showing what it found (green box).
+# If it picks the wrong spot for a streamer, set it by hand:
+#   cam: [x, y, width, height]   # fractions of the screen, e.g. [0, 0.25, 0.25, 0.3]
+#   layout: game                 # or cam, to force one big panel
 # Check each login on twitch.tv. Streamers who mainly stream on YouTube or Kick
 # need another source, so they're turned off until that's added.
 streamers:
@@ -30,4 +35,3 @@ streamers:
   - name: Jynxzi
     login: jynxzi
     platform: twitch
-    crop: full         # gameplay with a facecam corner

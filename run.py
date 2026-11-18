@@ -17,7 +17,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "engine"))
-import editor, metadata, spikes, twitch  # noqa: E402
+import editor, layout, metadata, spikes, twitch  # noqa: E402
 
 STATE = os.path.join(HERE, "state.json")
 WORK = os.path.join(HERE, "work")
@@ -78,7 +78,11 @@ def run_one(s, cfg, state, dry_run=False):
                                    channel=cfg["channel_name"], seed=tag)
     os.makedirs(OUT, exist_ok=True)
     out = os.path.join(OUT, f"{tag}.mp4")
-    editor.render(seg, out, meta["hook"], s["name"], words, crop=s.get("crop", "center43"), workdir=WORK)
+    lay = layout.find_layout(seg, override=s.get("cam"), debug_path=out.replace(".mp4", "_camera.jpg"))
+    if s.get("layout") in ("cam", "game"):
+        lay["mode"] = s["layout"]
+    print(f"Layout: {lay['mode']} ({lay['how']})")
+    editor.render(seg, out, meta["hook"], s["name"], words, lay, login=s["login"], workdir=WORK)
     with open(out.replace(".mp4", ".json"), "w") as f:
         json.dump(meta, f, indent=2)
     print(f"Rendered {out}\n  title: {meta['title']}\n  hook:  {meta['hook']}")
