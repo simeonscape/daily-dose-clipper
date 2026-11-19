@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T16:59:34+00:00",
+  "updated": "2026-11-19T17:56:48+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -18,10 +18,39 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 20,
-    "videos": 4
+    "videos": 5
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "1t4MgI_n7gI",
+      "title": "\"Six stars start up there, bro\" 🔥 (Kai Cenat)",
+      "published": "2026-11-19T17:00:31Z",
+      "thumbnail": "https://i.ytimg.com/vi/1t4MgI_n7gI/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/1t4MgI_n7gI",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 3,
+      "likes": 1,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-19"
+    }
+  ],
   "recent": [
+    {
+      "id": "1t4MgI_n7gI",
+      "title": "\"Six stars start up there, bro\" 🔥 (Kai Cenat)",
+      "published": "2026-11-19T17:00:31Z",
+      "thumbnail": "https://i.ytimg.com/vi/1t4MgI_n7gI/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/1t4MgI_n7gI",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 3,
+      "likes": 1,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-19"
+    },
     {
       "id": "VSleLhcEnqo",
       "title": "This CaseOh moment is too funny",
@@ -30,7 +59,7 @@
       "url": "https://youtube.com/shorts/VSleLhcEnqo",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 5,
+      "views": 6,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -72,7 +101,7 @@
       "url": "https://youtube.com/shorts/t0x3e8OEzBo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 5,
+      "views": 6,
       "likes": 1,
       "comments": 1,
       "streamer": "ohnepixel",
