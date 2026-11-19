@@ -18,6 +18,9 @@
     ],
     "2932628190": [
       25113.92
+    ],
+    "2932275268": [
+      21315.0
     ]
   },
   "posted": [
@@ -109,10 +112,27 @@
       "at": "2026-11-19T20:00:02+00:00",
       "slot": "2026-11-19T20:00:00+00:00",
       "quota_day": "2026-11-19"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2932275268",
+      "t": 21315.0,
+      "score": 508437,
+      "video_id": "Gp13zIuvUTo",
+      "title": "OhnePixel tries out the strip club's private dance in GTA 6 \ud83d\ude33",
+      "clip_title": "ohnePixel tries out the strip club's private dance in GTA 6",
+      "clip_ids": [
+        "PeacefulGlutenFreeVultureShazBotstix-KgHnVnwwgZOeO6Xs"
+      ],
+      "day": "2026-11-19",
+      "at": "2026-11-19T22:00:45+00:00",
+      "slot": "2026-11-19T22:00:00+00:00",
+      "quota_day": "2026-11-19"
     }
   ],
   "used_clips": [
     "SincereMoldyGaragePartyTime-C2fuK1XJ2UtVfHel",
-    "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ"
+    "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ",
+    "PeacefulGlutenFreeVultureShazBotstix-KgHnVnwwgZOeO6Xs"
   ]
 }
