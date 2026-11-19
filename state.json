@@ -15,6 +15,9 @@
     ],
     "2858049515": [
       2665.06
+    ],
+    "2932628190": [
+      25113.92
     ]
   },
   "posted": [
@@ -90,9 +93,26 @@
       "at": "2026-11-19T17:00:05+00:00",
       "slot": "2026-11-19T17:00:00+00:00",
       "quota_day": "2026-11-19"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2932628190",
+      "t": 25113.92,
+      "score": 21829,
+      "video_id": "6e6VQgU5UH4",
+      "title": "How did they survive??? (CaseOh) \ud83d\ude33",
+      "clip_title": "How did they survive???",
+      "clip_ids": [
+        "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ"
+      ],
+      "day": "2026-11-19",
+      "at": "2026-11-19T20:00:02+00:00",
+      "slot": "2026-11-19T20:00:00+00:00",
+      "quota_day": "2026-11-19"
     }
   ],
   "used_clips": [
-    "SincereMoldyGaragePartyTime-C2fuK1XJ2UtVfHel"
+    "SincereMoldyGaragePartyTime-C2fuK1XJ2UtVfHel",
+    "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ"
   ]
 }
