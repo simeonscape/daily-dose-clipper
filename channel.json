@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T18:58:01+00:00",
+  "updated": "2026-11-19T20:02:18+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 20,
-    "videos": 5
+    "videos": 6
   },
   "today_videos": [
+    {
+      "id": "6e6VQgU5UH4",
+      "title": "How did they survive??? (CaseOh) 😳",
+      "published": "2026-11-19T20:00:55Z",
+      "thumbnail": "https://i.ytimg.com/vi/6e6VQgU5UH4/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/6e6VQgU5UH4",
+      "privacy": "public",
+      "duration": "PT1M",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-19"
+    },
     {
       "id": "1t4MgI_n7gI",
       "title": "\"Six stars start up there, bro\" 🔥 (Kai Cenat)",
@@ -37,6 +51,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "6e6VQgU5UH4",
+      "title": "How did they survive??? (CaseOh) 😳",
+      "published": "2026-11-19T20:00:55Z",
+      "thumbnail": "https://i.ytimg.com/vi/6e6VQgU5UH4/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/6e6VQgU5UH4",
+      "privacy": "public",
+      "duration": "PT1M",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-19"
+    },
     {
       "id": "1t4MgI_n7gI",
       "title": "\"Six stars start up there, bro\" 🔥 (Kai Cenat)",
@@ -59,7 +87,7 @@
       "url": "https://youtube.com/shorts/VSleLhcEnqo",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 6,
+      "views": 7,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
