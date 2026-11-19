@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T21:21:04+00:00",
+  "updated": "2026-11-19T22:20:43+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 20,
-    "videos": 6
+    "videos": 7
   },
   "today_videos": [
+    {
+      "id": "Gp13zIuvUTo",
+      "title": "OhnePixel tries out the strip club's private dance in GTA 6 😳",
+      "published": "2026-11-19T22:01:11Z",
+      "thumbnail": "https://i.ytimg.com/vi/Gp13zIuvUTo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Gp13zIuvUTo",
+      "privacy": "public",
+      "duration": "PT1M1S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-19"
+    },
     {
       "id": "6e6VQgU5UH4",
       "title": "How did they survive??? (CaseOh) 😳",
@@ -51,6 +65,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "Gp13zIuvUTo",
+      "title": "OhnePixel tries out the strip club's private dance in GTA 6 😳",
+      "published": "2026-11-19T22:01:11Z",
+      "thumbnail": "https://i.ytimg.com/vi/Gp13zIuvUTo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Gp13zIuvUTo",
+      "privacy": "public",
+      "duration": "PT1M1S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-19"
+    },
     {
       "id": "6e6VQgU5UH4",
       "title": "How did they survive??? (CaseOh) 😳",
@@ -87,7 +115,7 @@
       "url": "https://youtube.com/shorts/VSleLhcEnqo",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 7,
+      "views": 8,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
