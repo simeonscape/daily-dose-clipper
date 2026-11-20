@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T02:48:16+00:00",
+  "updated": "2026-11-20T03:50:05+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -17,7 +17,7 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 20,
+    "views": 28,
     "videos": 9
   },
   "today_videos": [
@@ -29,7 +29,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -101,7 +101,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -171,7 +171,7 @@
       "url": "https://youtube.com/shorts/VSleLhcEnqo",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 8,
+      "views": 9,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
