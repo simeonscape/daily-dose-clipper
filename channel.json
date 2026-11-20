@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T16:30:14+00:00",
+  "updated": "2026-11-20T17:31:49+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-20",
   "post_times": [
@@ -18,10 +18,39 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 28,
-    "videos": 9
+    "videos": 10
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "F9cEqInYzeo",
+      "title": "Kai cenat argues with his new girlfriend 😂",
+      "published": "2026-11-20T17:00:19Z",
+      "thumbnail": "https://i.ytimg.com/vi/F9cEqInYzeo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/F9cEqInYzeo",
+      "privacy": "public",
+      "duration": "PT1M1S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-20"
+    }
+  ],
   "recent": [
+    {
+      "id": "F9cEqInYzeo",
+      "title": "Kai cenat argues with his new girlfriend 😂",
+      "published": "2026-11-20T17:00:19Z",
+      "thumbnail": "https://i.ytimg.com/vi/F9cEqInYzeo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/F9cEqInYzeo",
+      "privacy": "public",
+      "duration": "PT1M1S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-20"
+    },
     {
       "id": "7vS34AxCNco",
       "title": "JYNXZI Wins Gamer Of The Year! 🔥🔥🔥 W Jynxzi 🫶",
@@ -30,7 +59,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 12,
+      "views": 14,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
