@@ -24,6 +24,9 @@
     ],
     "2928685004": [
       118168.09
+    ],
+    "2926972985": [
+      33316.43
     ]
   },
   "posted": [
@@ -147,12 +150,29 @@
       "at": "2026-11-20T00:00:04+00:00",
       "slot": "2026-11-20T00:00:00+00:00",
       "quota_day": "2026-11-19"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2926972985",
+      "t": 33316.43,
+      "score": 10590,
+      "video_id": "7vS34AxCNco",
+      "title": "JYNXZI Wins Gamer Of The Year! \ud83d\udd25\ud83d\udd25\ud83d\udd25 W Jynxzi \ud83e\udef6",
+      "clip_title": "JYNXZI Wins Gamer Of The Year! \ud83d\udd25\ud83d\udd25\ud83d\udd25 W Jynxzi \ud83e\udef6",
+      "clip_ids": [
+        "GorgeousSparklingGoatBloodTrail-l-5IIruft8YsCVoM"
+      ],
+      "day": "2026-11-20",
+      "at": "2026-11-20T02:00:06+00:00",
+      "slot": "2026-11-20T02:00:00+00:00",
+      "quota_day": "2026-11-19"
     }
   ],
   "used_clips": [
     "SincereMoldyGaragePartyTime-C2fuK1XJ2UtVfHel",
     "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ",
     "PeacefulGlutenFreeVultureShazBotstix-KgHnVnwwgZOeO6Xs",
-    "OriginalRenownedPlumberTBTacoRight-htRQ2SGyUEq2gun9"
+    "OriginalRenownedPlumberTBTacoRight-htRQ2SGyUEq2gun9",
+    "GorgeousSparklingGoatBloodTrail-l-5IIruft8YsCVoM"
   ]
 }
