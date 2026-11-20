@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T03:50:05+00:00",
+  "updated": "2026-11-20T04:55:27+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -17,7 +17,7 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 28,
+    "views": 20,
     "videos": 9
   },
   "today_videos": [
@@ -43,7 +43,7 @@
       "url": "https://youtube.com/shorts/w7MkQwhzXKY",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -115,7 +115,7 @@
       "url": "https://youtube.com/shorts/w7MkQwhzXKY",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
