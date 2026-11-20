@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T23:15:27+00:00",
+  "updated": "2026-11-20T00:14:10+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 20,
-    "videos": 7
+    "videos": 8
   },
   "today_videos": [
+    {
+      "id": "w7MkQwhzXKY",
+      "title": "Tg gets the token (TypicalGamer) 😳",
+      "published": "2026-11-20T00:00:31Z",
+      "thumbnail": "https://i.ytimg.com/vi/w7MkQwhzXKY/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/w7MkQwhzXKY",
+      "privacy": "public",
+      "duration": "PT29S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-19"
+    },
     {
       "id": "Gp13zIuvUTo",
       "title": "OhnePixel tries out the strip club's private dance in GTA 6 😳",
@@ -29,7 +43,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 0,
+      "views": 1,
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
@@ -66,6 +80,20 @@
   ],
   "recent": [
     {
+      "id": "w7MkQwhzXKY",
+      "title": "Tg gets the token (TypicalGamer) 😳",
+      "published": "2026-11-20T00:00:31Z",
+      "thumbnail": "https://i.ytimg.com/vi/w7MkQwhzXKY/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/w7MkQwhzXKY",
+      "privacy": "public",
+      "duration": "PT29S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-19"
+    },
+    {
       "id": "Gp13zIuvUTo",
       "title": "OhnePixel tries out the strip club's private dance in GTA 6 😳",
       "published": "2026-11-19T22:01:11Z",
@@ -73,7 +101,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 0,
+      "views": 1,
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
