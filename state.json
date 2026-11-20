@@ -20,7 +20,8 @@
       25113.92
     ],
     "2932275268": [
-      21315.0
+      21315.0,
+      12992.25
     ],
     "2928685004": [
       118168.09
@@ -205,6 +206,22 @@
       "at": "2026-11-20T20:00:02+00:00",
       "slot": "2026-11-20T20:00:00+00:00",
       "quota_day": "2026-11-20"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2932275268",
+      "t": 12992.25,
+      "score": 197968,
+      "video_id": "LCOnn99Ex_E",
+      "title": "Neuron activation (ohnepixel) \ud83d\ude33",
+      "clip_title": "neuron activation",
+      "clip_ids": [
+        "EsteemedAlertBoarTTours-qTa7AtR3giDjQF5-"
+      ],
+      "day": "2026-11-20",
+      "at": "2026-11-20T22:00:03+00:00",
+      "slot": "2026-11-20T22:00:00+00:00",
+      "quota_day": "2026-11-20"
     }
   ],
   "used_clips": [
@@ -215,6 +232,7 @@
     "GorgeousSparklingGoatBloodTrail-l-5IIruft8YsCVoM",
     "UnusualConsiderateLionGingerPower-oJF7Ao2MX9omrH0x",
     "ResoluteCourteousPistachioSuperVinlin-DzGhsfoP-l4gFmBB",
-    "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl"
+    "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl",
+    "EsteemedAlertBoarTTours-qTa7AtR3giDjQF5-"
   ]
 }
