@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T01:45:10+00:00",
+  "updated": "2026-11-20T02:48:16+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-19",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 20,
-    "videos": 8
+    "videos": 9
   },
   "today_videos": [
+    {
+      "id": "7vS34AxCNco",
+      "title": "JYNXZI Wins Gamer Of The Year! 🔥🔥🔥 W Jynxzi 🫶",
+      "published": "2026-11-20T02:00:18Z",
+      "thumbnail": "https://i.ytimg.com/vi/7vS34AxCNco/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7vS34AxCNco",
+      "privacy": "public",
+      "duration": "PT58S",
+      "views": 1,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-19"
+    },
     {
       "id": "w7MkQwhzXKY",
       "title": "Tg gets the token (TypicalGamer) 😳",
@@ -29,7 +43,7 @@
       "url": "https://youtube.com/shorts/w7MkQwhzXKY",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 0,
+      "views": 1,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -43,7 +57,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 1,
+      "views": 6,
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
@@ -80,6 +94,20 @@
   ],
   "recent": [
     {
+      "id": "7vS34AxCNco",
+      "title": "JYNXZI Wins Gamer Of The Year! 🔥🔥🔥 W Jynxzi 🫶",
+      "published": "2026-11-20T02:00:18Z",
+      "thumbnail": "https://i.ytimg.com/vi/7vS34AxCNco/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7vS34AxCNco",
+      "privacy": "public",
+      "duration": "PT58S",
+      "views": 1,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-19"
+    },
+    {
       "id": "w7MkQwhzXKY",
       "title": "Tg gets the token (TypicalGamer) 😳",
       "published": "2026-11-20T00:00:31Z",
@@ -87,7 +115,7 @@
       "url": "https://youtube.com/shorts/w7MkQwhzXKY",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 0,
+      "views": 1,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -101,7 +129,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 1,
+      "views": 6,
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
