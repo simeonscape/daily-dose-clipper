@@ -30,6 +30,9 @@
     ],
     "2932305259": [
       10446.01
+    ],
+    "2931106673": [
+      7061.0
     ]
   },
   "posted": [
@@ -186,6 +189,22 @@
       "at": "2026-11-20T17:00:01+00:00",
       "slot": "2026-11-20T17:00:00+00:00",
       "quota_day": "2026-11-20"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2931106673",
+      "t": 7061.0,
+      "score": 14969,
+      "video_id": "9Az8G7oL958",
+      "title": "CaseOh couldn't stop laughing at this \ud83d\ude02",
+      "clip_title": "insane",
+      "clip_ids": [
+        "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl"
+      ],
+      "day": "2026-11-20",
+      "at": "2026-11-20T20:00:02+00:00",
+      "slot": "2026-11-20T20:00:00+00:00",
+      "quota_day": "2026-11-20"
     }
   ],
   "used_clips": [
@@ -195,6 +214,7 @@
     "OriginalRenownedPlumberTBTacoRight-htRQ2SGyUEq2gun9",
     "GorgeousSparklingGoatBloodTrail-l-5IIruft8YsCVoM",
     "UnusualConsiderateLionGingerPower-oJF7Ao2MX9omrH0x",
-    "ResoluteCourteousPistachioSuperVinlin-DzGhsfoP-l4gFmBB"
+    "ResoluteCourteousPistachioSuperVinlin-DzGhsfoP-l4gFmBB",
+    "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl"
   ]
 }
