@@ -21,6 +21,9 @@
     ],
     "2932275268": [
       21315.0
+    ],
+    "2928685004": [
+      118168.09
     ]
   },
   "posted": [
@@ -128,11 +131,28 @@
       "at": "2026-11-19T22:00:45+00:00",
       "slot": "2026-11-19T22:00:00+00:00",
       "quota_day": "2026-11-19"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2928685004",
+      "t": 118168.09,
+      "score": 2886,
+      "video_id": "w7MkQwhzXKY",
+      "title": "Tg gets the token (TypicalGamer) \ud83d\ude33",
+      "clip_title": "tg gets the token",
+      "clip_ids": [
+        "OriginalRenownedPlumberTBTacoRight-htRQ2SGyUEq2gun9"
+      ],
+      "day": "2026-11-20",
+      "at": "2026-11-20T00:00:04+00:00",
+      "slot": "2026-11-20T00:00:00+00:00",
+      "quota_day": "2026-11-19"
     }
   ],
   "used_clips": [
     "SincereMoldyGaragePartyTime-C2fuK1XJ2UtVfHel",
     "CuriousBadEchidnaCoolStoryBro-g66TfyHbfF_r5vxZ",
-    "PeacefulGlutenFreeVultureShazBotstix-KgHnVnwwgZOeO6Xs"
+    "PeacefulGlutenFreeVultureShazBotstix-KgHnVnwwgZOeO6Xs",
+    "OriginalRenownedPlumberTBTacoRight-htRQ2SGyUEq2gun9"
   ]
 }
