@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T23:43:08+00:00",
+  "updated": "2026-11-21T00:58:28+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-20",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 28,
-    "videos": 12
+    "videos": 13
   },
   "today_videos": [
+    {
+      "id": "b2Y7wLBkEjQ",
+      "title": "Tg couldnt handle all that gta ahh (TypicalGamer) 😳",
+      "published": "2026-11-21T00:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/b2Y7wLBkEjQ/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/b2Y7wLBkEjQ",
+      "privacy": "public",
+      "duration": "PT32S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-20"
+    },
     {
       "id": "LCOnn99Ex_E",
       "title": "Neuron activation (ohnepixel) 😳",
@@ -65,6 +79,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "b2Y7wLBkEjQ",
+      "title": "Tg couldnt handle all that gta ahh (TypicalGamer) 😳",
+      "published": "2026-11-21T00:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/b2Y7wLBkEjQ/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/b2Y7wLBkEjQ",
+      "privacy": "public",
+      "duration": "PT32S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-20"
+    },
     {
       "id": "LCOnn99Ex_E",
       "title": "Neuron activation (ohnepixel) 😳",
@@ -115,7 +143,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 18,
+      "views": 19,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -129,7 +157,7 @@
       "url": "https://youtube.com/shorts/w7MkQwhzXKY",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 6,
+      "views": 9,
       "likes": 1,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -143,7 +171,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 35,
+      "views": 40,
       "likes": 1,
       "comments": 1,
       "streamer": "ohnepixel",
