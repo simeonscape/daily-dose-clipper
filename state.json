@@ -34,6 +34,9 @@
     ],
     "2931106673": [
       7061.0
+    ],
+    "2933000873": [
+      12320.84
     ]
   },
   "posted": [
@@ -222,6 +225,22 @@
       "at": "2026-11-20T22:00:03+00:00",
       "slot": "2026-11-20T22:00:00+00:00",
       "quota_day": "2026-11-20"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2933000873",
+      "t": 12320.84,
+      "score": 4363,
+      "video_id": "b2Y7wLBkEjQ",
+      "title": "Tg couldnt handle all that gta ahh (TypicalGamer) \ud83d\ude33",
+      "clip_title": "tg couldnt handle all that gta ahh",
+      "clip_ids": [
+        "DeafOpenArmadilloPhilosoraptor-GbJe9VOAwJK8WUDv"
+      ],
+      "day": "2026-11-21",
+      "at": "2026-11-21T00:00:02+00:00",
+      "slot": "2026-11-21T00:00:00+00:00",
+      "quota_day": "2026-11-20"
     }
   ],
   "used_clips": [
@@ -233,6 +252,7 @@
     "UnusualConsiderateLionGingerPower-oJF7Ao2MX9omrH0x",
     "ResoluteCourteousPistachioSuperVinlin-DzGhsfoP-l4gFmBB",
     "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl",
-    "EsteemedAlertBoarTTours-qTa7AtR3giDjQF5-"
+    "EsteemedAlertBoarTTours-qTa7AtR3giDjQF5-",
+    "DeafOpenArmadilloPhilosoraptor-GbJe9VOAwJK8WUDv"
   ]
 }
