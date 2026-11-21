@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T16:41:51+00:00",
+  "updated": "2026-11-21T17:38:49+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-21",
   "post_times": [
@@ -18,10 +18,39 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 101,
-    "videos": 14
+    "videos": 15
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "lCjW3Py-6eg",
+      "title": "Nobody saw this coming (Kai Cenat)",
+      "published": "2026-11-21T17:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/lCjW3Py-6eg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/lCjW3Py-6eg",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-21"
+    }
+  ],
   "recent": [
+    {
+      "id": "lCjW3Py-6eg",
+      "title": "Nobody saw this coming (Kai Cenat)",
+      "published": "2026-11-21T17:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/lCjW3Py-6eg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/lCjW3Py-6eg",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-21"
+    },
     {
       "id": "qVD-xIfew94",
       "title": "Jump scare (Jynxzi) 💀",
@@ -100,7 +129,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 30,
+      "views": 32,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -128,7 +157,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 57,
+      "views": 58,
       "likes": 1,
       "comments": 1,
       "streamer": "ohnepixel",
