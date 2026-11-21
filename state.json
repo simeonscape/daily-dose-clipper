@@ -41,6 +41,9 @@
     ],
     "2933861646": [
       4240.0
+    ],
+    "2934099165": [
+      3999.0
     ]
   },
   "posted": [
@@ -281,6 +284,22 @@
       "at": "2026-11-21T17:00:02+00:00",
       "slot": "2026-11-21T17:00:00+00:00",
       "quota_day": "2026-11-21"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2934099165",
+      "t": 3999.0,
+      "score": 25760,
+      "video_id": "XX51xv70ehA",
+      "title": "Cooked them (CaseOh) \ud83d\ude02",
+      "clip_title": "cooked them",
+      "clip_ids": [
+        "ResoluteCrazyPistachioPrimeMe-FgUccHgoroOQYUJB"
+      ],
+      "day": "2026-11-21",
+      "at": "2026-11-21T20:00:02+00:00",
+      "slot": "2026-11-21T20:00:00+00:00",
+      "quota_day": "2026-11-21"
     }
   ],
   "used_clips": [
@@ -299,6 +318,7 @@
     "OptimisticGracefulPonyCharlietheUnicorn-mtJ1MPGAEAOkdj6Y",
     "ExquisiteInnocentGaragePoooound-mLDj-ot7Fg9JJjLA",
     "HardDignifiedPotFreakinStinkin-apxeZBEkhBGJrn8S",
-    "PerfectAmazingButterPogChamp-nPnBC0cKv-FE5Hyp"
+    "PerfectAmazingButterPogChamp-nPnBC0cKv-FE5Hyp",
+    "ResoluteCrazyPistachioPrimeMe-FgUccHgoroOQYUJB"
   ]
 }
