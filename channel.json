@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T19:43:32+00:00",
+  "updated": "2026-11-21T20:38:16+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-21",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 101,
-    "videos": 15
+    "videos": 16
   },
   "today_videos": [
+    {
+      "id": "XX51xv70ehA",
+      "title": "Cooked them (CaseOh) 😂",
+      "published": "2026-11-21T20:00:43Z",
+      "thumbnail": "https://i.ytimg.com/vi/XX51xv70ehA/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/XX51xv70ehA",
+      "privacy": "public",
+      "duration": "PT57S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-21"
+    },
     {
       "id": "lCjW3Py-6eg",
       "title": "Nobody saw this coming (Kai Cenat)",
@@ -29,7 +43,7 @@
       "url": "https://youtube.com/shorts/lCjW3Py-6eg",
       "privacy": "public",
       "duration": "PT59S",
-      "views": 1,
+      "views": 0,
       "likes": 0,
       "comments": 1,
       "streamer": "Kai Cenat",
@@ -38,6 +52,20 @@
   ],
   "recent": [
     {
+      "id": "XX51xv70ehA",
+      "title": "Cooked them (CaseOh) 😂",
+      "published": "2026-11-21T20:00:43Z",
+      "thumbnail": "https://i.ytimg.com/vi/XX51xv70ehA/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/XX51xv70ehA",
+      "privacy": "public",
+      "duration": "PT57S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-21"
+    },
+    {
       "id": "lCjW3Py-6eg",
       "title": "Nobody saw this coming (Kai Cenat)",
       "published": "2026-11-21T17:00:22Z",
@@ -45,7 +73,7 @@
       "url": "https://youtube.com/shorts/lCjW3Py-6eg",
       "privacy": "public",
       "duration": "PT59S",
-      "views": 1,
+      "views": 0,
       "likes": 0,
       "comments": 1,
       "streamer": "Kai Cenat",
@@ -129,7 +157,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 40,
+      "views": 42,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -185,7 +213,7 @@
       "url": "https://youtube.com/shorts/1t4MgI_n7gI",
       "privacy": "public",
       "duration": "PT59S",
-      "views": 4,
+      "views": 3,
       "likes": 1,
       "comments": 1,
       "streamer": "Kai Cenat",
