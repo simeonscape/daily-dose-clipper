@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T17:38:49+00:00",
+  "updated": "2026-11-21T18:40:14+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-21",
   "post_times": [
@@ -101,7 +101,7 @@
       "url": "https://youtube.com/shorts/9Az8G7oL958",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 21,
+      "views": 22,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -129,7 +129,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 32,
+      "views": 36,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -157,8 +157,8 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 58,
-      "likes": 1,
+      "views": 61,
+      "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
       "day": "2026-11-19"
