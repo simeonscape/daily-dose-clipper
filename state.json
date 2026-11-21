@@ -37,6 +37,9 @@
     ],
     "2933000873": [
       12320.84
+    ],
+    "2933861646": [
+      4240.0
     ]
   },
   "posted": [
@@ -241,6 +244,24 @@
       "at": "2026-11-21T00:00:02+00:00",
       "slot": "2026-11-21T00:00:00+00:00",
       "quota_day": "2026-11-20"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2933861646",
+      "t": 4240.0,
+      "score": 17992,
+      "video_id": "qVD-xIfew94",
+      "title": "Jump scare (Jynxzi) \ud83d\udc80",
+      "clip_title": "jump scare",
+      "clip_ids": [
+        "RamshackleLaconicLapwingSpicyBoy-vXH5sbEmR5KAzDO7",
+        "OnerousColdWebTBCheesePull-jHJ_MZWeKg7VI3oh",
+        "OptimisticGracefulPonyCharlietheUnicorn-mtJ1MPGAEAOkdj6Y"
+      ],
+      "day": "2026-11-21",
+      "at": "2026-11-21T02:00:02+00:00",
+      "slot": "2026-11-21T02:00:00+00:00",
+      "quota_day": "2026-11-20"
     }
   ],
   "used_clips": [
@@ -253,6 +274,9 @@
     "ResoluteCourteousPistachioSuperVinlin-DzGhsfoP-l4gFmBB",
     "LongFuriousGarlicDendiFace-C43HKo8gkc7BKTXl",
     "EsteemedAlertBoarTTours-qTa7AtR3giDjQF5-",
-    "DeafOpenArmadilloPhilosoraptor-GbJe9VOAwJK8WUDv"
+    "DeafOpenArmadilloPhilosoraptor-GbJe9VOAwJK8WUDv",
+    "RamshackleLaconicLapwingSpicyBoy-vXH5sbEmR5KAzDO7",
+    "OnerousColdWebTBCheesePull-jHJ_MZWeKg7VI3oh",
+    "OptimisticGracefulPonyCharlietheUnicorn-mtJ1MPGAEAOkdj6Y"
   ]
 }
