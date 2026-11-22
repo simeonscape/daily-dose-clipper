@@ -22,7 +22,8 @@
     "2932275268": [
       21315.0,
       12992.25,
-      21431.0
+      21431.0,
+      17654.48
     ],
     "2928685004": [
       118168.09
@@ -394,6 +395,23 @@
       "at": "2026-11-22T20:00:02+00:00",
       "slot": "2026-11-22T20:00:00+00:00",
       "quota_day": "2026-11-22"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2932275268",
+      "t": 17654.48,
+      "score": 73683,
+      "video_id": "bjFiEKrlhJs",
+      "title": "Ohnepixel agrees with Hasan. \ud83d\ude33",
+      "clip_title": "Ohnepixel agrees with Hasan.",
+      "clip_ids": [
+        "WiseBusyStapleNononoCat--XYNEyYmRlr4KoEY",
+        "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U"
+      ],
+      "day": "2026-11-22",
+      "at": "2026-11-22T22:00:04+00:00",
+      "slot": "2026-11-22T22:00:00+00:00",
+      "quota_day": "2026-11-22"
     }
   ],
   "used_clips": [
@@ -421,6 +439,8 @@
     "BoxyWealthyFlamingoSquadGoals-mRnNlefJSv-gcNPj",
     "ViscousCallousMuleRuleFive-HpdKHtraw_2ro91m",
     "BumblingConsiderateMagpieAsianGlow-uwONm1vYSnm95Wzn",
-    "ClumsyVivaciousDotterelBrokeBack-wxQt-rqtGLWo29wm"
+    "ClumsyVivaciousDotterelBrokeBack-wxQt-rqtGLWo29wm",
+    "WiseBusyStapleNononoCat--XYNEyYmRlr4KoEY",
+    "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U"
   ]
 }
