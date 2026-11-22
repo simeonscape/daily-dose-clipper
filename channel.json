@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-22T04:29:15+00:00",
+  "updated": "2026-11-22T05:30:14+00:00",
   "timezone": "America/New_York",
-  "today": "2026-11-21",
+  "today": "2026-11-22",
   "post_times": [
     "12:00",
     "15:00",
@@ -20,78 +20,7 @@
     "views": 101,
     "videos": 19
   },
-  "today_videos": [
-    {
-      "id": "PuOAoinbLEo",
-      "title": "Jynxy plays gta6 for the first time (Jynxzi) 🔥",
-      "published": "2026-11-22T02:00:30Z",
-      "thumbnail": "https://i.ytimg.com/vi/PuOAoinbLEo/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/PuOAoinbLEo",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-21"
-    },
-    {
-      "id": "Rlx0nqdPV6g",
-      "title": "First heist (TypicalGamer) 😳",
-      "published": "2026-11-22T00:00:20Z",
-      "thumbnail": "https://i.ytimg.com/vi/Rlx0nqdPV6g/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/Rlx0nqdPV6g",
-      "privacy": "public",
-      "duration": "PT35S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "TypicalGamer",
-      "day": "2026-11-21"
-    },
-    {
-      "id": "Gri5ah3BmlU",
-      "title": "Horny ohne! (ohnepixel) 😳",
-      "published": "2026-11-21T22:00:32Z",
-      "thumbnail": "https://i.ytimg.com/vi/Gri5ah3BmlU/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/Gri5ah3BmlU",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "ohnepixel",
-      "day": "2026-11-21"
-    },
-    {
-      "id": "XX51xv70ehA",
-      "title": "Cooked them (CaseOh) 😂",
-      "published": "2026-11-21T20:00:43Z",
-      "thumbnail": "https://i.ytimg.com/vi/XX51xv70ehA/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/XX51xv70ehA",
-      "privacy": "public",
-      "duration": "PT57S",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "CaseOh",
-      "day": "2026-11-21"
-    },
-    {
-      "id": "lCjW3Py-6eg",
-      "title": "Nobody saw this coming (Kai Cenat)",
-      "published": "2026-11-21T17:00:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/lCjW3Py-6eg/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/lCjW3Py-6eg",
-      "privacy": "public",
-      "duration": "PT59S",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
-      "day": "2026-11-21"
-    }
-  ],
+  "today_videos": [],
   "recent": [
     {
       "id": "PuOAoinbLEo",
@@ -213,7 +142,7 @@
       "url": "https://youtube.com/shorts/9Az8G7oL958",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 26,
+      "views": 28,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
