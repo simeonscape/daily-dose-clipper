@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T19:25:37+00:00",
+  "updated": "2026-11-22T20:18:50+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-22",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 205,
-    "videos": 20
+    "videos": 21
   },
   "today_videos": [
+    {
+      "id": "I3X7VWNmQkU",
+      "title": "Omg haha  (nsfw )  LUL (CaseOh) 😂",
+      "published": "2026-11-22T20:00:30Z",
+      "thumbnail": "https://i.ytimg.com/vi/I3X7VWNmQkU/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/I3X7VWNmQkU",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-22"
+    },
     {
       "id": "nyW8yvbSMFg",
       "title": "This Kai Cenat moment is too funny",
@@ -37,6 +51,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "I3X7VWNmQkU",
+      "title": "Omg haha  (nsfw )  LUL (CaseOh) 😂",
+      "published": "2026-11-22T20:00:30Z",
+      "thumbnail": "https://i.ytimg.com/vi/I3X7VWNmQkU/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/I3X7VWNmQkU",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-22"
+    },
     {
       "id": "nyW8yvbSMFg",
       "title": "This Kai Cenat moment is too funny",
@@ -59,7 +87,7 @@
       "url": "https://youtube.com/shorts/PuOAoinbLEo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 0,
+      "views": 6,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -101,7 +129,7 @@
       "url": "https://youtube.com/shorts/XX51xv70ehA",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -301,20 +329,6 @@
       "likes": 1,
       "comments": 1,
       "streamer": "TypicalGamer",
-      "day": "2026-11-18"
-    },
-    {
-      "id": "t0x3e8OEzBo",
-      "title": "Cs2 chicken dead (ohnepixel) 💀",
-      "published": "2026-11-18T13:03:32Z",
-      "thumbnail": "https://i.ytimg.com/vi/t0x3e8OEzBo/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/t0x3e8OEzBo",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 8,
-      "likes": 1,
-      "comments": 1,
-      "streamer": "ohnepixel",
       "day": "2026-11-18"
     }
   ]
