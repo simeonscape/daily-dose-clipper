@@ -48,6 +48,9 @@
     ],
     "2930583379": [
       155056.22
+    ],
+    "2932568279": [
+      922.29
     ]
   },
   "posted": [
@@ -337,6 +340,23 @@
       "at": "2026-11-22T00:00:01+00:00",
       "slot": "2026-11-22T00:00:00+00:00",
       "quota_day": "2026-11-21"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2932568279",
+      "t": 922.29,
+      "score": 12990,
+      "video_id": "PuOAoinbLEo",
+      "title": "Jynxy plays gta6 for the first time (Jynxzi) \ud83d\udd25",
+      "clip_title": "Jynxy plays gta6 for the first time",
+      "clip_ids": [
+        "EvilKindChamoisFreakinStinkin-_Q6h9MGvEezIzSw0",
+        "BoxyWealthyFlamingoSquadGoals-mRnNlefJSv-gcNPj"
+      ],
+      "day": "2026-11-22",
+      "at": "2026-11-22T02:00:02+00:00",
+      "slot": "2026-11-22T02:00:00+00:00",
+      "quota_day": "2026-11-21"
     }
   ],
   "used_clips": [
@@ -359,6 +379,8 @@
     "ResoluteCrazyPistachioPrimeMe-FgUccHgoroOQYUJB",
     "AwkwardColdbloodedBunnyKappaWealth-jwq_HEi8HgaRlves",
     "LaconicPlumpGarageYouWHY-L9YkH7El_F5PbFlN",
-    "FineSarcasticDragonCharlieBitMe-1p87N0rhLjnKvoqb"
+    "FineSarcasticDragonCharlieBitMe-1p87N0rhLjnKvoqb",
+    "EvilKindChamoisFreakinStinkin-_Q6h9MGvEezIzSw0",
+    "BoxyWealthyFlamingoSquadGoals-mRnNlefJSv-gcNPj"
   ]
 }
