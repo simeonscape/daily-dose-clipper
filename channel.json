@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T08:09:15+00:00",
+  "updated": "2026-11-22T09:16:18+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-22",
   "post_times": [
@@ -17,7 +17,7 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 101,
+    "views": 113,
     "videos": 19
   },
   "today_videos": [],
@@ -142,7 +142,7 @@
       "url": "https://youtube.com/shorts/9Az8G7oL958",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 30,
+      "views": 29,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
