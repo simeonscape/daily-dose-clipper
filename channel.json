@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T16:16:23+00:00",
+  "updated": "2026-11-22T17:15:38+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-22",
   "post_times": [
@@ -17,11 +17,40 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 113,
-    "videos": 19
+    "views": 205,
+    "videos": 20
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "nyW8yvbSMFg",
+      "title": "This Kai Cenat moment is too funny",
+      "published": "2026-11-22T17:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/nyW8yvbSMFg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/nyW8yvbSMFg",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 3,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-22"
+    }
+  ],
   "recent": [
+    {
+      "id": "nyW8yvbSMFg",
+      "title": "This Kai Cenat moment is too funny",
+      "published": "2026-11-22T17:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/nyW8yvbSMFg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/nyW8yvbSMFg",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 3,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-22"
+    },
     {
       "id": "PuOAoinbLEo",
       "title": "Jynxy plays gta6 for the first time (Jynxzi) 🔥",
@@ -100,7 +129,7 @@
       "url": "https://youtube.com/shorts/qVD-xIfew94",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 0,
+      "views": 3,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -142,7 +171,7 @@
       "url": "https://youtube.com/shorts/9Az8G7oL958",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 31,
+      "views": 33,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -198,7 +227,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 77,
+      "views": 79,
       "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
