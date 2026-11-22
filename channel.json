@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T23:34:07+00:00",
+  "updated": "2026-11-22T00:54:53+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-21",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 101,
-    "videos": 17
+    "videos": 18
   },
   "today_videos": [
+    {
+      "id": "Rlx0nqdPV6g",
+      "title": "First heist (TypicalGamer) 😳",
+      "published": "2026-11-22T00:00:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/Rlx0nqdPV6g/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Rlx0nqdPV6g",
+      "privacy": "public",
+      "duration": "PT35S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-21"
+    },
     {
       "id": "Gri5ah3BmlU",
       "title": "Horny ohne! (ohnepixel) 😳",
@@ -65,6 +79,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "Rlx0nqdPV6g",
+      "title": "First heist (TypicalGamer) 😳",
+      "published": "2026-11-22T00:00:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/Rlx0nqdPV6g/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Rlx0nqdPV6g",
+      "privacy": "public",
+      "duration": "PT35S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-21"
+    },
     {
       "id": "Gri5ah3BmlU",
       "title": "Horny ohne! (ohnepixel) 😳",
@@ -157,7 +185,7 @@
       "url": "https://youtube.com/shorts/9Az8G7oL958",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 24,
+      "views": 25,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -185,7 +213,7 @@
       "url": "https://youtube.com/shorts/7vS34AxCNco",
       "privacy": "public",
       "duration": "PT58S",
-      "views": 42,
+      "views": 48,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -213,7 +241,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 65,
+      "views": 68,
       "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
