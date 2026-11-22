@@ -45,6 +45,9 @@
     ],
     "2934099165": [
       3999.0
+    ],
+    "2930583379": [
+      155056.22
     ]
   },
   "posted": [
@@ -318,6 +321,22 @@
       "at": "2026-11-21T22:00:02+00:00",
       "slot": "2026-11-21T22:00:00+00:00",
       "quota_day": "2026-11-21"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2930583379",
+      "t": 155056.22,
+      "score": 3736,
+      "video_id": "Rlx0nqdPV6g",
+      "title": "First heist (TypicalGamer) \ud83d\ude33",
+      "clip_title": "first heist",
+      "clip_ids": [
+        "FineSarcasticDragonCharlieBitMe-1p87N0rhLjnKvoqb"
+      ],
+      "day": "2026-11-22",
+      "at": "2026-11-22T00:00:01+00:00",
+      "slot": "2026-11-22T00:00:00+00:00",
+      "quota_day": "2026-11-21"
     }
   ],
   "used_clips": [
@@ -339,6 +358,7 @@
     "PerfectAmazingButterPogChamp-nPnBC0cKv-FE5Hyp",
     "ResoluteCrazyPistachioPrimeMe-FgUccHgoroOQYUJB",
     "AwkwardColdbloodedBunnyKappaWealth-jwq_HEi8HgaRlves",
-    "LaconicPlumpGarageYouWHY-L9YkH7El_F5PbFlN"
+    "LaconicPlumpGarageYouWHY-L9YkH7El_F5PbFlN",
+    "FineSarcasticDragonCharlieBitMe-1p87N0rhLjnKvoqb"
   ]
 }
