@@ -29,6 +29,7 @@ the action -> title/description/hashtags/first comment -> upload.
 Live streams as they happen: watcher.py signals moments, run.py --live clips them.
 """
 import argparse
+import json
 import os
 import sys
 import time
@@ -117,8 +118,6 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
     tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
     seg, msgs, summary = get_segment(m, cfg, tag, streamer=s["name"])
     out, meta = pipeline.make_short(s, seg, msgs, cfg, tag, OUT, WORK, clip_title=m.title, summary=summary)
-    if summary:
-        meta["what_happened"] = summary
 
     video_id = None
     if not dry_run:
@@ -130,6 +129,9 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
                 time.sleep(wait)
         video_id = youtube.upload(out, meta, privacy=cfg.get("privacy", "public"))
         print(f"  uploaded: https://youtube.com/shorts/{video_id}")
+        meta["video_id"] = video_id
+        with open(out.replace(".mp4", ".json"), "w") as f:
+            json.dump(meta, f, indent=2, ensure_ascii=False)
         st.mark_posted(state, s["name"], m, video_id, meta, slot=slot, quota_day=quota_day(),
                        extra={"layout": meta.get("layout")})
     return out

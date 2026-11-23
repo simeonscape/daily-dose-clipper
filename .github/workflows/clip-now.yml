@@ -97,6 +97,37 @@ jobs:
           RATE: ${{ inputs.rate }}
         run: python run.py --live "$STREAMER" --vod "$VOD" --t "$T" --rate "$RATE"
 
+      - name: Tell your phone (only if you added NTFY_TOPIC)
+        if: always()
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          STREAMER: ${{ inputs.streamer }}
+          RATE: ${{ inputs.rate }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          OUTCOME: ${{ job.status }}
+        run: |
+          [ -z "$NTFY_TOPIC" ] && exit 0
+          python - <<'PY'
+          import glob, json, os, urllib.request
+          meta = {}
+          for f in sorted(glob.glob("output/*.json")):
+              meta = json.load(open(f))
+          s, rate = os.environ["STREAMER"], os.environ.get("RATE") or "?"
+          if meta:
+              title = f"New live clip: {s}"
+              body = (meta.get("what_happened") or meta.get("title", "")) + \
+                     f"\nChat: {rate}/min per 1,000 viewers. Layout: {meta.get('layout', '?')}." + \
+                     (f"\nPosted: https://youtube.com/shorts/{meta['video_id']}" if meta.get("video_id")
+                      else "\nNot posted (live.post is off): download it from the run.")
+          elif os.environ["OUTCOME"] == "success":
+              title, body = f"Live moment skipped: {s}", "Already had a Short today, or the moment wasn't usable."
+          else:
+              title, body = f"Clip now failed: {s}", "Open the run to see why."
+          req = urllib.request.Request(f"https://ntfy.sh/{os.environ['NTFY_TOPIC']}", data=body.encode(),
+                                       headers={"Title": title, "Click": os.environ["RUN_URL"], "Tags": "movie_camera"})
+          urllib.request.urlopen(req, timeout=20)
+          PY
+
       - name: Keep the video as a download
         if: always()
         uses: actions/upload-artifact@v4

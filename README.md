@@ -12,6 +12,8 @@ Posts each streamer's most viral moment to the Daily Dose of Streamers channel a
 
 **Live streams:** the **Live watcher** workflow is always on, 24/7, with nothing to fill in. It reads the five streamers' live chats and measures chat speed per 1,000 viewers (messages a minute ÷ viewers/1000). When it goes over `live.chat_per_1000` (100 by default) and is well above that stream's own normal, it starts **Clip now** for that moment, which cuts it from the stream's live VOD, edits it and posts it, usually within about 10 minutes. **Each streamer gets one Short a day:** once they have one, live or scheduled, they're checked off, and the scheduled times only fill in for streamers who didn't get a live one. Every 10 minutes the watcher's log shows each stream's normal and peak chat speed per 1,000 viewers, so you can tune the threshold. With `live.post: false` Clip now only makes the video (download it from the run's Artifacts). A streamer with VODs turned off can't be clipped live.
 
+**Phone alerts:** to get a push notification each time Clip now finishes, install the free **ntfy** app (iPhone or Android), tap **+**, subscribe to a topic name that's hard to guess (for example `ddc-clips-` plus random letters, since anyone who knows the name can read it), and save that name as the secret `NTFY_TOPIC`. You'll get what happened in the clip, the chat speed, and either the YouTube link or a note that it's waiting in the run's Artifacts. Tapping the alert opens the run. Without the secret, nothing is sent.
+
 **How it posts:** it writes the hook, title, description, hashtags and a first comment, then uploads the clip and posts the comment. By default a built-in writer does this with no API key: it reads what chat was spamming to tell what kind of moment it was (funny, hype, shocking, a fail or rage) and fills tested Shorts patterns, using a punchy line from the transcript when there is one. You can also let your Claude subscription write them instead (step 3). The clip is uploaded to YouTube and the comment is posted. YouTube's API can't pin comments, so pin it in YouTube Studio if you want.
 
 ## Setup (about 30 minutes, once)
@@ -44,6 +46,7 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 | `YT_CLIENT_ID` | step 4 |
 | `YT_CLIENT_SECRET` | step 4 |
 | `YT_REFRESH_TOKEN` | step 4 |
+| `NTFY_TOPIC` (optional) | your own topic name in the free ntfy app, see below |
 
 ### 6. Test, then go live
 - Under **Actions > Daily clips > Run workflow**, pick how many Shorts (1, 2, 3 or 5) and which streamer (or all), and leave "dry run" ticked. When it finishes, download the video from the run's **Artifacts** and check it.

@@ -92,6 +92,8 @@ def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title="", summary="
     print(f"  layout: {p['mode']} ({p['why']})")
     editor.render(seg, out, meta["hook"], s["name"], words, p, login=s["login"], workdir=workdir)
     meta["layout"] = p["mode"]
+    if summary:
+        meta["what_happened"] = summary
     meta["safety"] = safety_report
     with open(out.replace(".mp4", ".json"), "w") as f:
         json.dump(meta, f, indent=2, ensure_ascii=False)
