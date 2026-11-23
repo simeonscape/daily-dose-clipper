@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T23:14:40+00:00",
+  "updated": "2026-11-23T00:13:48+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-22",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 205,
-    "videos": 22
+    "videos": 23
   },
   "today_videos": [
+    {
+      "id": "5rlOB15jgHM",
+      "title": "Wait for TypicalGamer's reaction 😱",
+      "published": "2026-11-23T00:00:23Z",
+      "thumbnail": "https://i.ytimg.com/vi/5rlOB15jgHM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/5rlOB15jgHM",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-22"
+    },
     {
       "id": "bjFiEKrlhJs",
       "title": "Ohnepixel agrees with Hasan. 😳",
@@ -65,6 +79,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "5rlOB15jgHM",
+      "title": "Wait for TypicalGamer's reaction 😱",
+      "published": "2026-11-23T00:00:23Z",
+      "thumbnail": "https://i.ytimg.com/vi/5rlOB15jgHM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/5rlOB15jgHM",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-22"
+    },
     {
       "id": "bjFiEKrlhJs",
       "title": "Ohnepixel agrees with Hasan. 😳",
@@ -283,7 +311,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 82,
+      "views": 83,
       "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
@@ -329,20 +357,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
-      "day": "2026-11-18"
-    },
-    {
-      "id": "CestbL9S56E",
-      "title": "This went so wrong for Jynxzi",
-      "published": "2026-11-18T13:10:10Z",
-      "thumbnail": "https://i.ytimg.com/vi/CestbL9S56E/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/CestbL9S56E",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 6,
-      "likes": 1,
-      "comments": 1,
-      "streamer": "Jynxzi",
       "day": "2026-11-18"
     }
   ]
