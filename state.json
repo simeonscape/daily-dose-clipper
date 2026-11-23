@@ -34,7 +34,8 @@
     "2932305259": [
       10446.01,
       30913.84,
-      10355.0
+      10355.0,
+      22405.0
     ],
     "2931106673": [
       7061.0
@@ -448,6 +449,26 @@
       "at": "2026-11-23T02:00:02+00:00",
       "slot": "2026-11-23T02:00:00+00:00",
       "quota_day": "2026-11-22"
+    },
+    {
+      "streamer": "Kai Cenat",
+      "moment": "2932305259",
+      "t": 22405.0,
+      "score": 31510,
+      "viral": 0.462,
+      "source": "clips",
+      "video_id": "w6vpy2HQB_E",
+      "title": "Lucia and Jason in a steamy moment\ud83d\udd25 (Kai Cenat)",
+      "clip_title": "Lucia and Jason in a steamy moment\ud83d\udd25",
+      "clip_ids": [
+        "PunchySpeedyCasetteRalpherZ-oNhHMUfHYqCFg6lg",
+        "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv"
+      ],
+      "day": "2026-11-23",
+      "at": "2026-11-23T17:21:44+00:00",
+      "slot": "2026-11-23T17:00:00+00:00",
+      "quota_day": "2026-11-23",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -479,6 +500,8 @@
     "WiseBusyStapleNononoCat--XYNEyYmRlr4KoEY",
     "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U",
     "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1",
-    "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt"
+    "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt",
+    "PunchySpeedyCasetteRalpherZ-oNhHMUfHYqCFg6lg",
+    "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv"
   ]
 }
