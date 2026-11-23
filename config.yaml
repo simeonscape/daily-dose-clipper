@@ -40,6 +40,22 @@ virality:
   refine: true
   search_s: 20        # how far the peak may be from where the clip says
 
+# The smart clipper: a Twitch clip or chat spike only says roughly where the
+# moment is; the real highlight can be 30+ seconds earlier or later. So the
+# engine downloads a wider stretch around it and judges what actually
+# happened (transcript, chat, loudness, frames, viewers' clips), then cuts
+# from the setup through the payoff to the end of the reaction. With
+# CLAUDE_CODE_OAUTH_TOKEN set, Claude does the judging (and looks at the
+# frames); otherwise a built-in judge does.
+smart:
+  enabled: true
+  ai: true              # let Claude judge when the token is set
+  context_before: 75    # seconds downloaded before the moment
+  context_after: 60     # and after it
+  min_len: 20           # Short length range, in seconds
+  max_len: 60
+  setup_s: 18           # built-in judge: about this much lead-up before the peak
+
 # 18+ content (GTA strip clubs, nude characters...): found with NudeNet, a
 # small free model that runs on GitHub, and only those spots are blurred while
 # they're on screen. A clip that's explicit for most of its length is skipped

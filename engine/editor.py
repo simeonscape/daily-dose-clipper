@@ -191,7 +191,7 @@ def _probe(args, path):
                           capture_output=True, text=True, check=True).stdout
 
 
-def normalize(segment):
+def normalize(segment, return_start=False):
     """Make video and sound start together at 0, with a picture on the first frame.
 
     Downloaded stream parts often start mid-way through a group of video
@@ -215,7 +215,7 @@ def normalize(segment):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start:.3f}", "-i", segment,
                     "-c:v", "libx264", "-preset", "veryfast", "-crf", "14", "-c:a", "aac", "-b:a", "192k",
                     "-avoid_negative_ts", "make_zero", fixed], check=True)
-    return fixed
+    return (fixed, start) if return_start else fixed
 
 
 def transcribe(video, model_size="small"):
