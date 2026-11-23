@@ -186,29 +186,35 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         f.write(head + "\n".join(lines) + "\n")
 
 
-def normalize(segment):
-    """Make video and sound both start at 0 with a picture on the very first frame.
+def _probe(args, path):
+    return subprocess.run(["ffprobe", "-v", "error", *args, "-of", "json", path],
+                          capture_output=True, text=True, check=True).stdout
 
-    Downloaded VOD parts often have sound starting before the first video frame,
-    which showed up as empty white panels at the start of the Short (and as a
-    blank thumbnail). Trim to where the picture starts and re-time both streams."""
+
+def normalize(segment):
+    """Make video and sound start together at 0, with a picture on the first frame.
+
+    Downloaded stream parts often start mid-way through a group of video
+    frames: the first few seconds of video can't be decoded (no keyframe yet)
+    while the sound plays from the very start. The old fix re-timed picture
+    and sound separately, which moved the sound 2 to 5 seconds late. Now both
+    are cut at the first real picture (or the start of the sound, whichever
+    is later) with one shared clock, so they stay in sync."""
     import json
-    probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,start_time",
-                            "-of", "json", segment], capture_output=True, text=True, check=True)
-    starts = {}
-    for st in json.loads(probe.stdout).get("streams", []):
-        try:
-            starts.setdefault(st["codec_type"], float(st.get("start_time", 0)))
-        except (TypeError, ValueError):
-            pass
-    v0 = starts.get("video", 0.0)
-    a0 = starts.get("audio", v0)
-    skip = max(0.0, v0 - min(v0, a0)) + 0.05      # a hair more, past any partial first frame
+    info = json.loads(_probe(["-show_entries", "stream=codec_type,start_time:format=start_time"], segment))
+    fmt0 = float((info.get("format") or {}).get("start_time") or 0)
+    a0 = next((float(st["start_time"]) for st in info.get("streams", [])
+               if st.get("codec_type") == "audio" and st.get("start_time") not in (None, "N/A")), fmt0)
+    # the first frame that actually decodes
+    frames = json.loads(_probe(["-select_streams", "v:0", "-read_intervals", "%+#1",
+                                "-show_entries", "frame=pts_time,best_effort_timestamp_time"], segment))
+    f0 = (frames.get("frames") or [{}])[0]
+    v0 = float(f0.get("pts_time") or f0.get("best_effort_timestamp_time") or fmt0)
+    start = max(0.0, max(v0, a0) - fmt0) + 0.05
     fixed = segment.replace(".mp4", "_n.mp4")
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", segment, "-ss", f"{skip:.3f}",
-                    "-vf", "setpts=PTS-STARTPTS", "-af", "asetpts=PTS-STARTPTS",
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start:.3f}", "-i", segment,
                     "-c:v", "libx264", "-preset", "veryfast", "-crf", "14", "-c:a", "aac", "-b:a", "192k",
-                    fixed], check=True)
+                    "-avoid_negative_ts", "make_zero", fixed], check=True)
     return fixed
 
 
