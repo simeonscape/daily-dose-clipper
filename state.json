@@ -57,6 +57,9 @@
     ],
     "2935283335": [
       16336.36
+    ],
+    "2936316823": [
+      7065.0
     ]
   },
   "posted": [
@@ -429,6 +432,22 @@
       "at": "2026-11-23T00:00:02+00:00",
       "slot": "2026-11-23T00:00:00+00:00",
       "quota_day": "2026-11-22"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2936316823",
+      "t": 7065.0,
+      "score": 27669,
+      "video_id": "fibO8BE07z0",
+      "title": "Fan sent Jynxzi a hard sock \ud83d\udc80",
+      "clip_title": "Fan sent Jynxzi a hard sock",
+      "clip_ids": [
+        "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt"
+      ],
+      "day": "2026-11-23",
+      "at": "2026-11-23T02:00:02+00:00",
+      "slot": "2026-11-23T02:00:00+00:00",
+      "quota_day": "2026-11-22"
     }
   ],
   "used_clips": [
@@ -459,6 +478,7 @@
     "ClumsyVivaciousDotterelBrokeBack-wxQt-rqtGLWo29wm",
     "WiseBusyStapleNononoCat--XYNEyYmRlr4KoEY",
     "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U",
-    "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1"
+    "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1",
+    "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt"
   ]
 }
