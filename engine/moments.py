@@ -36,6 +36,7 @@ class Moment:
     viral: float = 0.0           # final score, see virality.py
     signals: dict = field(default_factory=dict)
     live: bool = False           # the VOD is still being recorded
+    clip_ranges: list = field(default_factory=list)   # [(start, end)] in the VOD of viewers' clips
     key_override: str = None     # live moments without a VOD: "live:<login>:<stream id>"
 
     @property
@@ -66,10 +67,12 @@ def clip_moments(s, cfg, live_vod=None):
             same = next((m for m in moments if m.vod and m.vod["id"] == c["video_id"] and abs(m.t - t) < 40), None)
             if same:
                 same.views += c["view_count"]; same.clips += 1; same.clip_ids.append(c["id"])
+                same.clip_ranges.append((c["vod_offset"], c["vod_offset"] + c["duration"]))
                 continue
             vods.setdefault(c["video_id"], {"id": c["video_id"], "duration": None})
             moments.append(Moment(source="clips", vod=vods[c["video_id"]], t=t, title=c["title"],
                                   views=c["view_count"], clip_id=c["id"], clip_ids=[c["id"]],
+                                  clip_ranges=[(c["vod_offset"], c["vod_offset"] + c["duration"])],
                                   created_at=c.get("created_at"),
                                   live=bool(live_vod and c["video_id"] == live_vod["id"])))
         else:

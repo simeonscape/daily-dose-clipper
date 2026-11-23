@@ -64,14 +64,26 @@ def prune_chats(keep_days=4):
             os.remove(path)
 
 
-def get_segment(m, cfg, tag):
-    """Download the moment, cut to its best window. Returns (video path, chat lines)."""
+def context(cfg):
+    """Seconds downloaded before and after a moment, for the judge to look at."""
+    sc = cfg.get("smart", {}) or {}
+    if sc.get("enabled", True):
+        return float(sc.get("context_before", 75)), float(sc.get("context_after", 60))
+    return cfg["before_s"] + PAD, cfg["after_s"] + PAD
+
+
+def get_segment(m, cfg, tag, streamer=""):
+    """Download the moment, cut to its best part. Returns (video path, chat lines, summary)."""
     os.makedirs(WORK, exist_ok=True)
     seg = os.path.join(WORK, f"seg_{tag}.mp4")
     before, after = cfg["before_s"], cfg["after_s"]
     if m.vod:
-        start = max(0.0, m.t - before - PAD)
-        end = m.t + after + PAD
+        b, a = context(cfg)
+        start = max(0.0, m.t - b)
+        end = m.t + a
+        if m.clip_ranges:     # make sure every viewer clip of it is inside, with some room
+            start = max(0.0, min(start, min(r[0] for r in m.clip_ranges) - 15))
+            end = max(end, max(r[1] for r in m.clip_ranges) + 15)
         if m.vod.get("duration"):
             end = min(end, m.vod["duration"])
         print(f"  downloading {start:.0f}-{end:.0f}s of VOD {m.vod['id']}{' (live)' if m.live else ''}")
@@ -83,7 +95,7 @@ def get_segment(m, cfg, tag):
             # e.g. subscriber-only VODs: the clip itself is still public
             print(f"  can't download the VOD ({e}); using clip {m.clip_id} itself")
             twitch.download_clip(m.clip_id, seg)
-            return seg, []
+            return seg, [], ""
         chat = None
         try:
             chat_path = os.path.join(WORK, f"chatwin_{tag}.json")
@@ -91,19 +103,22 @@ def get_segment(m, cfg, tag):
             chat = spikes.load_chat(chat_path)
         except Exception as e:
             print(f"  (couldn't get chat for this moment: {e})")
-        cut, a = pipeline.best_window(seg, m.t - start, cfg, chat=chat, seg_start=start)
+        cut, a, summary = pipeline.best_window(seg, m.t - start, cfg, chat=chat, seg_start=start,
+                                               clip_ranges=m.clip_ranges, streamer=streamer, workdir=WORK)
         msgs = [b for t, b in (chat or []) if start + a <= t <= start + a + before + after + 8] or m.messages
-        return cut, msgs
+        return cut, msgs, summary
     print(f"  the stream's VOD is gone, using clip {m.clip_id} itself")
     twitch.download_clip(m.clip_id, seg)
-    return seg, []
+    return seg, [], ""
 
 
 def run_one(s, m, cfg, state, dry_run=False, slot=None):
     print(f"\n== {s['name']}: {m.describe()}")
     tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
-    seg, msgs = get_segment(m, cfg, tag)
-    out, meta = pipeline.make_short(s, seg, msgs, cfg, tag, OUT, WORK, clip_title=m.title)
+    seg, msgs, summary = get_segment(m, cfg, tag, streamer=s["name"])
+    out, meta = pipeline.make_short(s, seg, msgs, cfg, tag, OUT, WORK, clip_title=m.title, summary=summary)
+    if summary:
+        meta["what_happened"] = summary
 
     video_id = None
     if not dry_run:
@@ -139,7 +154,7 @@ def clip_live(args, cfg, state):
         sys.exit(f"{s['name']} has no VOD for this stream (VODs off or subscriber-only), so it can't be clipped.")
     t = float(args.t)
     # the live VOD trails the stream a little: wait until it has the whole moment
-    need = t + cfg["after_s"] + PAD
+    need = t + context(cfg)[1]
     for _ in range(40):
         vod = next((v for v in twitch.latest_vods(s["login"], n=3) if v["id"] == vod_id), None)
         if vod and vod["duration"] >= need:

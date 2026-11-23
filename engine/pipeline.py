@@ -11,6 +11,7 @@ import subprocess
 
 import editor
 import framing
+import judge
 import layout
 import metadata
 import safety
@@ -24,11 +25,32 @@ def cut(src, start, end, out):
     return out
 
 
-def best_window(seg, m_t, cfg, chat=None, seg_start=0.0):
-    """Cut `seg` down to the Short around its most exciting point.
-    `m_t` is where the moment should be, in seconds into `seg`."""
+def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streamer="", workdir="."):
+    """Cut `seg` down to the Short. Returns (cut video, start in `seg`, summary).
+
+    `m_t` is where we think the moment is (seconds into `seg`), `chat` is
+    [(seconds into the VOD, text)], `seg_start` where `seg` starts in the VOD,
+    `clip_ranges` [(start, end)] of viewers' clips in the VOD.
+    With `smart:` on, judge.py studies the whole download and picks the cut;
+    otherwise the old fixed window around the loudest point is used."""
+    sc = cfg.get("smart", {}) or {}
+    if sc.get("enabled", True):
+        try:
+            norm, skip = editor.normalize(seg, return_start=True)
+            off = seg_start + skip            # where `norm` starts in the VOD
+            rel_chat = [(t - off, b) for t, b in (chat or [])]
+            rel_clips = [(a - off, b - off) for a, b in clip_ranges]
+            j = judge.judge(norm, m_t - skip, cfg, chat_rel=rel_chat, clip_ranges=rel_clips,
+                            streamer=streamer, workdir=workdir)
+            print(f"  {j['how']}: Short is {j['start']:.1f}-{j['end']:.1f}s of the download "
+                  f"(peak {j['peak']:.1f}s, {j['end'] - j['start']:.0f}s long)"
+                  + (f"\n  what happened: {j['summary']}" if j["summary"] else ""))
+            return cut(norm, j["start"], j["end"], seg.replace(".mp4", "_cut.mp4")), j["start"] + skip, j["summary"]
+        except Exception as e:
+            print(f"  (smart judge failed: {e}; using the fixed window)")
     before, after = cfg["before_s"], cfg["after_s"]
     vc = cfg.get("virality", {}) or {}
+    a, b = max(0.0, m_t - before), m_t + after
     if vc.get("refine", True):
         try:
             a, b, peak = virality.refine(seg, m_t, before, after, chat=chat, seg_start=seg_start,
@@ -37,13 +59,10 @@ def best_window(seg, m_t, cfg, chat=None, seg_start=0.0):
             print(f"  best window {a:.1f}-{b:.1f}s of the download (peak at {peak:.1f}s, guess was {m_t:.1f}s)")
         except Exception as e:
             print(f"  (couldn't refine the window: {e})")
-            a, b = max(0.0, m_t - before), m_t + after
-    else:
-        a, b = max(0.0, m_t - before), m_t + after
-    return cut(seg, a, b, seg.replace(".mp4", "_cut.mp4")), a
+    return cut(seg, a, b, seg.replace(".mp4", "_cut.mp4")), a, ""
 
 
-def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title=""):
+def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title="", summary=""):
     """Render the Short for streamer `s` from `seg` (already cut to length).
     Returns (video path, metadata dict)."""
     seg = editor.normalize(seg)
@@ -56,7 +75,8 @@ def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title=""):
     words, text = editor.transcribe(seg, cfg.get("whisper_model", "small"))
     stream_url = f"https://twitch.tv/{s['login']}"
     meta = metadata.write_metadata(s["name"], "Twitch", stream_url, text, msgs,
-                                   channel=cfg["channel_name"], seed=tag, clip_title=clip_title)
+                                   channel=cfg["channel_name"], seed=tag, clip_title=clip_title,
+                                   summary=summary)
 
     lay = layout.find_layout(seg, override=s.get("cam"), debug_path=out.replace(".mp4", "_camera.jpg"))
     lcfg = dict(cfg.get("layout", {}) or {})
