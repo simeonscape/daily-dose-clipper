@@ -256,3 +256,52 @@ def tidy(path):
             os.remove(f)
         except OSError:
             pass
+
+
+class RateTrigger:
+    """Chat speed per 1,000 viewers: messages a minute (measured over the last
+    `window_s` seconds) divided by viewers / 1000.
+
+    A moment fires when the rate goes over `threshold` AND chat is clearly
+    faster than this stream's own normal (`min_z`), so a chat that's always
+    fast doesn't fire all day. It reports the peak once chat slows down again.
+    """
+
+    def __init__(self, threshold=100.0, window_s=20.0, min_z=3.0, cooldown_s=120.0):
+        self.threshold, self.window_s, self.min_z, self.cooldown_s = threshold, window_s, min_z, cooldown_s
+        self.z = Detector(warmup_s=90, window_s=window_s)
+        self.open = None
+        self.last = 0.0
+        self.peak_rate = 0.0       # highest rate seen in this watch (for the logs)
+        self.rates = collections.deque(maxlen=3600)
+
+    def rate(self, messages, now, viewers):
+        n = sum(1 for t, _ in messages if now - self.window_s < t <= now)
+        return n * 60.0 / self.window_s / max(1.0, viewers / 1000.0)
+
+    def update(self, messages, now, viewers):
+        """Returns a finished moment {t, rate, z} or None. Call every second."""
+        if self.z.started is None:
+            self.z.started = now
+        r = self.rate(messages, now, viewers)
+        self.rates.append(r)
+        self.peak_rate = max(self.peak_rate, r)
+        warm = now - self.z.started >= self.z.warmup_s
+        if self.open:
+            if r > self.open["rate"]:
+                z, _ = self.z.z_now(messages, now)
+                self.open.update(t=now - self.window_s / 2, rate=r, z=max(z, self.open["z"]))
+            if r < 0.6 * self.threshold or now - self.open["t"] > 45:
+                done, self.open = self.open, None
+                self.last = now
+                return done if done["z"] >= self.min_z else None
+        elif warm and r >= self.threshold and now - self.last >= self.cooldown_s:
+            z, _ = self.z.z_now(messages, now)
+            self.open = {"t": now - self.window_s / 2, "rate": r, "z": z}
+        return None
+
+    def typical(self):
+        if not self.rates:
+            return 0.0
+        xs = sorted(self.rates)
+        return xs[len(xs) // 2]

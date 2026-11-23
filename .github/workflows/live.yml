@@ -1,17 +1,18 @@
 name: Live clips
 
-# Watches the streamers who are live, reads their chat in real time and cuts
-# the moments where chat explodes (see live.py). Starts every 3 hours and
-# watches for up to live.max_minutes; if nobody is live it stops in seconds.
-# Settings are under `live:` in config.yaml (post: false = render only).
+# A constant eye on the streamers' live streams (see live.py). Each run watches
+# for up to live.max_minutes (under GitHub's 6-hour limit). It starts every
+# hour; while one run is watching, the next waits in line and takes over the
+# moment it ends, so there's only a few minutes' gap every ~6 hours.
+# Settings are under `live:` in config.yaml (post: false = make videos only).
 on:
   schedule:
-    - cron: "25 */3 * * *"
+    - cron: "5 * * * *"
   workflow_dispatch:
     inputs:
       minutes:
-        description: "How long to watch (minutes)"
-        default: "60"
+        description: "How long to watch (minutes, up to 320)"
+        default: "120"
       streamer:
         description: "Which streamer (all = whoever is live)"
         type: choice
@@ -32,7 +33,7 @@ concurrency:
 jobs:
   watch:
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    timeout-minutes: 358
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,24 +44,11 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Anyone live?
+      - name: Is live clipping on?
         id: live
-        env:
-          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
-          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
         run: |
-          pip install -q requests pyyaml
-          python - <<'PY' >> "$GITHUB_OUTPUT"
-          import sys, yaml
-          sys.path.insert(0, "engine")
-          import twitch
-          cfg = yaml.safe_load(open("config.yaml"))
-          on = (cfg.get("live") or {}).get("enabled", True)
-          logins = [s["login"] for s in cfg["streamers"] if s.get("enabled", True)]
-          live = twitch.live_streams(logins) if on else {}
-          print("live=" + ("yes" if live else ""))
-          print("Live now: " + (", ".join(live) or "nobody"), file=sys.stderr)
-          PY
+          pip install -q pyyaml
+          python -c "import yaml; c=yaml.safe_load(open('config.yaml')); print('live=' + ('yes' if (c.get('live') or {}).get('enabled', True) else ''))" >> "$GITHUB_OUTPUT"
 
       - name: Install ffmpeg
         if: steps.live.outputs.live == 'yes'
