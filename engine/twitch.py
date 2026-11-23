@@ -1,25 +1,58 @@
-"""Twitch side: find a streamer's latest VODs and download chat and video
-with TwitchDownloaderCLI (https://github.com/lay295/TwitchDownloader).
+"""Twitch side: find a streamer's clips, VODs and live streams (Helix API),
+and download chat and video with TwitchDownloaderCLI
+(https://github.com/lay295/TwitchDownloader).
+
+A stream that is live right now already has a VOD that keeps growing, so
+clips, chat and video from earlier in the current stream work the same way
+as for a finished one. live.py records the live stream itself for moments
+that are only seconds old.
 
 Needs TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET from a free app at
-https://dev.twitch.tv/console/apps (used only to list VODs).
+https://dev.twitch.tv/console/apps (used only to list clips, VODs and streams).
 """
 import os
 import re
 import shutil
 import subprocess
+import time
+
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 HELIX = "https://api.twitch.tv/helix"
 CLI = os.environ.get("TWITCHDOWNLOADER_CLI", shutil.which("TwitchDownloaderCLI") or "./TwitchDownloaderCLI")
 FFMPEG = shutil.which("ffmpeg") or "ffmpeg"
 _token = None
 
+# Twitch's API sometimes hiccups; retry a few times before giving up
+_http = requests.Session()
+_http.mount("https://", HTTPAdapter(max_retries=Retry(total=4, backoff_factor=1.5,
+                                                      status_forcelist=(429, 500, 502, 503, 504),
+                                                      allowed_methods=None)))
+
+
+def _get(path, **params):
+    r = _http.get(f"{HELIX}/{path}", params=params, headers=_headers(), timeout=30)
+    r.raise_for_status()
+    return r.json()["data"]
+
+
+def _run(cmd, tries=3):
+    """TwitchDownloaderCLI, retried: downloads fail now and then on GitHub's runners."""
+    for i in range(tries):
+        try:
+            return subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError:
+            if i == tries - 1:
+                raise
+            time.sleep(5 * (i + 1))
+
 
 def _headers():
     global _token
     if _token is None:
-        r = requests.post("https://id.twitch.tv/oauth2/token", data={
+        r = _http.post("https://id.twitch.tv/oauth2/token", data={
             "client_id": os.environ["TWITCH_CLIENT_ID"],
             "client_secret": os.environ["TWITCH_CLIENT_SECRET"],
             "grant_type": "client_credentials",
@@ -42,9 +75,7 @@ _ids = {}
 
 def user_id(login):
     if login not in _ids:
-        u = requests.get(f"{HELIX}/users", params={"login": login}, headers=_headers(), timeout=30)
-        u.raise_for_status()
-        data = u.json()["data"]
+        data = _get("users", login=login)
         if not data:
             raise ValueError(f"Twitch user not found: {login}")
         _ids[login] = data[0]["id"]
@@ -58,44 +89,56 @@ def top_clips(login, days=7, n=100):
     the best sign of which moments went viral."""
     from datetime import datetime, timedelta, timezone
     now = datetime.now(timezone.utc)
-    r = requests.get(f"{HELIX}/clips", headers=_headers(), timeout=30, params={
-        "broadcaster_id": user_id(login), "first": n,
-        "started_at": (now - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "ended_at": now.strftime("%Y-%m-%dT%H:%M:%SZ")})
-    r.raise_for_status()
-    clips = r.json()["data"]
+    clips = _get("clips", broadcaster_id=user_id(login), first=n,
+                 started_at=(now - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                 ended_at=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
     clips.sort(key=lambda c: -c["view_count"])
     return clips
 
 
 def download_clip(clip_id, out):
-    subprocess.run([CLI, "clipdownload", "--id", str(clip_id), "-o", out, "--ffmpeg-path", FFMPEG], check=True)
+    _run([CLI, "clipdownload", "--id", str(clip_id), "-o", out, "--ffmpeg-path", FFMPEG])
     return out
 
 
 def download_chat_window(vod_id, start, end, out):
-    subprocess.run([CLI, "chatdownload", "--id", str(vod_id), "-b", str(int(start)), "-e", str(int(end)),
-                    "-o", out], check=True)
+    _run([CLI, "chatdownload", "--id", str(vod_id), "-b", str(int(start)), "-e", str(int(end)), "-o", out])
     return out
 
 
 def latest_vods(login, n=3):
-    h = _headers()
-    v = requests.get(f"{HELIX}/videos", params={"user_id": user_id(login), "type": "archive", "first": n},
-                     headers=h, timeout=30)
-    v.raise_for_status()
+    data = _get("videos", user_id=user_id(login), type="archive", first=n)
     return [{"id": x["id"], "url": x["url"], "title": x["title"], "created_at": x["created_at"],
-             "duration": parse_duration(x["duration"])} for x in v.json()["data"]]
+             "stream_id": x.get("stream_id"), "duration": parse_duration(x["duration"])} for x in data]
+
+
+def live_streams(logins):
+    """{login: stream} for the ones live right now (one API call for up to 100)."""
+    if not logins:
+        return {}
+    r = _http.get(f"{HELIX}/streams", params=[("user_login", l) for l in logins][:100],
+                  headers=_headers(), timeout=30)
+    r.raise_for_status()
+    return {x["user_login"].lower(): x for x in r.json()["data"]}
 
 
 def is_live(login):
-    r = requests.get(f"{HELIX}/streams", params={"user_login": login}, headers=_headers(), timeout=30)
-    r.raise_for_status()
-    return bool(r.json()["data"])
+    return login.lower() in live_streams([login])
+
+
+def live_vod(login, stream=None):
+    """The VOD being recorded for the current stream, or None (VODs off, or sub-only)."""
+    stream = stream or live_streams([login]).get(login.lower())
+    if not stream:
+        return None
+    for v in latest_vods(login, n=2):
+        if v.get("stream_id") == stream["id"] or v["created_at"] >= stream["started_at"]:
+            return v
+    return None
 
 
 def download_chat(vod_id, out):
-    subprocess.run([CLI, "chatdownload", "--id", str(vod_id), "-o", out], check=True)
+    _run([CLI, "chatdownload", "--id", str(vod_id), "-o", out])
     return out
 
 
@@ -109,5 +152,5 @@ def download_segment(vod_id, start, end, out, quality=None):
             return out
         except subprocess.CalledProcessError:
             pass
-    subprocess.run(base, check=True)
+    _run(base)
     return out

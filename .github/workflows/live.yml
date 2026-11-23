@@ -1,0 +1,140 @@
+name: Live clips
+
+# Watches the streamers who are live, reads their chat in real time and cuts
+# the moments where chat explodes (see live.py). Starts every 3 hours and
+# watches for up to live.max_minutes; if nobody is live it stops in seconds.
+# Settings are under `live:` in config.yaml (post: false = render only).
+on:
+  schedule:
+    - cron: "25 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "How long to watch (minutes)"
+        default: "60"
+      streamer:
+        description: "Which streamer (all = whoever is live)"
+        type: choice
+        options: [all, caseoh_, ohnepixel, kaicenat, jynxzi, typicalgamer]
+        default: all
+      dry_run:
+        description: "Make the videos but don't upload them"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write   # to save state.json
+
+concurrency:
+  group: live
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Anyone live?
+        id: live
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+        run: |
+          pip install -q requests pyyaml
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import sys, yaml
+          sys.path.insert(0, "engine")
+          import twitch
+          cfg = yaml.safe_load(open("config.yaml"))
+          on = (cfg.get("live") or {}).get("enabled", True)
+          logins = [s["login"] for s in cfg["streamers"] if s.get("enabled", True)]
+          live = twitch.live_streams(logins) if on else {}
+          print("live=" + ("yes" if live else ""))
+          print("Live now: " + (", ".join(live) or "nobody"), file=sys.stderr)
+          PY
+
+      - name: Install ffmpeg
+        if: steps.live.outputs.live == 'yes'
+        timeout-minutes: 5
+        run: |
+          curl -sSL --retry 3 -o ffmpeg.tar.xz https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
+          mkdir -p "$HOME/ffmpeg" && tar -xf ffmpeg.tar.xz -C "$HOME/ffmpeg" --strip-components=1
+          echo "$HOME/ffmpeg/bin" >> "$GITHUB_PATH"
+
+      - name: Install Python packages
+        if: steps.live.outputs.live == 'yes'
+        timeout-minutes: 10
+        run: pip install -r requirements.txt
+
+      - name: Install TwitchDownloaderCLI (for clips of the live stream)
+        if: steps.live.outputs.live == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download -R lay295/TwitchDownloader -p "*CLI*Linux-x64.zip" -O tdl.zip
+          unzip -o tdl.zip TwitchDownloaderCLI && chmod +x TwitchDownloaderCLI
+
+      - name: Install Claude Code (only if you added CLAUDE_CODE_OAUTH_TOKEN)
+        env:
+          HAS_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        if: steps.live.outputs.live == 'yes' && env.HAS_TOKEN == 'true'
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Cache subtitle model
+        if: steps.live.outputs.live == 'yes'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-small
+
+      - name: Watch and clip
+        if: steps.live.outputs.live == 'yes'
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TWITCHDOWNLOADER_CLI: ./TwitchDownloaderCLI
+          PYTHONUNBUFFERED: "1"
+        run: |
+          args=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            args="--minutes ${{ inputs.minutes }} --streamer ${{ inputs.streamer }}"
+            [ "${{ inputs.dry_run }}" = "true" ] && args="$args --dry-run"
+          fi
+          python live.py $args
+
+      - name: Keep the videos as a download
+        if: always() && steps.live.outputs.live == 'yes'
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-shorts
+          if-no-files-found: ignore
+          path: output/
+          retention-days: 7
+
+      - name: Save state
+        if: always() && steps.live.outputs.live == 'yes'
+        run: |
+          git config user.name "clipper-bot"
+          git config user.email "clipper-bot@users.noreply.github.com"
+          cp state.json "$RUNNER_TEMP/mine.json"
+          for i in 1 2 3 4; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python statemerge.py "$RUNNER_TEMP/mine.json" state.json
+            git add state.json
+            git diff --cached --quiet && break
+            git commit -qm "Update posted clips (live)" && git push -q origin HEAD:main && break
+            sleep $((i * 5))
+          done

@@ -104,6 +104,41 @@ def find_spikes(chat, bin_s=2.0, window_s=10.0, baseline_s=300.0,
     return picked
 
 
+def chat_features(chat, t, around_s=15.0, bin_s=2.0, window_s=10.0):
+    """How hard chat reacted to a moment at `t` (seconds), compared with the rest
+    of the chat we have (ideally a few minutes either side of it).
+
+    Returns z (how far the busiest 10 s near t is above normal), the share of
+    LOL / CLIP IT messages around it, and the raw counts. Works on a small
+    chat window, so it can rate a clip's moment without the whole VOD's chat."""
+    out = {"z": 0.0, "lol_share": 0.0, "clip_it": 0, "hype": 0, "messages": []}
+    if not chat:
+        return out
+    chat = sorted(chat)
+    t0 = chat[0][0]
+    n = int((chat[-1][0] - t0) // bin_s) + 1
+    bins = [0.0] * n
+    for tt, body in chat:
+        bins[int((tt - t0) // bin_s)] += WEIGHTS[kind(body)]
+    w = max(1, int(window_s // bin_s))
+    act = [sum(bins[i:i + w]) for i in range(n)]
+    ref = sorted(act)
+    med = ref[len(ref) // 2]
+    mad = sorted(abs(x - med) for x in ref)[len(ref) // 2] or 1.0
+    # chat reacts after the moment, so look a bit later than t
+    lo, hi = int((t - around_s - t0) // bin_s), int((t + around_s + 8 - t0) // bin_s)
+    near = act[max(0, lo):max(0, min(n, hi))]
+    if near:
+        out["z"] = round((max(near) - med) / (1.4826 * mad), 2)
+    around = [m for (tt, m) in chat if t - around_s <= tt <= t + around_s + 8]
+    kinds = [kind(m) for m in around]
+    out["lol_share"] = round((kinds.count("lol") + kinds.count("clip")) / max(1, len(around)), 3)
+    out["clip_it"] = kinds.count("clip")
+    out["hype"] = kinds.count("hype")
+    out["messages"] = around[:60]
+    return out
+
+
 def clip_window(spike, before=30.0, after=30.0, chat_delay=6.0, vod_len=None):
     """The clip: 30 s before the spike to 30 s after it.
 
