@@ -4,9 +4,13 @@
 
 Posts each streamer's most viral moment to the Daily Dose of Streamers channel as branded Shorts. It runs five times a day, and you can start a run by hand that makes 1, 2, 3 or 5 Shorts (one per streamer).
 
-**How it picks a clip:** one Short per streamer. For each streamer it looks at their most-viewed Twitch clips from the last 7 days, the moments viewers actually saved and shared, and adds up clips of the same moment. It takes the top one it hasn't posted yet, then downloads 30 seconds before and 30 seconds after it from the stream. If a streamer has no recent clips, it falls back to the biggest chat spike in their last stream, weighted toward LOL spam and CLIP IT. The viewer's clip title is used for the hook and title when it says something about the moment.
+**How it picks a clip:** one Short per streamer, and it goes for the most viral moment, not just any spike. Candidates are the streamer's most-viewed Twitch clips from the last 7 days (clips of the same moment are added together), including clips from a stream that is live right now. If there are none, it uses chat spikes in their latest stream. The top few candidates get the chat around them downloaded, and each gets one virality score from clip views, how many people clipped it, how hard chat exploded, how much of chat was laughing (KEKW, 💀, LMAO), CLIP IT spam and how recent it is (weights under `virality:` in `config.yaml`). It then downloads a bit more than a minute around the winner and centres the Short on the loudest, most chat-heavy second, cutting at quiet points so no sentence is cut in half.
 
-**How it edits:** it makes a 1080x1920 vertical video with an orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. It finds the streamer's facecam by itself and puts the camera on top with the whole screen below. Audio is levelled to YouTube loudness.
+**18+ content:** every clip is scanned with NudeNet, a small free model that runs on GitHub with no API key. Only the spots it finds (nude characters in GTA, for example) are blurred, and only while they're on screen. A clip that's explicit for most of its length is skipped and the next-best moment is used. Each run saves `<clip>_blurred.jpg` showing what was blurred. Settings are under `safety:`.
+
+**How it edits:** a 1080x1920 vertical video with the orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. The layout is picked per clip: **split** (facecam on top, whole screen below) when the stream has a good facecam, **pip** (gameplay big with a small facecam box in the corner) when the facecam is small or the moment is all about the game, **cam** (full camera) for Just Chatting, and **game** when there's no camera. In the single-panel layouts the crop follows the action or the streamer's face, smoothly. Audio is levelled to YouTube loudness.
+
+**Live streams:** the **Live clips** workflow starts every 3 hours. If a streamer is live, it reads their chat in real time, keeps the last 5 minutes of video, and cuts the moment chat explodes. Every 30 minutes the best moment so far becomes a Short. With `live.post: false` (the default) it only renders them so you can check the videos in the run's Artifacts; set it to `true` to post up to `live.max_posts_per_day` (1, so 5 scheduled + 1 live stays within YouTube's 6 a day).
 
 **How it posts:** it writes the hook, title, description, hashtags and a first comment, then uploads the clip and posts the comment. By default a built-in writer does this with no API key: it reads what chat was spamming to tell what kind of moment it was (funny, hype, shocking, a fail or rage) and fills tested Shorts patterns, using a punchy line from the transcript when there is one. You can also let your Claude subscription write them instead (step 3). The clip is uploaded to YouTube and the comment is posted. YouTube's API can't pin comments, so pin it in YouTube Studio if you want.
 
@@ -47,14 +51,16 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 
 ## Settings (`config.yaml`)
 - `privacy: private` makes uploads private so you can check each one first.
-- Layout is automatic. When the stream has a facecam, the camera goes on top and the whole screen below. A full-screen camera, or no camera, gets one big panel. Each run saves `<clip>_camera.jpg` in the download showing the box it found. If it's wrong for a streamer, set `cam: [x, y, width, height]` (fractions of the screen) for them.
+- Layout is automatic (see above). Each run saves `<clip>_camera.jpg` in the download showing the facecam it found. If it's wrong for a streamer, set `cam: [x, y, width, height]` (fractions of the screen) for them, and `layout: split` (or pip / cam / game) to force a layout.
+- `safety.threshold`: lower blurs more, with more false alarms. `safety.enabled: false` turns the scan off.
+- `live.post: true` lets the live watcher upload.
 - `whisper_model`: `small` is a good balance. `medium` gives better subtitles but runs slower.
 - Each streamer's Twitch `login`. Streamers who mostly stream on YouTube or Kick are turned off (`enabled: false`) because TwitchDownloader only supports Twitch.
 
 ## Limits to know
 - **Copyright:** clips are the streamers' content. Unpermitted clips can get claims or strikes, and three strikes deletes the channel. Join their clip programs or ask permission (see the launch plan).
 - **YouTube quota:** 10,000 units a day. An upload costs 1,600 and a comment 50, so 5 a day fits and 6 is the most.
-- **Runs after the stream, not live:** clips come from the last finished VOD, usually a few hours after the stream ends. This is more reliable than live capture, and it needs no computer of yours.
+- **Live clipping** needs the stream to be public on Twitch. Ads are skipped. If a streamer has VODs turned off, the scheduled Shorts can only use their clips; the live watcher still works because it records the stream itself.
 - **Costs:** GitHub Actions is free for public repos. Private repos get 2,000 free minutes a month, and each run takes about 10 to 20 minutes, so 5 runs a day may go over. Titles cost nothing with the built-in writer. With the subscription option, they count toward your Claude plan's usage.
 
 ## Channel stats for School OS
