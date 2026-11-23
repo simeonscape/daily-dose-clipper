@@ -5,6 +5,7 @@
     python run.py --streamer kaicenat    # only this streamer
     python run.py --clips 5 --dry-run    # make the videos but don't upload them
     python run.py --slot 2026-11-19T17:00:00+00:00   # one Short, posted at that time
+    python run.py --live kaicenat --vod 123 --t 5400  # a live moment the watcher signaled
 
 Every day the hourly workflow posts one Short at each of the post_times in
 config.yaml (see slots.py), so they go out spread over the day.
@@ -25,7 +26,7 @@ longest ago go first, so everyone gets their turn.
 
 Then: blur explicit spots -> subtitles -> layout picked for the clip, following
 the action -> title/description/hashtags/first comment -> upload.
-Live streams as they happen: see live.py.
+Live streams as they happen: watcher.py signals moments, run.py --live clips them.
 """
 import argparse
 import os
@@ -119,6 +120,46 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
     return out
 
 
+def clip_live(args, cfg, state):
+    """A moment the live watcher signaled: cut it from the stream's live VOD and post it."""
+    from moments import Moment
+    s = next((x for x in enabled_streamers(cfg) if x["login"].lower() == args.live.lower()), None)
+    if not s:
+        sys.exit(f"No enabled streamer with login {args.live} in config.yaml")
+    lcfg = cfg.get("live") or {}
+    post = not args.dry_run and lcfg.get("post", False)
+    if post and s["name"] in done_today(state, cfg):
+        print(f"{s['name']} already has a Short today. Nothing to do.")
+        return
+    if post and posted_today(state) >= cfg.get("max_uploads_per_day", 6):
+        print("Already posted today's maximum (YouTube's daily upload quota). Nothing to do.")
+        return
+    vod_id = args.vod or (twitch.live_vod(s["login"]) or {}).get("id")
+    if not vod_id:
+        sys.exit(f"{s['name']} has no VOD for this stream (VODs off or subscriber-only), so it can't be clipped.")
+    t = float(args.t)
+    # the live VOD trails the stream a little: wait until it has the whole moment
+    need = t + cfg["after_s"] + PAD
+    for _ in range(40):
+        vod = next((v for v in twitch.latest_vods(s["login"], n=3) if v["id"] == vod_id), None)
+        if vod and vod["duration"] >= need:
+            break
+        print(f"  waiting for the VOD to reach {need:.0f}s (now {vod['duration'] if vod else '?'}s)")
+        time.sleep(15)
+    m = Moment(source="live", vod={"id": vod_id, "duration": None}, t=t, live=True,
+               created_at=datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    print(f"Live moment from the watcher: {s['name']}, {args.rate or '?'} chats/min per 1,000 viewers")
+    try:
+        run_one(s, m, cfg, state, dry_run=not post)
+    except safety.Unsafe as e:
+        print(f"Not posting this moment: {e}. The watcher will signal the next one.")
+        return
+    if not post:
+        print("Not uploaded (dry run, or live.post is off in config.yaml). The video is in this run's Artifacts.")
+    else:
+        st.save(state)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--clips", type=int, help="how many Shorts (default: clips_per_run in config.yaml)")
@@ -126,12 +167,18 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--slot", help="posting time (ISO, from slots.py): make one Short and post it then")
     ap.add_argument("--next", action="store_true", help=argparse.SUPPRESS)   # old name, same as default
+    ap.add_argument("--live", help="Twitch login: clip a live moment the watcher signaled")
+    ap.add_argument("--vod", help="with --live: the live VOD's id")
+    ap.add_argument("--t", help="with --live: seconds into the VOD")
+    ap.add_argument("--rate", help=argparse.SUPPRESS)
     args = ap.parse_args()
 
     with open(os.path.join(HERE, "config.yaml")) as f:
         cfg = yaml.safe_load(f)
     streamers = enabled_streamers(cfg)
     state = st.load()
+    if args.live:
+        return clip_live(args, cfg, state)
     if args.streamer and args.streamer != "all":
         streamers = [s for s in streamers if s["login"] == args.streamer]
         if not streamers:

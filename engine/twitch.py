@@ -4,8 +4,7 @@ and download chat and video with TwitchDownloaderCLI
 
 A stream that is live right now already has a VOD that keeps growing, so
 clips, chat and video from earlier in the current stream work the same way
-as for a finished one. live.py records the live stream itself for moments
-that are only seconds old.
+as for a finished one. That is how the moments watcher.py signals are clipped.
 
 Needs TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET from a free app at
 https://dev.twitch.tv/console/apps (used only to list clips, VODs and streams).
