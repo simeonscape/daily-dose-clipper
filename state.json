@@ -57,7 +57,8 @@
       922.29
     ],
     "2935283335": [
-      16336.36
+      16336.36,
+      11625.0
     ],
     "2936316823": [
       7065.0
@@ -469,6 +470,25 @@
       "slot": "2026-11-23T17:00:00+00:00",
       "quota_day": "2026-11-23",
       "layout": "split"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2935283335",
+      "t": 11625.0,
+      "score": 29271,
+      "viral": 0.4489,
+      "source": "clips",
+      "video_id": "t4zo2sLUZVo",
+      "title": "CaseOh's chat couldn't believe it",
+      "clip_title": "kyle 1",
+      "clip_ids": [
+        "OddSweetToadMVGame-GtoXLBw9qz8XcLCg"
+      ],
+      "day": "2026-11-23",
+      "at": "2026-11-23T20:00:02+00:00",
+      "slot": "2026-11-23T20:00:00+00:00",
+      "quota_day": "2026-11-23",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -502,6 +522,7 @@
     "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1",
     "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt",
     "PunchySpeedyCasetteRalpherZ-oNhHMUfHYqCFg6lg",
-    "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv"
+    "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv",
+    "OddSweetToadMVGame-GtoXLBw9qz8XcLCg"
   ]
 }
