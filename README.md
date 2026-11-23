@@ -10,7 +10,7 @@ Posts each streamer's most viral moment to the Daily Dose of Streamers channel a
 
 **How it edits:** a 1080x1920 vertical video with the orange brand background, the streamer's picture and name at the top, a hook in big text, and word-by-word subtitles. The layout is picked per clip: **split** (facecam on top, whole screen below) when the stream has a good facecam, **pip** (gameplay big with a small facecam box in the corner) when the facecam is small or the moment is all about the game, **cam** (full camera) for Just Chatting, and **game** when there's no camera. In the single-panel layouts the crop follows the action or the streamer's face, smoothly. Audio is levelled to YouTube loudness.
 
-**Live streams:** the **Live clips** workflow keeps an eye on all five streamers around the clock. For whoever is live, it reads chat and keeps the last 5 minutes of video. Chat speed is measured per 1,000 viewers (messages a minute ÷ viewers/1000). When it goes over `live.chat_per_1000` (100 by default) and is well above that stream's own normal, the moment is cut, edited and posted right away. **Each streamer gets one Short a day:** once they have one, live or scheduled, they're checked off, and the scheduled times only fill in for streamers who didn't get a live one. Every 10 minutes the run's log shows each stream's normal and peak chat speed per 1,000 viewers, so you can tune the threshold. With `live.post: false` it only makes the videos (download them from the run's Artifacts).
+**Live streams:** the **Live watcher** workflow is always on, 24/7, with nothing to fill in. It reads the five streamers' live chats and measures chat speed per 1,000 viewers (messages a minute ÷ viewers/1000). When it goes over `live.chat_per_1000` (100 by default) and is well above that stream's own normal, it starts **Clip now** for that moment, which cuts it from the stream's live VOD, edits it and posts it, usually within about 10 minutes. **Each streamer gets one Short a day:** once they have one, live or scheduled, they're checked off, and the scheduled times only fill in for streamers who didn't get a live one. Every 10 minutes the watcher's log shows each stream's normal and peak chat speed per 1,000 viewers, so you can tune the threshold. With `live.post: false` Clip now only makes the video (download it from the run's Artifacts). A streamer with VODs turned off can't be clipped live.
 
 **How it posts:** it writes the hook, title, description, hashtags and a first comment, then uploads the clip and posts the comment. By default a built-in writer does this with no API key: it reads what chat was spamming to tell what kind of moment it was (funny, hype, shocking, a fail or rage) and fills tested Shorts patterns, using a punchy line from the transcript when there is one. You can also let your Claude subscription write them instead (step 3). The clip is uploaded to YouTube and the comment is posted. YouTube's API can't pin comments, so pin it in YouTube Studio if you want.
 
@@ -53,14 +53,14 @@ In the repo, go to **Settings > Secrets and variables > Actions > New repository
 - `privacy: private` makes uploads private so you can check each one first.
 - Layout is automatic (see above). Each run saves `<clip>_camera.jpg` in the download showing the facecam it found. If it's wrong for a streamer, set `cam: [x, y, width, height]` (fractions of the screen) for them, and `layout: split` (or pip / cam / game) to force a layout.
 - `safety.threshold`: lower blurs more, with more false alarms. `safety.enabled: false` turns the scan off.
-- `live.post: true` lets the live watcher upload. `live.chat_per_1000` sets how fast chat must go to count as viral.
+- `live.post: true` lets Clip now upload. `live.chat_per_1000` sets how fast chat must go to count as viral.
 - `whisper_model`: `small` is a good balance. `medium` gives better subtitles but runs slower.
 - Each streamer's Twitch `login`. Streamers who mostly stream on YouTube or Kick are turned off (`enabled: false`) because TwitchDownloader only supports Twitch.
 
 ## Limits to know
 - **Copyright:** clips are the streamers' content. Unpermitted clips can get claims or strikes, and three strikes deletes the channel. Join their clip programs or ask permission (see the launch plan).
 - **YouTube quota:** 10,000 units a day. An upload costs 1,600 and a comment 50, so 5 a day fits and 6 is the most.
-- **Live clipping** needs the stream to be public on Twitch. Ads are skipped. If a streamer has VODs turned off, the scheduled Shorts can only use their clips; the live watcher still works because it records the stream itself.
+- **Live clipping** needs the stream to be public on Twitch. Live moments are cut from the stream's live VOD, so a streamer needs VODs turned on.
 - **Costs:** GitHub Actions is free for public repos. Private repos get 2,000 free minutes a month, and each run takes about 10 to 20 minutes, so 5 runs a day may go over. Titles cost nothing with the built-in writer. With the subscription option, they count toward your Claude plan's usage.
 
 ## Channel stats for School OS

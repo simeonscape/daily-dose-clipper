@@ -3,7 +3,7 @@
     cut the best window -> blur explicit spots -> subtitles -> title/hook ->
     pick the layout and follow the action -> render
 
-Used by run.py (scheduled Shorts from VODs and clips) and live.py (live streams).
+Used by run.py (scheduled Shorts from VODs and clips) and live moments the watcher signals (run.py --live).
 """
 import json
 import os

@@ -68,24 +68,21 @@ layout:
   pip_when_cam_still: true
   game_zoom: 1.0        # >1 zooms into the action in split/game layouts (e.g. 1.3)
 
-# Live streams: live.py (workflow "Live clips") keeps an eye on all the
-# streamers around the clock. When a stream's chat goes over chat_per_1000
-# messages a minute per 1,000 viewers (and well above its own normal), it cuts
-# that moment and posts it right away. Each streamer gets ONE Short a day
-# (post_timezone): once they have one, live or scheduled, they're checked off
-# and the scheduled times skip them. The run logs each stream's normal and
-# peak chat speed every 10 minutes, so you can tune the threshold.
-# `post: false` makes the videos (download them from the run) without uploading.
+# Live: the "Live watcher" workflow is always on. It reads the streamers'
+# live chats, and when a stream's chat goes over chat_per_1000 messages a
+# minute per 1,000 viewers (and well above its own normal), it signals the
+# "Clip now" workflow, which cuts that moment from the live VOD and posts it.
+# Each streamer gets ONE Short a day (post_timezone): once they have one,
+# live or scheduled, they're checked off and the scheduled times skip them.
+# The watcher's log shows each stream's normal and peak chat speed every
+# 10 minutes, so you can tune the threshold.
+# `post: false` makes the videos (download them from the Clip now run) without uploading.
 live:
-  enabled: true
+  enabled: true          # false turns the watcher off
   post: false
   chat_per_1000: 100     # messages a minute per 1,000 viewers that counts as viral
   min_chat_z: 3          # and chat must be this far above the stream's own normal
   rate_window_s: 20      # chat speed is measured over this many seconds
-  max_streams: 5         # watch up to this many live streams at once
-  max_minutes: 320       # one watch session; the next run takes over when it ends
-  buffer_s: 300
-  quality: 1080p60,1080p,best
 
 # quality: leave out for the best (source) quality
 whisper_model: small   # tiny / base / small / medium (bigger = better subtitles, slower)
