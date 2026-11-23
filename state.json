@@ -49,7 +49,8 @@
       3999.0
     ],
     "2930583379": [
-      155056.22
+      155056.22,
+      43750.0
     ],
     "2932568279": [
       922.29
@@ -412,6 +413,22 @@
       "at": "2026-11-22T22:00:04+00:00",
       "slot": "2026-11-22T22:00:00+00:00",
       "quota_day": "2026-11-22"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2930583379",
+      "t": 43750.0,
+      "score": 4428,
+      "video_id": "5rlOB15jgHM",
+      "title": "Wait for TypicalGamer's reaction \ud83d\ude31",
+      "clip_title": "token",
+      "clip_ids": [
+        "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1"
+      ],
+      "day": "2026-11-23",
+      "at": "2026-11-23T00:00:02+00:00",
+      "slot": "2026-11-23T00:00:00+00:00",
+      "quota_day": "2026-11-22"
     }
   ],
   "used_clips": [
@@ -441,6 +458,7 @@
     "BumblingConsiderateMagpieAsianGlow-uwONm1vYSnm95Wzn",
     "ClumsyVivaciousDotterelBrokeBack-wxQt-rqtGLWo29wm",
     "WiseBusyStapleNononoCat--XYNEyYmRlr4KoEY",
-    "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U"
+    "DreamyCharmingMonkeyPipeHype-GQVBVBbVXKLeOF-U",
+    "KitschyElatedTapirMrDestructoid-TK7gGVAbD8h7zTC1"
   ]
 }
