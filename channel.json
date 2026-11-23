@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T18:58:27+00:00",
+  "updated": "2026-11-23T20:02:28+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-23",
   "post_times": [
@@ -17,10 +17,24 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 220,
-    "videos": 25
+    "views": 238,
+    "videos": 26
   },
   "today_videos": [
+    {
+      "id": "t4zo2sLUZVo",
+      "title": "CaseOh's chat couldn't believe it",
+      "published": "2026-11-23T20:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/t4zo2sLUZVo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/t4zo2sLUZVo",
+      "privacy": "public",
+      "duration": "PT1M",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-23"
+    },
     {
       "id": "w6vpy2HQB_E",
       "title": "Lucia and Jason in a steamy moment🔥 (Kai Cenat)",
@@ -37,6 +51,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "t4zo2sLUZVo",
+      "title": "CaseOh's chat couldn't believe it",
+      "published": "2026-11-23T20:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/t4zo2sLUZVo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/t4zo2sLUZVo",
+      "privacy": "public",
+      "duration": "PT1M",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-23"
+    },
     {
       "id": "w6vpy2HQB_E",
       "title": "Lucia and Jason in a steamy moment🔥 (Kai Cenat)",
@@ -59,7 +87,7 @@
       "url": "https://youtube.com/shorts/fibO8BE07z0",
       "privacy": "public",
       "duration": "PT59S",
-      "views": 5,
+      "views": 4,
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -199,7 +227,7 @@
       "url": "https://youtube.com/shorts/qVD-xIfew94",
       "privacy": "public",
       "duration": "PT57S",
-      "views": 2,
+      "views": 3,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -301,20 +329,6 @@
       "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
-      "day": "2026-11-19"
-    },
-    {
-      "id": "6e6VQgU5UH4",
-      "title": "How did they survive??? (CaseOh) 😳",
-      "published": "2026-11-19T20:00:55Z",
-      "thumbnail": "https://i.ytimg.com/vi/6e6VQgU5UH4/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/6e6VQgU5UH4",
-      "privacy": "public",
-      "duration": "PT1M",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "CaseOh",
       "day": "2026-11-19"
     }
   ]
