@@ -4,7 +4,11 @@ Layout (1080x1920, orange brand):
   top     - the streamer's picture and name, then the hook in big white text
   split   - when the stream has a facecam: the camera on top, the whole
             screen below, subtitles on the line between them
-  single  - full-screen camera (Just Chatting) or no camera: one big panel
+  pip     - gameplay in one tall panel that follows the action, the facecam
+            as a small box in its corner
+  cam     - full-screen camera (Just Chatting): one tall panel following the face
+  game    - no camera: one big panel following the action
+framing.py decides which one fits each clip and how to crop.
   bottom  - small channel chip, under where YouTube shows its title
 """
 import os
@@ -25,17 +29,33 @@ TOP = 350                      # first panel starts here
 CAM_H = 680                    # split: camera panel height (aspect 1.5)
 GAME_H = 574                   # split: whole screen, 16:9
 GAP = 26
-SINGLE_H = {"cam": 1264, "game": 1020}
+SINGLE_H = {"cam": 1264, "game": 1020, "pip": 1264}
+BUBBLE = (440, 330)            # pip: the facecam box in the corner
+BORDER = 8
+
+
+def panel_boxes(mode):
+    """{name: (x, y, w, h)} of the video panels, drawn in this order."""
+    if mode == "split":
+        return {"cam": (PX, TOP, PW, CAM_H), "game": (PX, TOP + CAM_H + GAP, PW, GAME_H)}
+    h = SINGLE_H.get(mode, SINGLE_H["game"])
+    boxes = {"main": (PX, TOP, PW, h)}
+    if mode == "pip":
+        bw, bh = BUBBLE
+        boxes["bubble"] = (PX + 28, TOP + h - 28 - bh, bw, bh)
+    return boxes
 
 
 def panels(mode):
-    """[(x, y, w, h)] for the panels, and the y where subtitles are centred."""
+    """[(x, y, w, h)] for the framed panels, and the y where subtitles are centred."""
     if mode == "split":
-        cam = (PX, TOP, PW, CAM_H)
-        game = (PX, TOP + CAM_H + GAP, PW, GAME_H)
-        return [cam, game], TOP + CAM_H + GAP // 2
+        b = panel_boxes(mode)
+        return [b["cam"], b["game"]], TOP + CAM_H + GAP // 2
     h = SINGLE_H.get(mode, SINGLE_H["game"])
-    sub_y = TOP + h - 230 if mode == "cam" else TOP + h + 110
+    if mode == "pip":
+        sub_y = TOP + h - 28 - BUBBLE[1] - 100
+    else:
+        sub_y = TOP + h - 230 if mode == "cam" else TOP + h + 110
     return [(PX, TOP, PW, h)], sub_y
 
 
@@ -223,31 +243,43 @@ def _upscale(src_w, w, h):
             f"unsharp=5:5:{amount:.2f}:5:5:0,setsar=1")
 
 
-def render(segment, out, hook, streamer, words, layout_info, login=None, workdir=None):
-    """layout_info comes from layout.find_layout()."""
-    import layout
+def _crop_chain(c, bw, bh):
+    """ffmpeg filters for one panel from a framing.plan() crop."""
+    if c.get("whole"):
+        return f"crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale={bw}:{bh}:flags=lanczos,setsar=1"
+    lift = ",eq=gamma=1.7:saturation=1.1" if c.get("lift") else ""
+    return f"crop={c['w']}:{c['h']}:x='{c['x']}':y='{c['y']}',{_upscale(c['src_w'], bw, bh)}{lift}"
+
+
+def render(segment, out, hook, streamer, words, plan, login=None, workdir=None):
+    """`plan` comes from framing.plan(): the layout and how to crop each panel."""
     workdir = workdir or os.path.dirname(os.path.abspath(out))
     bg = os.path.join(workdir, "bg.png")
     ass = os.path.join(workdir, "subs.ass")
-    mode = layout_info["mode"]
+    mode = plan["mode"]
     sub_y = make_background(bg, hook, streamer, mode, login=login)
     make_subtitles(words, ass, sub_y)
-    boxes, _ = panels(mode)
-    subs = f"subtitles='{ass}':fontsdir='{ASSETS}',format=yuv420p[out]"
-    if mode == "split":
-        (cx0, cy0, cw, ch), (gx0, gy0, gw, gh) = boxes
-        x, y, w, h = layout.crop_box(layout_info, cw / ch)
-        lift = ",eq=gamma=1.7:saturation=1.1" if layout_info.get("dark") else ""
-        vf = (f"[0:v]split=2[a][b];"
-              f"[a]crop={w}:{h}:{x}:{y},{_upscale(w, cw, ch)}{lift}[cam];"
-              f"[b]crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale={gw}:{gh}:flags=lanczos,setsar=1[game];"
-              f"[1:v][cam]overlay={cx0}:{cy0}:shortest=1:eof_action=endall[t];"
-              f"[t][game]overlay={gx0}:{gy0}:shortest=1,{subs}")
-    else:
-        (x0, y0, bw, bh), = boxes
-        x, y, w, h = layout.crop_box(layout_info, bw / bh)
-        vf = (f"[0:v]crop={w}:{h}:{x}:{y},{_upscale(w, bw, bh)}[v];"
-              f"[1:v][v]overlay={x0}:{y0}:shortest=1,{subs}")
+    boxes = panel_boxes(mode)
+    names = [n for n in boxes if n in plan["crops"]]
+    parts = [f"[0:v]split={len(names)}" + "".join(f"[s{i}]" for i in range(len(names))) if len(names) > 1
+             else "[0:v]null[s0]"]
+    for i, n in enumerate(names):
+        bw, bh = boxes[n][2], boxes[n][3]
+        parts.append(f"[s{i}]{_crop_chain(plan['crops'][n], bw, bh)}[p{i}]")
+    cur = "[1:v]"
+    for i, n in enumerate(names):
+        x0, y0, bw, bh = boxes[n]
+        nxt = f"[o{i}]"
+        parts.append(f"{cur}[p{i}]overlay={x0}:{y0}:shortest=1:eof_action=endall{nxt}")
+        cur = nxt
+    post = []
+    if "bubble" in names:
+        x0, y0, bw, bh = boxes["bubble"]
+        post.append(f"drawbox=x={x0 - BORDER}:y={y0 - BORDER}:w={bw + 2 * BORDER}:h={bh + 2 * BORDER}"
+                    f":color=white:t={BORDER}")
+    post.append(f"subtitles='{ass}':fontsdir='{ASSETS}',format=yuv420p[out]")
+    parts.append(f"{cur}{','.join(post)}")
+    vf = ";".join(parts)
     cmd = [
         "ffmpeg", "-y", "-loglevel", "error",
         "-i", segment, "-loop", "1", "-i", bg,
