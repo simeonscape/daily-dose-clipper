@@ -62,6 +62,9 @@
     ],
     "2936316823": [
       7065.0
+    ],
+    "2935588241": [
+      13148.0
     ]
   },
   "posted": [
@@ -489,6 +492,25 @@
       "slot": "2026-11-23T20:00:00+00:00",
       "quota_day": "2026-11-23",
       "layout": "split"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2935588241",
+      "t": 13148.0,
+      "score": 1546,
+      "viral": 0.4181,
+      "source": "clips",
+      "video_id": "oIUG7DtWkug",
+      "title": "No words (TypicalGamer) \ud83d\ude33",
+      "clip_title": "No words",
+      "clip_ids": [
+        "CarelessHeartlessPonyPipeHype-vbuEvBobMjddRobW"
+      ],
+      "day": "2026-11-23",
+      "at": "2026-11-23T22:00:56+00:00",
+      "slot": "2026-11-23T22:00:00+00:00",
+      "quota_day": "2026-11-23",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -523,6 +545,7 @@
     "BenevolentRepleteRatTriHard-DythDw2ua2Wi67Mt",
     "PunchySpeedyCasetteRalpherZ-oNhHMUfHYqCFg6lg",
     "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv",
-    "OddSweetToadMVGame-GtoXLBw9qz8XcLCg"
+    "OddSweetToadMVGame-GtoXLBw9qz8XcLCg",
+    "CarelessHeartlessPonyPipeHype-vbuEvBobMjddRobW"
   ]
 }
