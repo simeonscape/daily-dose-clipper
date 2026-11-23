@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # to save channel.json
+  contents: write   # to save channel.json and history.json
 
 concurrency:
   group: stats
@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.name "clipper-bot"
           git config user.email "clipper-bot@users.noreply.github.com"
-          git add channel.json
+          git add channel.json history.json
           if ! git diff --cached --quiet; then
             git commit -m "Update channel stats"
             for i in 1 2 3; do
