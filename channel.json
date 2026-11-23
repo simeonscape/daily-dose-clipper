@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T01:52:47+00:00",
+  "updated": "2026-11-23T02:53:30+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-22",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 205,
-    "videos": 23
+    "videos": 24
   },
   "today_videos": [
+    {
+      "id": "fibO8BE07z0",
+      "title": "Fan sent Jynxzi a hard sock 💀",
+      "published": "2026-11-23T02:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/fibO8BE07z0/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/fibO8BE07z0",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-22"
+    },
     {
       "id": "5rlOB15jgHM",
       "title": "Wait for TypicalGamer's reaction 😱",
@@ -79,6 +93,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "fibO8BE07z0",
+      "title": "Fan sent Jynxzi a hard sock 💀",
+      "published": "2026-11-23T02:00:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/fibO8BE07z0/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/fibO8BE07z0",
+      "privacy": "public",
+      "duration": "PT59S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-22"
+    },
     {
       "id": "5rlOB15jgHM",
       "title": "Wait for TypicalGamer's reaction 😱",
@@ -311,7 +339,7 @@
       "url": "https://youtube.com/shorts/Gp13zIuvUTo",
       "privacy": "public",
       "duration": "PT1M1S",
-      "views": 84,
+      "views": 83,
       "likes": 2,
       "comments": 1,
       "streamer": "ohnepixel",
@@ -344,20 +372,6 @@
       "comments": 1,
       "streamer": "Kai Cenat",
       "day": "2026-11-19"
-    },
-    {
-      "id": "VSleLhcEnqo",
-      "title": "This CaseOh moment is too funny",
-      "published": "2026-11-18T13:30:18Z",
-      "thumbnail": "https://i.ytimg.com/vi/VSleLhcEnqo/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/VSleLhcEnqo",
-      "privacy": "public",
-      "duration": "PT57S",
-      "views": 9,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "CaseOh",
-      "day": "2026-11-18"
     }
   ]
 }
