@@ -212,7 +212,16 @@ def main():
 
     prune_chats()
     # streamers posted longest ago go first, so everyone gets turns
-    order = sorted(streamers, key=lambda s: last_posted(state, s))
+    # Streamers who are live right now go last: the live watcher may still
+    # catch a viral moment of theirs today, which beats a scheduled pick.
+    try:
+        live_now = set(twitch.live_streams([s["login"] for s in streamers]))
+    except Exception:
+        live_now = set()
+    if live_now:
+        print("Live right now (left for the live watcher if possible): "
+              + ", ".join(s["name"] for s in streamers if s["login"].lower() in live_now))
+    order = sorted(streamers, key=lambda s: (s["login"].lower() in live_now, last_posted(state, s)))
     made, errors = [], 0
     for s in order:
         if len(made) >= want:
