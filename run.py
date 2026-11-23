@@ -40,7 +40,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "engine"))
 import moments, pipeline, safety, spikes, twitch  # noqa: E402
 import state as st  # noqa: E402
-from slots import posted_today, quota_day  # noqa: E402
+from slots import done_today, enabled_streamers, posted_today, quota_day  # noqa: E402
 
 WORK = os.path.join(HERE, "work")
 OUT = os.path.join(HERE, "output")
@@ -130,12 +130,21 @@ def main():
 
     with open(os.path.join(HERE, "config.yaml")) as f:
         cfg = yaml.safe_load(f)
-    streamers = [s for s in cfg["streamers"] if s.get("platform", "twitch") == "twitch" and s.get("enabled", True)]
+    streamers = enabled_streamers(cfg)
+    state = st.load()
     if args.streamer and args.streamer != "all":
         streamers = [s for s in streamers if s["login"] == args.streamer]
         if not streamers:
             sys.exit(f"No enabled streamer with login {args.streamer} in config.yaml")
-    state = st.load()
+    elif not args.dry_run:
+        # one Short per streamer per day: whoever already got one (live or scheduled) is done
+        done = done_today(state, cfg)
+        if done:
+            print("Already posted today: " + ", ".join(sorted(done)))
+        streamers = [s for s in streamers if s["name"] not in done]
+        if not streamers:
+            print("Every streamer already has a Short today. Nothing to do.")
+            return
     want = min(args.clips or cfg.get("clips_per_run", 1), len(streamers))
     slot = None
     if args.slot:

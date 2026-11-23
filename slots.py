@@ -32,6 +32,32 @@ def posted_today(state, when=None):
     return sum(1 for p in state["posted"] if p.get("video_id") and p.get("quota_day", p.get("day")) == today)
 
 
+def local_day(cfg, when=None):
+    tz = ZoneInfo(cfg.get("post_timezone", "America/New_York"))
+    return (when or datetime.now(timezone.utc)).astimezone(tz).date().isoformat()
+
+
+def done_today(state, cfg, when=None):
+    """Streamers who already have a Short today (posting time zone), live or
+    scheduled. Each streamer gets one Short a day; a deleted one frees them up."""
+    today = local_day(cfg, when)
+    out = set()
+    for p in state["posted"]:
+        if not p.get("video_id") or p.get("deleted"):
+            continue
+        try:
+            day = local_day(cfg, datetime.fromisoformat(p["at"])) if p.get("at") else p.get("day")
+        except ValueError:
+            day = p.get("day")
+        if day == today:
+            out.add(p["streamer"])
+    return out
+
+
+def enabled_streamers(cfg):
+    return [s for s in cfg["streamers"] if s.get("platform", "twitch") == "twitch" and s.get("enabled", True)]
+
+
 def slot_times(cfg, now):
     """Posting times for yesterday, today and tomorrow, in UTC."""
     tz = ZoneInfo(cfg.get("post_timezone", "America/New_York"))
@@ -50,6 +76,9 @@ def due_slot(cfg, state, now=None):
     filled = {p["slot"] for p in state["posted"] if p.get("slot") and p.get("video_id")}
     for t in slot_times(cfg, now):
         if now - LATE <= t <= now + EARLY and t.isoformat() not in filled:
+            names = {s["name"] for s in enabled_streamers(cfg)}
+            if names and names <= done_today(state, cfg, t):
+                return None      # every streamer already has a Short that day (e.g. from live)
             if posted_today(state, t) >= cfg.get("max_uploads_per_day", 6):
                 return None      # that day's YouTube quota is used up
             return t
