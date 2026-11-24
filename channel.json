@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T16:02:13+00:00",
+  "updated": "2026-11-24T17:27:00+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-24",
   "post_times": [
@@ -17,11 +17,40 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 265,
-    "videos": 29
+    "views": 298,
+    "videos": 30
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "e6eQbP3NuIo",
+      "title": "Kai wildn (Kai Cenat) 😂",
+      "published": "2026-11-24T17:00:25Z",
+      "thumbnail": "https://i.ytimg.com/vi/e6eQbP3NuIo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/e6eQbP3NuIo",
+      "privacy": "public",
+      "duration": "PT48S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-24"
+    }
+  ],
   "recent": [
+    {
+      "id": "e6eQbP3NuIo",
+      "title": "Kai wildn (Kai Cenat) 😂",
+      "published": "2026-11-24T17:00:25Z",
+      "thumbnail": "https://i.ytimg.com/vi/e6eQbP3NuIo/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/e6eQbP3NuIo",
+      "privacy": "public",
+      "duration": "PT48S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-24"
+    },
     {
       "id": "UBzU4XRhW-4",
       "title": "Jynxzi is different 🐐",
@@ -72,7 +101,7 @@
       "url": "https://youtube.com/shorts/t4zo2sLUZVo",
       "privacy": "public",
       "duration": "PT1M",
-      "views": 10,
+      "views": 12,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -286,20 +315,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
-      "day": "2026-11-20"
-    },
-    {
-      "id": "F9cEqInYzeo",
-      "title": "Kai cenat argues with his new girlfriend 😂",
-      "published": "2026-11-20T17:00:19Z",
-      "thumbnail": "https://i.ytimg.com/vi/F9cEqInYzeo/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/F9cEqInYzeo",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 2,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
       "day": "2026-11-20"
     }
   ]
