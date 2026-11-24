@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T23:23:43+00:00",
+  "updated": "2026-11-24T00:19:54+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-23",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 238,
-    "videos": 27
+    "videos": 28
   },
   "today_videos": [
+    {
+      "id": "Y4hPTd-AX94",
+      "title": "Father of the Year Award (ohnepixel) 😂",
+      "published": "2026-11-24T00:00:17Z",
+      "thumbnail": "https://i.ytimg.com/vi/Y4hPTd-AX94/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Y4hPTd-AX94",
+      "privacy": "public",
+      "duration": "PT49S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-23"
+    },
     {
       "id": "oIUG7DtWkug",
       "title": "No words (TypicalGamer) 😳",
@@ -65,6 +79,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "Y4hPTd-AX94",
+      "title": "Father of the Year Award (ohnepixel) 😂",
+      "published": "2026-11-24T00:00:17Z",
+      "thumbnail": "https://i.ytimg.com/vi/Y4hPTd-AX94/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Y4hPTd-AX94",
+      "privacy": "public",
+      "duration": "PT49S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-23"
+    },
     {
       "id": "oIUG7DtWkug",
       "title": "No words (TypicalGamer) 😳",
@@ -329,20 +357,6 @@
       "likes": 1,
       "comments": 1,
       "streamer": "Jynxzi",
-      "day": "2026-11-19"
-    },
-    {
-      "id": "w7MkQwhzXKY",
-      "title": "Tg gets the token (TypicalGamer) 😳",
-      "published": "2026-11-20T00:00:31Z",
-      "thumbnail": "https://i.ytimg.com/vi/w7MkQwhzXKY/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/w7MkQwhzXKY",
-      "privacy": "public",
-      "duration": "PT29S",
-      "views": 12,
-      "likes": 1,
-      "comments": 1,
-      "streamer": "TypicalGamer",
       "day": "2026-11-19"
     }
   ]
