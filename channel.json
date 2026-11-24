@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T18:20:44+00:00",
+  "updated": "2026-11-24T19:31:44+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-24",
   "post_times": [
@@ -18,7 +18,7 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 298,
-    "videos": 30
+    "videos": 29
   },
   "today_videos": [
     {
@@ -101,7 +101,7 @@
       "url": "https://youtube.com/shorts/t4zo2sLUZVo",
       "privacy": "public",
       "duration": "PT1M",
-      "views": 12,
+      "views": 15,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
