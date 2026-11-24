@@ -1,0 +1,10 @@
+requests
+pyyaml
+pillow
+faster-whisper
+google-api-python-client
+google-auth
+opencv-python-headless
+numpy
+tzdata
+nudenet
