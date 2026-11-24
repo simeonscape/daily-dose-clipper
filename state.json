@@ -66,7 +66,8 @@
       7065.0
     ],
     "2935588241": [
-      13148.0
+      13148.0,
+      3601.0
     ],
     "2933599748": [
       592.33
@@ -598,6 +599,25 @@
       "slot": "2026-11-24T20:00:00+00:00",
       "quota_day": "2026-11-24",
       "layout": "split"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2935588241",
+      "t": 3601.0,
+      "score": 3111,
+      "viral": 0.388,
+      "source": "clips",
+      "video_id": "GNwuckdozmg",
+      "title": "Typical gamer finds unknown island with a lost phone on it (TypicalGamer) \ud83d\ude33",
+      "clip_title": "Typical gamer finds unknown island with a lost phone on it",
+      "clip_ids": [
+        "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm"
+      ],
+      "day": "2026-11-24",
+      "at": "2026-11-24T22:00:02+00:00",
+      "slot": "2026-11-24T22:00:00+00:00",
+      "quota_day": "2026-11-24",
+      "layout": "pip"
     }
   ],
   "used_clips": [
@@ -640,6 +660,7 @@
     "VenomousKathishAardvarkKappaWealth-Hxj1rxekaa3BsOQn",
     "EnthusiasticHumbleGaurBuddhaBar-8zMmWpT7_POQpgxf",
     "PeppyFunGaurPunchTrees-edM6JKBegYQ6zSk-",
-    "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q"
+    "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q",
+    "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm"
   ]
 }
