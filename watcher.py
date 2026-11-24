@@ -4,19 +4,24 @@ clipper the moment one explodes.
     python watcher.py              # run (on GitHub this is the "Live watcher" workflow)
     python watcher.py --dry-run    # only print the signals
 
-It never stops on its own (GitHub ends a run after ~6 hours; the workflow
-starts the next one straight away). What it does, all the time:
+It never stops: GitHub ends a run after ~6 hours, so near the end each run
+starts its own replacement and keeps watching until the new one is warmed up
+(handover), so there's no gap. A run every 15 minutes is only a safety net:
+it quits at once when a watcher is already running.
+What it does, all the time:
   - Every minute: which of the streamers are live, and how many viewers.
-  - Reads every live streamer's chat (read-only, anonymous).
-  - Chat speed per 1,000 viewers = messages a minute / (viewers / 1000), over
-    the last 20 s. Over `live.chat_per_1000`, and clearly above that stream's
+  - Reads every live streamer's chat as it comes in (read-only, anonymous).
+  - Every second: chat speed per 1,000 viewers = messages a minute /
+    (viewers / 1000), over the last 20 s. Over `live.chat_per_1000`, and clearly above that stream's
     own normal: a viral moment. It sends a signal to the "Clip now" workflow
     (streamer, which VOD, the second it happened), which cuts the moment
     from the stream's live VOD, edits it and posts it.
   - One Short per streamer per day: a streamer who already has one (live or
     scheduled) is checked off and gets no more signals that day.
-  - Every 10 minutes it logs each stream's normal and peak chat speed per
-    1,000 viewers, so the threshold can be tuned from real numbers.
+  - Every minute (while someone is live) it logs each stream's chat speed
+    now, normal and peak per 1,000 viewers, so the threshold can be tuned
+    from real numbers. These log lines are only a summary: chat is checked
+    every second.
 Light on purpose: no video here, only chat, so it can run around the clock.
 """
 import argparse
@@ -38,6 +43,50 @@ from slots import done_today, enabled_streamers, local_day  # noqa: E402
 
 DEFAULTS = {"enabled": True, "chat_per_1000": 100, "min_chat_z": 3.0, "rate_window_s": 20,
             "run_hours": 5.75, "retry_after_min": 30}
+HANDOVER_WARM_S = 150      # a new run is warmed up (knows each chat's normal) after this long
+HANDOVER_MAX_S = 8 * 60    # the old run stops by then, warmed up or not
+
+
+def gh(method, path, **kw):
+    """GitHub API call for this repo, or None when not on GitHub / it failed."""
+    token, repo = os.environ.get("GITHUB_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
+    if not (token and repo):
+        return None
+    try:
+        r = requests.request(method, f"https://api.github.com/repos/{repo}/{path}", timeout=30,
+                             headers={"Authorization": f"Bearer {token}",
+                                      "Accept": "application/vnd.github+json"}, **kw)
+    except requests.RequestException as e:
+        print(f"(GitHub API: {e})")
+        return None
+    if r.status_code >= 300:
+        print(f"(GitHub API {path}: {r.status_code} {r.text[:200]})")
+        return None
+    return r.json() if r.content else {}
+
+
+def other_watchers():
+    """Other running Live watcher runs: [(run id, seconds since it started)].
+    None if it couldn't be checked."""
+    data = gh("GET", "actions/workflows/watcher.yml/runs", params={"status": "in_progress", "per_page": 20})
+    if data is None:
+        return None
+    me, now, out = str(os.environ.get("GITHUB_RUN_ID", "")), time.time(), []
+    for run in data.get("workflow_runs", []):
+        if str(run["id"]) == me:
+            continue
+        started = datetime.fromisoformat((run.get("run_started_at") or run["created_at"]).replace("Z", "+00:00"))
+        out.append((run["id"], now - started.timestamp()))
+    return out
+
+
+def start_replacement():
+    """Start the next watcher run (it takes over when it's warmed up)."""
+    ok = gh("POST", "actions/workflows/watcher.yml/dispatches",
+            json={"ref": "main", "inputs": {"handover": "true"}}) is not None
+    print("Started the next watcher run; handing over once it's warmed up" if ok
+          else "Couldn't start the next watcher run; the 15-minute safety net will")
+    return ok
 
 
 def load_cfg():
@@ -108,24 +157,63 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="print signals, don't start the clipper")
     ap.add_argument("--hours", type=float, help=argparse.SUPPRESS)
+    ap.add_argument("--handover", action="store_true",
+                    help="started by the previous run: watch, but stay quiet until it has stopped")
     args = ap.parse_args()
     cfg, lcfg = load_cfg()
     if not lcfg["enabled"]:
         print("The live watcher is off (live.enabled in config.yaml).")
         return
+    on_github = os.environ.get("GITHUB_ACTIONS") == "true"
+    if on_github and not args.handover:
+        others = other_watchers()
+        if others:
+            print(f"A watcher is already running (run {others[0][0]}), so this one isn't needed.")
+            return
     streamers = enabled_streamers(cfg)
     delay = cfg.get("chat_delay_s", 6)
     print(f"Watching {', '.join(s['name'] for s in streamers)} for chat over "
-          f"{lcfg['chat_per_1000']}/min per 1,000 viewers.")
+          f"{lcfg['chat_per_1000']}/min per 1,000 viewers, checked every second.")
 
+    started_at = time.time()
     watches = {}
     signaled = {}                     # streamer -> (day, time of last signal)
     state, next_state = None, 0.0
     next_check = next_log = 0.0
     end = time.time() + 3600 * (args.hours or lcfg["run_hours"])
+    hard_end = end + HANDOVER_MAX_S
+    # handover: the new run watches (to learn each chat's normal) but only
+    # sends signals once the previous run has stopped, so nothing is sent twice
+    sending, quiet_until = not (args.handover and on_github), time.time() + HANDOVER_MAX_S + 120
+    replacement = False            # next run started (old run)
+    next_peer = 0.0
+    if not sending:
+        print("Taking over from the previous run: warming up, it keeps watching meanwhile.")
     try:
-        while time.time() < end:
+        while time.time() < hard_end:
             now = time.time()
+            if now >= next_peer and (not sending or (on_github and now >= end)):
+                next_peer = now + 10
+                if not sending:
+                    others = other_watchers()
+                    older = [o for o in (others or []) if o[1] > now - started_at]
+                    if (others is not None and not older) or now >= quiet_until:
+                        sending = True
+                        print("Previous run has stopped: this run is now the one sending signals.")
+                else:
+                    if not replacement:
+                        replacement = start_replacement()
+                        if not replacement:
+                            end = hard_end      # keep going to the limit; the cron safety net follows
+                    else:
+                        others = other_watchers() or []
+                        newer = [o for o in others if o[1] < now - started_at]
+                        calm = not any(w.trig.open for w in watches.values())
+                        if any(age >= HANDOVER_WARM_S for _, age in newer) and calm:
+                            print("The next run is warmed up; handing over.")
+                            break
+            elif not on_github and now >= end:
+                break
             if now >= next_state:
                 state, next_state = fresh_state(), now + 300
             day = local_day(cfg)
@@ -153,20 +241,26 @@ def main():
                                   f"({watches[login].viewers:,} viewers)"
                                   + (" (already has a Short today)" if s["name"] in done else ""))
             if now >= next_log:
-                next_log = now + 600
+                next_log = now + (60 if watches else 600)
                 stamp = f"{datetime.now(timezone.utc):%H:%M} UTC"
                 if not watches:
                     print(f"{stamp}: nobody live. Done today: {', '.join(sorted(done)) or 'nobody'}")
                 for w in watches.values():
-                    print(f"{stamp} {w.s['name']}: {w.viewers:,} viewers, chat {w.trig.typical():.0f}/min "
-                          f"per 1,000 normally, peak {w.trig.peak_rate:.0f}"
+                    now_rate = w.trig.rates[-1] if w.trig.rates else 0.0
+                    print(f"{stamp} {w.s['name']}: {w.viewers:,} viewers, chat {now_rate:.0f}/min per 1,000 now, "
+                          f"{w.trig.typical():.0f} normally, peak {w.trig.peak_rate:.0f}"
                           + (", done today" if w.s["name"] in done else "")
                           + ("" if w.chat.connected else " (chat reconnecting)"))
             for w in watches.values():
+                if w.viewers <= 0:          # Twitch shows 0 for the first minutes; per-1,000 means nothing yet
+                    continue
                 hit = w.trig.update(w.chat.window(now - 320, now), now, w.viewers)
                 if not hit:
                     continue
                 name = w.s["name"]
+                if not sending:
+                    print(f"[{name}] chat at {hit['rate']:.0f}/min per 1,000 (the previous run handles it)")
+                    continue
                 last = signaled.get(name)
                 if name in done:
                     print(f"[{name}] chat at {hit['rate']:.0f}/min per 1,000, but {name} already has a Short today")
