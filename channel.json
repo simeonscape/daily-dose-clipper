@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T21:53:08+00:00",
+  "updated": "2026-11-24T22:53:33+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-24",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 298,
-    "videos": 31
+    "videos": 32
   },
   "today_videos": [
+    {
+      "id": "GNwuckdozmg",
+      "title": "Typical gamer finds unknown island with a lost phone on it (TypicalGamer) 😳",
+      "published": "2026-11-24T22:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/GNwuckdozmg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/GNwuckdozmg",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-24"
+    },
     {
       "id": "JpUI1avHZtg",
       "title": "Get away (CaseOh) 😂",
@@ -51,6 +65,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "GNwuckdozmg",
+      "title": "Typical gamer finds unknown island with a lost phone on it (TypicalGamer) 😳",
+      "published": "2026-11-24T22:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/GNwuckdozmg/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/GNwuckdozmg",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-24"
+    },
     {
       "id": "JpUI1avHZtg",
       "title": "Get away (CaseOh) 😂",
@@ -129,7 +157,7 @@
       "url": "https://youtube.com/shorts/t4zo2sLUZVo",
       "privacy": "public",
       "duration": "PT1M",
-      "views": 15,
+      "views": 14,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -315,20 +343,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
-      "day": "2026-11-20"
-    },
-    {
-      "id": "LCOnn99Ex_E",
-      "title": "Neuron activation (ohnepixel) 😳",
-      "published": "2026-11-20T22:00:30Z",
-      "thumbnail": "https://i.ytimg.com/vi/LCOnn99Ex_E/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/LCOnn99Ex_E",
-      "privacy": "public",
-      "duration": "PT1M1S",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "ohnepixel",
       "day": "2026-11-20"
     }
   ]
