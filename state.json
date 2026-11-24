@@ -65,6 +65,9 @@
     ],
     "2935588241": [
       13148.0
+    ],
+    "2933599748": [
+      592.33
     ]
   },
   "posted": [
@@ -511,6 +514,26 @@
       "slot": "2026-11-23T22:00:00+00:00",
       "quota_day": "2026-11-23",
       "layout": "split"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2933599748",
+      "t": 592.33,
+      "score": 35041,
+      "viral": 0.4552,
+      "source": "clips",
+      "video_id": "Y4hPTd-AX94",
+      "title": "Father of the Year Award (ohnepixel) \ud83d\ude02",
+      "clip_title": "Father of the Year Award",
+      "clip_ids": [
+        "BlindingGleamingDonkeyOpieOP-LMiLWd2l1xgmvbEM",
+        "CrunchyFaintTriangleHoneyBadger-EahOACAOAC-1e1-O"
+      ],
+      "day": "2026-11-24",
+      "at": "2026-11-24T00:00:02+00:00",
+      "slot": "2026-11-24T00:00:00+00:00",
+      "quota_day": "2026-11-23",
+      "layout": "pip"
     }
   ],
   "used_clips": [
@@ -546,6 +569,8 @@
     "PunchySpeedyCasetteRalpherZ-oNhHMUfHYqCFg6lg",
     "DependableAmazingSwordDogFace-JNn5o7pENT_NcVkv",
     "OddSweetToadMVGame-GtoXLBw9qz8XcLCg",
-    "CarelessHeartlessPonyPipeHype-vbuEvBobMjddRobW"
+    "CarelessHeartlessPonyPipeHype-vbuEvBobMjddRobW",
+    "BlindingGleamingDonkeyOpieOP-LMiLWd2l1xgmvbEM",
+    "CrunchyFaintTriangleHoneyBadger-EahOACAOAC-1e1-O"
   ]
 }
