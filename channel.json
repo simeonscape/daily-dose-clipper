@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-24T03:54:36+00:00",
+  "updated": "2026-11-24T05:00:04+00:00",
   "timezone": "America/New_York",
-  "today": "2026-11-23",
+  "today": "2026-11-24",
   "post_times": [
     "12:00",
     "15:00",
@@ -17,81 +17,10 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 265,
+    "views": 238,
     "videos": 29
   },
-  "today_videos": [
-    {
-      "id": "UBzU4XRhW-4",
-      "title": "Jynxzi is different 🐐",
-      "published": "2026-11-24T02:00:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/UBzU4XRhW-4/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/UBzU4XRhW-4",
-      "privacy": "public",
-      "duration": "PT38S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "Y4hPTd-AX94",
-      "title": "Father of the Year Award (ohnepixel) 😂",
-      "published": "2026-11-24T00:00:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/Y4hPTd-AX94/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/Y4hPTd-AX94",
-      "privacy": "public",
-      "duration": "PT49S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "ohnepixel",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "oIUG7DtWkug",
-      "title": "No words (TypicalGamer) 😳",
-      "published": "2026-11-23T22:01:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/oIUG7DtWkug/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/oIUG7DtWkug",
-      "privacy": "public",
-      "duration": "PT30S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "TypicalGamer",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "t4zo2sLUZVo",
-      "title": "CaseOh's chat couldn't believe it",
-      "published": "2026-11-23T20:00:28Z",
-      "thumbnail": "https://i.ytimg.com/vi/t4zo2sLUZVo/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/t4zo2sLUZVo",
-      "privacy": "public",
-      "duration": "PT1M",
-      "views": 4,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "CaseOh",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "w6vpy2HQB_E",
-      "title": "Lucia and Jason in a steamy moment🔥 (Kai Cenat)",
-      "published": "2026-11-23T17:22:06Z",
-      "thumbnail": "https://i.ytimg.com/vi/w6vpy2HQB_E/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/w6vpy2HQB_E",
-      "privacy": "public",
-      "duration": "PT28S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
-      "day": "2026-11-23"
-    }
-  ],
+  "today_videos": [],
   "recent": [
     {
       "id": "UBzU4XRhW-4",
@@ -185,7 +114,7 @@
       "url": "https://youtube.com/shorts/5rlOB15jgHM",
       "privacy": "public",
       "duration": "PT30S",
-      "views": 5,
+      "views": 6,
       "likes": 2,
       "comments": 1,
       "streamer": "TypicalGamer",
