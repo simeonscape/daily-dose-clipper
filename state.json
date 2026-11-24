@@ -70,6 +70,9 @@
     ],
     "2933599748": [
       592.33
+    ],
+    "2937666104": [
+      2604.0
     ]
   },
   "posted": [
@@ -576,6 +579,25 @@
       "slot": "2026-11-24T17:00:00+00:00",
       "quota_day": "2026-11-24",
       "layout": "pip"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2937666104",
+      "t": 2604.0,
+      "score": 21258,
+      "viral": 0.4587,
+      "source": "clips",
+      "video_id": "JpUI1avHZtg",
+      "title": "Get away (CaseOh) \ud83d\ude02",
+      "clip_title": "get away",
+      "clip_ids": [
+        "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q"
+      ],
+      "day": "2026-11-24",
+      "at": "2026-11-24T20:00:02+00:00",
+      "slot": "2026-11-24T20:00:00+00:00",
+      "quota_day": "2026-11-24",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -617,6 +639,7 @@
     "RacyFreezingWebDuDudu-L5DqegYwxBAaJyMT",
     "VenomousKathishAardvarkKappaWealth-Hxj1rxekaa3BsOQn",
     "EnthusiasticHumbleGaurBuddhaBar-8zMmWpT7_POQpgxf",
-    "PeppyFunGaurPunchTrees-edM6JKBegYQ6zSk-"
+    "PeppyFunGaurPunchTrees-edM6JKBegYQ6zSk-",
+    "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q"
   ]
 }
