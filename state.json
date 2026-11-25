@@ -84,6 +84,9 @@
     ],
     "2938655753": [
       28888.07
+    ],
+    "2938912600": [
+      482.0
     ]
   },
   "posted": [
@@ -705,6 +708,25 @@
       "slot": "2026-11-25T20:00:00+00:00",
       "quota_day": "2026-11-25",
       "layout": "split"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2938912600",
+      "t": 482.0,
+      "score": 896,
+      "viral": 0.3424,
+      "source": "clips",
+      "video_id": "Nvfeq5up-QI",
+      "title": "Pirate token in gta 6 (TypicalGamer) \ud83d\ude33",
+      "clip_title": "pirate token in gta 6",
+      "clip_ids": [
+        "AthleticStylishWasabiBrainSlug-vgKp_xy912n5alGf"
+      ],
+      "day": "2026-11-25",
+      "at": "2026-11-25T22:00:02+00:00",
+      "slot": "2026-11-25T22:00:00+00:00",
+      "quota_day": "2026-11-25",
+      "layout": "cam"
     }
   ],
   "used_clips": [
@@ -753,6 +775,7 @@
     "SmokyTentativeLegOMGScoots-vJFQwQ-sp_-ZWPrS",
     "MistyFastChickpeaBatChest-1l50Cnz_nbghKxmh",
     "PhilanthropicToughCakeUWot-N9xNYKnP7VTdWpik",
-    "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3"
+    "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3",
+    "AthleticStylishWasabiBrainSlug-vgKp_xy912n5alGf"
   ]
 }
