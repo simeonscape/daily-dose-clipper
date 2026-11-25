@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T01:02:17+00:00",
+  "updated": "2026-11-25T02:36:36+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-24",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 298,
-    "videos": 33
+    "videos": 34
   },
   "today_videos": [
+    {
+      "id": "C_d0bVYTveM",
+      "title": "Levy sees everything (Jynxzi) 😂",
+      "published": "2026-11-25T02:00:23Z",
+      "thumbnail": "https://i.ytimg.com/vi/C_d0bVYTveM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/C_d0bVYTveM",
+      "privacy": "public",
+      "duration": "PT33S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-24"
+    },
     {
       "id": "ZKuZ92UVcfU",
       "title": "Bro Want the ban So bad!! Hahahha (ohnepixel) 😳",
@@ -79,6 +93,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "C_d0bVYTveM",
+      "title": "Levy sees everything (Jynxzi) 😂",
+      "published": "2026-11-25T02:00:23Z",
+      "thumbnail": "https://i.ytimg.com/vi/C_d0bVYTveM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/C_d0bVYTveM",
+      "privacy": "public",
+      "duration": "PT33S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-24"
+    },
     {
       "id": "ZKuZ92UVcfU",
       "title": "Bro Want the ban So bad!! Hahahha (ohnepixel) 😳",
@@ -185,7 +213,7 @@
       "url": "https://youtube.com/shorts/t4zo2sLUZVo",
       "privacy": "public",
       "duration": "PT1M",
-      "views": 18,
+      "views": 19,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -344,20 +372,6 @@
       "comments": 1,
       "streamer": "Kai Cenat",
       "day": "2026-11-21"
-    },
-    {
-      "id": "qVD-xIfew94",
-      "title": "Jump scare (Jynxzi) 💀",
-      "published": "2026-11-21T02:00:34Z",
-      "thumbnail": "https://i.ytimg.com/vi/qVD-xIfew94/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/qVD-xIfew94",
-      "privacy": "public",
-      "duration": "PT57S",
-      "views": 2,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-20"
     }
   ]
 }
