@@ -1,0 +1,132 @@
+# config.yaml settings
+
+Every setting, with its default and what it does. The same comments are in the repo's `config.yaml`.
+
+Per streamer, besides `name`, `login` and `platform: twitch`: `enabled: false` (skip), `cam: [x, y, w, h]` (facecam position as fractions of the screen), `layout: split|pip|cam|game` (force a layout), and `follow`, `game_zoom`, `min_cam_width` (override the `layout:` values).
+
+```yaml
+channel_name: "YOUR CHANNEL NAME"    # set by scripts/configure.py
+
+# Look of every Short: background colour (hex) and the text on the small
+# channel chip at the bottom (defaults to channel_name). Put a square logo at
+# assets/logo.png and each streamer's picture at assets/streamers/<login>.png.
+brand:
+  color: "#D97757"
+  chip_text: ""
+
+# When the Shorts go live, every day. One Short per time, one streamer each,
+# whoever was posted longest ago goes next. Times are in post_timezone (pick
+# your viewers' time zone); the workflow starts about an hour early,
+# makes the Short, and posts it right on time. Change the times here.
+post_timezone: America/New_York
+post_times: ["12:00", "15:00", "17:00", "19:00", "21:00"]
+
+# How many Shorts a manual run makes when you don't pick a number.
+clips_per_run: 1
+max_uploads_per_day: 6    # YouTube's free API quota allows about 6 uploads a day
+
+# Picking the moment: each streamer's most-viewed Twitch clips from the last
+# few days (what viewers actually shared). If there are none, the biggest chat
+# spike in their last stream, weighted toward LOL spam and CLIP IT.
+clip_days: 7
+min_clip_views: 200
+
+# Clip window around the moment
+before_s: 30        # seconds before the moment
+after_s: 30         # seconds after the moment
+chat_delay_s: 6     # chat reacts a few seconds after the moment, so shift back
+min_spike_score: 3.0
+
+# Picking the MOST viral moment. Every candidate gets one score from these
+# signals (each 0 to 1), weighted. The top `shortlist` get chat fetched around
+# them first. Then the Short is centred on the loudest, most chat-heavy point
+# near the moment (`refine`), cut at quiet spots so no sentence is cut in half.
+virality:
+  weights:
+    views: 0.40       # Twitch clip views (log scale, 100k views = 1)
+    clips: 0.10       # how many people clipped the same moment
+    chat: 0.25        # how hard chat exploded compared with normal
+    laughter: 0.10    # share of chat that was KEKW / LMAO / 💀
+    clip_it: 0.05     # people typing CLIP IT
+    recency: 0.10     # newer is better
+  recency_half_life_h: 36
+  shortlist: 5
+  refine: true
+  search_s: 20        # how far the peak may be from where the clip says
+
+# The smart clipper: a Twitch clip or chat spike only says roughly where the
+# moment is; the real highlight can be 30+ seconds earlier or later. So the
+# engine downloads a wider stretch around it and judges what actually
+# happened (transcript, chat, loudness, frames, viewers' clips), then cuts
+# from the setup through the payoff to the end of the reaction. With
+# CLAUDE_CODE_OAUTH_TOKEN set, Claude does the judging (and looks at the
+# frames); otherwise a built-in judge does.
+smart:
+  enabled: true
+  ai: true              # let Claude judge when the token is set
+  context_before: 75    # seconds downloaded before the moment
+  context_after: 60     # and after it
+  min_len: 20           # Short length range, in seconds
+  max_len: 60
+  setup_s: 18           # built-in judge: about this much lead-up before the peak
+
+# 18+ content (GTA strip clubs, nude characters...): found with NudeNet, a
+# small free model that runs on GitHub, and only those spots are blurred while
+# they're on screen. A clip that's explicit for most of its length is skipped
+# and the next-best moment is used instead. Each run saves <clip>_blurred.jpg
+# showing what it blurred.
+safety:
+  enabled: true
+  threshold: 0.45     # lower = blur more (and more false alarms)
+  fps: 2              # frames checked per second
+  pad: 0.3            # grow each box by 30% so nothing peeks out
+  max_explicit_share: 0.35
+  classes: [FEMALE_BREAST_EXPOSED, FEMALE_GENITALIA_EXPOSED, MALE_GENITALIA_EXPOSED,
+            BUTTOCKS_EXPOSED, ANUS_EXPOSED]
+
+# Layout per clip (see engine/framing.py):
+#   split - facecam on top, whole screen below (default with a good facecam)
+#   pip   - gameplay big, following the action, small facecam in the corner
+#           (when the cam is small and would look blurry, or the moment is all game)
+#   cam   - full camera following the face (Just Chatting / IRL)
+#   game  - no camera: the stream, following the action
+# A streamer can force one with `layout: split` (or pip / cam / game).
+layout:
+  allowed: [split, pip, cam, game]
+  follow: true          # move the crop with the action / the face
+  min_cam_width: 300    # facecams narrower than this (in 1080p pixels) use pip
+  pip_when_cam_still: true
+  game_zoom: 1.0        # >1 zooms into the action in split/game layouts (e.g. 1.3)
+
+# Live: the "Live watcher" workflow is always on. It reads the streamers'
+# live chats, and when a stream's chat goes over chat_per_1000 messages a
+# minute per 1,000 viewers (and well above its own normal), it signals the
+# "Clip now" workflow, which cuts that moment from the live VOD and posts it.
+# Each streamer gets ONE Short a day (post_timezone): once they have one,
+# live or scheduled, they're checked off and the scheduled times skip them.
+# The watcher's log shows each stream's normal and peak chat speed every
+# 10 minutes, so you can tune the threshold.
+# `post: false` makes the videos (download them from the Clip now run) without uploading.
+live:
+  enabled: true          # false turns the watcher off
+  post: false
+  chat_per_1000: 100     # messages a minute per 1,000 viewers that counts as viral
+  min_chat_z: 3          # and chat must be this far above the stream's own normal
+  rate_window_s: 20      # chat speed is measured over this many seconds
+
+# quality: leave out for the best (source) quality
+whisper_model: small   # tiny / base / small / medium (bigger = better subtitles, slower)
+privacy: public        # set to private to check videos before they go live
+
+# The facecam is found automatically. Each run saves <clip>_camera.jpg showing
+# what it found (green box). If it picks the wrong spot for a streamer, set it by hand:
+#   cam: [x, y, width, height]   # fractions of the screen, e.g. [0, 0.25, 0.25, 0.3]
+#   layout: pip                  # force a layout (split / pip / cam / game)
+# Check each login on twitch.tv. A streamer with no Twitch VODs is skipped.
+streamers:
+  # One entry per streamer. `login` is the name in their twitch.tv/<login> URL.
+  # Set by scripts/configure.py; edit by hand any time.
+  - name: Example Streamer
+    login: examplestreamer
+    platform: twitch
+```
