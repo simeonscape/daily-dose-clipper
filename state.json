@@ -81,6 +81,9 @@
     ],
     "2939504732": [
       10848.58
+    ],
+    "2938655753": [
+      28888.07
     ]
   },
   "posted": [
@@ -682,6 +685,26 @@
       "slot": "2026-11-25T17:00:00+00:00",
       "quota_day": "2026-11-25",
       "layout": "split"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2938655753",
+      "t": 28888.07,
+      "score": 9760,
+      "viral": 0.4297,
+      "source": "clips",
+      "video_id": "sa8ymSI-aY4",
+      "title": "CaseOh's chat couldn't believe it",
+      "clip_title": "Casoh's soft locked from completing the game by his chat and is now struggling to make money",
+      "clip_ids": [
+        "PhilanthropicToughCakeUWot-N9xNYKnP7VTdWpik",
+        "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3"
+      ],
+      "day": "2026-11-25",
+      "at": "2026-11-25T20:00:02+00:00",
+      "slot": "2026-11-25T20:00:00+00:00",
+      "quota_day": "2026-11-25",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -728,6 +751,8 @@
     "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm",
     "AggressiveTardyDragonHotPokket--9_zAHpPX48qQTS-",
     "SmokyTentativeLegOMGScoots-vJFQwQ-sp_-ZWPrS",
-    "MistyFastChickpeaBatChest-1l50Cnz_nbghKxmh"
+    "MistyFastChickpeaBatChest-1l50Cnz_nbghKxmh",
+    "PhilanthropicToughCakeUWot-N9xNYKnP7VTdWpik",
+    "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3"
   ]
 }
