@@ -70,7 +70,8 @@
       3601.0
     ],
     "2933599748": [
-      592.33
+      592.33,
+      3160.27
     ],
     "2937666104": [
       2604.0
@@ -618,6 +619,25 @@
       "slot": "2026-11-24T22:00:00+00:00",
       "quota_day": "2026-11-24",
       "layout": "pip"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2933599748",
+      "t": 3160.27,
+      "score": 73297,
+      "viral": 0.4351,
+      "source": "clips",
+      "video_id": "ZKuZ92UVcfU",
+      "title": "Bro Want the ban So bad!! Hahahha (ohnepixel) \ud83d\ude33",
+      "clip_title": "Bro Want the ban So bad!! Hahahha",
+      "clip_ids": [
+        "AggressiveTardyDragonHotPokket--9_zAHpPX48qQTS-"
+      ],
+      "day": "2026-11-25",
+      "at": "2026-11-25T00:00:02+00:00",
+      "slot": "2026-11-25T00:00:00+00:00",
+      "quota_day": "2026-11-24",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -661,6 +681,7 @@
     "EnthusiasticHumbleGaurBuddhaBar-8zMmWpT7_POQpgxf",
     "PeppyFunGaurPunchTrees-edM6JKBegYQ6zSk-",
     "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q",
-    "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm"
+    "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm",
+    "AggressiveTardyDragonHotPokket--9_zAHpPX48qQTS-"
   ]
 }
