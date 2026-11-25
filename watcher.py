@@ -12,8 +12,10 @@ What it does, all the time:
   - Every minute: which of the streamers are live, and how many viewers.
   - Reads every live streamer's chat as it comes in (read-only, anonymous).
   - Every second: chat speed per 1,000 viewers = messages a minute /
-    (viewers / 1000), over the last 20 s. Over `live.chat_per_1000`, and clearly above that stream's
-    own normal: a viral moment. It sends a signal to the "Clip now" workflow
+    (viewers / 1000), over the last 20 s. Over `live.chat_per_1000`, clearly above that stream's
+    own normal, AND chat is reacting (enough LOL / CLIP IT / OMG / DAMN-type
+    messages, hellos don't count; the first `live.skip_start_min` minutes of
+    a stream are skipped): a viral moment. It sends a signal to the "Clip now" workflow
     (streamer, which VOD, the second it happened), which cuts the moment
     from the stream's live VOD, edits it and posts it.
   - One Short per streamer per day: a streamer who already has one (live or
@@ -42,6 +44,7 @@ import state as st  # noqa: E402
 from slots import done_today, enabled_streamers, local_day  # noqa: E402
 
 DEFAULTS = {"enabled": True, "chat_per_1000": 100, "min_chat_z": 3.0, "rate_window_s": 20,
+            "min_reaction_share": 0.3, "min_reactions": 8, "skip_start_min": 5,
             "run_hours": 5.75, "retry_after_min": 30}
 HANDOVER_WARM_S = 150      # a new run is warmed up (knows each chat's normal) after this long
 HANDOVER_MAX_S = 8 * 60    # the old run stops by then, warmed up or not
@@ -137,7 +140,9 @@ class Watch:
         self.started = datetime.fromisoformat(stream["started_at"].replace("Z", "+00:00")).timestamp()
         self.chat = live.ChatListener(s["login"], keep_s=400)
         self.trig = live.RateTrigger(threshold=float(lcfg["chat_per_1000"]), window_s=float(lcfg["rate_window_s"]),
-                                     min_z=float(lcfg["min_chat_z"]))
+                                     min_z=float(lcfg["min_chat_z"]),
+                                     min_reaction_share=float(lcfg["min_reaction_share"]),
+                                     min_reactions=int(lcfg["min_reactions"]))
         self.vod = None
         self.chat.start()
 
@@ -173,7 +178,8 @@ def main():
     streamers = enabled_streamers(cfg)
     delay = cfg.get("chat_delay_s", 6)
     print(f"Watching {', '.join(s['name'] for s in streamers)} for chat over "
-          f"{lcfg['chat_per_1000']}/min per 1,000 viewers, checked every second.")
+          f"{lcfg['chat_per_1000']}/min per 1,000 viewers with chat reacting (LOL, CLIP IT, OMG...), "
+          f"checked every second.")
 
     started_at = time.time()
     watches = {}
@@ -258,6 +264,14 @@ def main():
                 if not hit:
                     continue
                 name = w.s["name"]
+                react = f"{hit['reactions']} reactions ({hit['reaction_share']:.0%} of chat)"
+                if hit.get("skipped"):
+                    print(f"[{name}] chat at {hit['rate']:.0f}/min per 1,000, but only {react}: not a moment")
+                    continue
+                if hit["t"] - w.started < 60 * float(lcfg["skip_start_min"]):
+                    print(f"[{name}] chat at {hit['rate']:.0f}/min per 1,000 with {react}, "
+                          f"but the stream only just started: not a moment")
+                    continue
                 if not sending:
                     print(f"[{name}] chat at {hit['rate']:.0f}/min per 1,000 (the previous run handles it)")
                     continue
