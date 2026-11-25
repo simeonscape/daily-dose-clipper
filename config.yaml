@@ -99,6 +99,9 @@ live:
   chat_per_1000: 100     # messages a minute per 1,000 viewers that counts as viral
   min_chat_z: 3          # and chat must be this far above the stream's own normal
   rate_window_s: 20      # chat speed is measured over this many seconds
+  min_reaction_share: 0.3  # and this share of chat must be reactions (LOL, CLIP IT, LMAO, OMG, DAMN, 💀...), not hellos
+  min_reactions: 8       # and at least this many reaction messages
+  skip_start_min: 5      # ignore the first minutes of a stream (everybody saying hello)
 
 # quality: leave out for the best (source) quality
 whisper_model: small   # tiny / base / small / medium (bigger = better subtitles, slower)

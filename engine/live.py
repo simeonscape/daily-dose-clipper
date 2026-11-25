@@ -3,13 +3,15 @@
   ChatListener  - Twitch chat over IRC, read-only and anonymous (no login).
   Detector      - how far chat is above its own normal (robust z-score), with
                   the same weighting as the VOD chat spikes.
-  RateTrigger   - chat speed per 1,000 viewers; fires on a viral moment.
+  RateTrigger   - chat speed per 1,000 viewers; fires on a viral moment,
+                  but only when chat is reacting (LOL, CLIP IT, OMG, DAMN...).
 
 watcher.py uses these to watch the streamers' chats around the clock and
 signal the clipper (the "Clip now" workflow) when one explodes.
 """
 import collections
 import random
+import re
 import socket
 import threading
 import time
@@ -137,17 +139,43 @@ class Detector:
         return None
 
 
+# Words that mean chat is reacting to something (a funny, shocking or hype
+# moment), not just talking. Emoji have no word boundaries, so they're matched
+# on their own.
+REACTION = re.compile(
+    r"\b(LO+L+|LUL\w*|KEKW|KEKL|OMEGALUL|ICANT|LMA+O+|LMFAO|LFMAO|ROFL|HA(HA)+|XD+|"
+    r"CLIP+\s*(IT|THAT|THIS)?|CLIPP+ED|CLIPPING|O+MG+|OH MY GOD|DA+MN+|DAYU+M+|WTF|WHAT THE|"
+    r"NO WAY|NO SHOT|HOLY|INSANE|CRAZY|BRO WHAT|NAH+|DEAD|CRYING|DYING|"
+    r"Pog\w*|POGGERS|monka\w*|LETS+ GO+|GOAT(ED)?|W+ ?(CLIP|MOMENT)|SHEESH)\b"
+    r"|😂|🤣|💀|😭|😱|😳|🔥|🤯", re.IGNORECASE)
+# Hellos and stream-start chat never count, even with a reaction word in them
+GREETING = re.compile(r"\b(hi+|hello+|hey+|heyo|yo+|sup|wassup|good (morning|evening|afternoon)|gm|welcome|"
+                      r"first|early|we'?re live|he'?s live|stream'?s? (up|live|starting)|"
+                      r"W stream|L stream)\b|👋|🫡", re.IGNORECASE)
+
+
+def is_reaction(text):
+    """Is this chat message a reaction (LOL, CLIP IT, OMG, DAMN...) and not a hello?"""
+    return bool(REACTION.search(text)) and not GREETING.search(text)
+
+
 class RateTrigger:
     """Chat speed per 1,000 viewers: messages a minute (measured over the last
     `window_s` seconds) divided by viewers / 1000.
 
     A moment fires when the rate goes over `threshold` AND chat is clearly
     faster than this stream's own normal (`min_z`), so a chat that's always
-    fast doesn't fire all day. It reports the peak once chat slows down again.
+    fast doesn't fire all day, AND chat is reacting: at least
+    `min_reaction_share` of the messages (and `min_reactions` of them) are
+    LOL / CLIP IT / OMG / DAMN-type messages, not hellos. That keeps out a
+    stream start where everybody says hello. It reports the peak once chat
+    slows down again.
     """
 
-    def __init__(self, threshold=100.0, window_s=20.0, min_z=3.0, cooldown_s=120.0):
+    def __init__(self, threshold=100.0, window_s=20.0, min_z=3.0, cooldown_s=120.0,
+                 min_reaction_share=0.3, min_reactions=8):
         self.threshold, self.window_s, self.min_z, self.cooldown_s = threshold, window_s, min_z, cooldown_s
+        self.min_reaction_share, self.min_reactions = min_reaction_share, min_reactions
         self.z = Detector(warmup_s=90, window_s=window_s)
         self.open = None
         self.last = 0.0
@@ -158,8 +186,15 @@ class RateTrigger:
         n = sum(1 for t, _ in messages if now - self.window_s < t <= now)
         return n * 60.0 / self.window_s / max(1.0, viewers / 1000.0)
 
+    def reactions(self, messages, now):
+        """(reaction messages, share of all messages) over the last `window_s` seconds."""
+        recent = [m for t, m in messages if now - self.window_s < t <= now]
+        n = sum(1 for m in recent if is_reaction(m))
+        return n, n / max(1, len(recent))
+
     def update(self, messages, now, viewers):
-        """Returns a finished moment {t, rate, z} or None. Call every second."""
+        """Returns a finished moment {t, rate, z, reactions, reaction_share} or None.
+        Call every second."""
         if self.z.started is None:
             self.z.started = now
         r = self.rate(messages, now, viewers)
@@ -167,16 +202,24 @@ class RateTrigger:
         self.peak_rate = max(self.peak_rate, r)
         warm = now - self.z.started >= self.z.warmup_s
         if self.open:
+            n, share = self.reactions(messages, now)
+            if share > self.open["reaction_share"]:
+                self.open.update(reactions=max(n, self.open["reactions"]), reaction_share=share)
             if r > self.open["rate"]:
                 z, _ = self.z.z_now(messages, now)
                 self.open.update(t=now - self.window_s / 2, rate=r, z=max(z, self.open["z"]))
             if r < 0.6 * self.threshold or now - self.open["t"] > 45:
                 done, self.open = self.open, None
                 self.last = now
-                return done if done["z"] >= self.min_z else None
+                if done["z"] < self.min_z:
+                    return None
+                if done["reactions"] < self.min_reactions or done["reaction_share"] < self.min_reaction_share:
+                    done["skipped"] = "chat was fast but not reacting (no LOL / CLIP IT / OMG...)"
+                return done
         elif warm and r >= self.threshold and now - self.last >= self.cooldown_s:
             z, _ = self.z.z_now(messages, now)
-            self.open = {"t": now - self.window_s / 2, "rate": r, "z": z}
+            n, share = self.reactions(messages, now)
+            self.open = {"t": now - self.window_s / 2, "rate": r, "z": z, "reactions": n, "reaction_share": share}
         return None
 
     def typical(self):
