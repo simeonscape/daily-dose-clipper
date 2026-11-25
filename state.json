@@ -75,6 +75,9 @@
     ],
     "2937666104": [
       2604.0
+    ],
+    "2938664561": [
+      9334.26
     ]
   },
   "posted": [
@@ -638,6 +641,25 @@
       "slot": "2026-11-25T00:00:00+00:00",
       "quota_day": "2026-11-24",
       "layout": "split"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2938664561",
+      "t": 9334.26,
+      "score": 2967,
+      "viral": 0.5849,
+      "source": "clips",
+      "video_id": "C_d0bVYTveM",
+      "title": "Levy sees everything (Jynxzi) \ud83d\ude02",
+      "clip_title": "Levy sees everything",
+      "clip_ids": [
+        "SmokyTentativeLegOMGScoots-vJFQwQ-sp_-ZWPrS"
+      ],
+      "day": "2026-11-25",
+      "at": "2026-11-25T02:00:01+00:00",
+      "slot": "2026-11-25T02:00:00+00:00",
+      "quota_day": "2026-11-24",
+      "layout": "pip"
     }
   ],
   "used_clips": [
@@ -682,6 +704,7 @@
     "PeppyFunGaurPunchTrees-edM6JKBegYQ6zSk-",
     "SmoggyCleverMosquitoTBTacoRight-RVBfPSPbe5p5k44q",
     "LightHungryStinkbugRitzMitz--9h2hfQUsrxODcRm",
-    "AggressiveTardyDragonHotPokket--9_zAHpPX48qQTS-"
+    "AggressiveTardyDragonHotPokket--9_zAHpPX48qQTS-",
+    "SmokyTentativeLegOMGScoots-vJFQwQ-sp_-ZWPrS"
   ]
 }
