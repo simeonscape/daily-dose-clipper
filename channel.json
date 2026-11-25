@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T23:46:37+00:00",
+  "updated": "2026-11-25T01:02:17+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-24",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 298,
-    "videos": 32
+    "videos": 33
   },
   "today_videos": [
+    {
+      "id": "ZKuZ92UVcfU",
+      "title": "Bro Want the ban So bad!! Hahahha (ohnepixel) 😳",
+      "published": "2026-11-25T00:00:27Z",
+      "thumbnail": "https://i.ytimg.com/vi/ZKuZ92UVcfU/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/ZKuZ92UVcfU",
+      "privacy": "public",
+      "duration": "PT26S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-24"
+    },
     {
       "id": "GNwuckdozmg",
       "title": "Typical gamer finds unknown island with a lost phone on it (TypicalGamer) 😳",
@@ -29,7 +43,7 @@
       "url": "https://youtube.com/shorts/GNwuckdozmg",
       "privacy": "public",
       "duration": "PT30S",
-      "views": 0,
+      "views": 3,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -66,6 +80,20 @@
   ],
   "recent": [
     {
+      "id": "ZKuZ92UVcfU",
+      "title": "Bro Want the ban So bad!! Hahahha (ohnepixel) 😳",
+      "published": "2026-11-25T00:00:27Z",
+      "thumbnail": "https://i.ytimg.com/vi/ZKuZ92UVcfU/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/ZKuZ92UVcfU",
+      "privacy": "public",
+      "duration": "PT26S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-24"
+    },
+    {
       "id": "GNwuckdozmg",
       "title": "Typical gamer finds unknown island with a lost phone on it (TypicalGamer) 😳",
       "published": "2026-11-24T22:00:22Z",
@@ -73,7 +101,7 @@
       "url": "https://youtube.com/shorts/GNwuckdozmg",
       "privacy": "public",
       "duration": "PT30S",
-      "views": 0,
+      "views": 3,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -329,20 +357,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
-      "day": "2026-11-20"
-    },
-    {
-      "id": "b2Y7wLBkEjQ",
-      "title": "Tg couldnt handle all that gta ahh (TypicalGamer) 😳",
-      "published": "2026-11-21T00:00:24Z",
-      "thumbnail": "https://i.ytimg.com/vi/b2Y7wLBkEjQ/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/b2Y7wLBkEjQ",
-      "privacy": "public",
-      "duration": "PT32S",
-      "views": 7,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "TypicalGamer",
       "day": "2026-11-20"
     }
   ]
