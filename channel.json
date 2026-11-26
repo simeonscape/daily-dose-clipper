@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T19:35:10+00:00",
+  "updated": "2026-11-26T20:51:03+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-26",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 358,
-    "videos": 40
+    "videos": 41
   },
   "today_videos": [
+    {
+      "id": "7UBTW6yC72Y",
+      "title": "CaseOh actually pulled this off 🔥",
+      "published": "2026-11-26T20:00:18Z",
+      "thumbnail": "https://i.ytimg.com/vi/7UBTW6yC72Y/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7UBTW6yC72Y",
+      "privacy": "public",
+      "duration": "PT25S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-26"
+    },
     {
       "id": "JCCR_K7A6bM",
       "title": "KAI WTF (Kai Cenat) 😳",
@@ -37,6 +51,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "7UBTW6yC72Y",
+      "title": "CaseOh actually pulled this off 🔥",
+      "published": "2026-11-26T20:00:18Z",
+      "thumbnail": "https://i.ytimg.com/vi/7UBTW6yC72Y/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7UBTW6yC72Y",
+      "privacy": "public",
+      "duration": "PT25S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "CaseOh",
+      "day": "2026-11-26"
+    },
     {
       "id": "JCCR_K7A6bM",
       "title": "KAI WTF (Kai Cenat) 😳",
@@ -301,20 +329,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
-      "day": "2026-11-22"
-    },
-    {
-      "id": "I3X7VWNmQkU",
-      "title": "Omg haha  (nsfw )  LUL (CaseOh) 😂",
-      "published": "2026-11-22T20:00:30Z",
-      "thumbnail": "https://i.ytimg.com/vi/I3X7VWNmQkU/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/I3X7VWNmQkU",
-      "privacy": "public",
-      "duration": "PT59S",
-      "views": 1,
-      "likes": 1,
-      "comments": 1,
-      "streamer": "CaseOh",
       "day": "2026-11-22"
     }
   ]
