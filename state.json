@@ -88,6 +88,9 @@
     ],
     "2938912600": [
       482.0
+    ],
+    "2939550825": [
+      20842.98
     ]
   },
   "posted": [
@@ -748,6 +751,25 @@
       "slot": "2026-11-26T00:00:00+00:00",
       "quota_day": "2026-11-25",
       "layout": "split"
+    },
+    {
+      "streamer": "Jynxzi",
+      "moment": "2939550825",
+      "t": 20842.98,
+      "score": 2398,
+      "viral": 0.4557,
+      "source": "clips",
+      "video_id": "Z3lQHRysHgc",
+      "title": "NAH JYNXZI \ud83d\ude33",
+      "clip_title": "NAH JYNXZI",
+      "clip_ids": [
+        "LittleBombasticPangolinDoubleRainbow-85e1yrxtRC0l2Gra"
+      ],
+      "day": "2026-11-26",
+      "at": "2026-11-26T02:00:02+00:00",
+      "slot": "2026-11-26T02:00:00+00:00",
+      "quota_day": "2026-11-25",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -799,6 +821,7 @@
     "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3",
     "AthleticStylishWasabiBrainSlug-vgKp_xy912n5alGf",
     "BashfulLongStapleCoolStoryBob-V5OcXqmlfNIoptdl",
-    "AwkwardEphemeralFriseeCmonBruh-A_PY6vBzFpkpx8BB"
+    "AwkwardEphemeralFriseeCmonBruh-A_PY6vBzFpkpx8BB",
+    "LittleBombasticPangolinDoubleRainbow-85e1yrxtRC0l2Gra"
   ]
 }
