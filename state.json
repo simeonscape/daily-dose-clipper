@@ -71,7 +71,8 @@
     ],
     "2933599748": [
       592.33,
-      3160.27
+      3160.27,
+      17367.02
     ],
     "2937666104": [
       2604.0
@@ -727,6 +728,26 @@
       "slot": "2026-11-25T22:00:00+00:00",
       "quota_day": "2026-11-25",
       "layout": "cam"
+    },
+    {
+      "streamer": "ohnepixel",
+      "moment": "2933599748",
+      "t": 17367.02,
+      "score": 45047,
+      "viral": 0.4282,
+      "source": "clips",
+      "video_id": "6-ocoCgxaz8",
+      "title": "For yall freaks (ohnepixel) \ud83d\udd25",
+      "clip_title": "for yall freaks",
+      "clip_ids": [
+        "BashfulLongStapleCoolStoryBob-V5OcXqmlfNIoptdl",
+        "AwkwardEphemeralFriseeCmonBruh-A_PY6vBzFpkpx8BB"
+      ],
+      "day": "2026-11-26",
+      "at": "2026-11-26T00:00:02+00:00",
+      "slot": "2026-11-26T00:00:00+00:00",
+      "quota_day": "2026-11-25",
+      "layout": "split"
     }
   ],
   "used_clips": [
@@ -776,6 +797,8 @@
     "MistyFastChickpeaBatChest-1l50Cnz_nbghKxmh",
     "PhilanthropicToughCakeUWot-N9xNYKnP7VTdWpik",
     "BlindingAgreeableTurtleKreygasm-OFxrS3_6aayEoRV3",
-    "AthleticStylishWasabiBrainSlug-vgKp_xy912n5alGf"
+    "AthleticStylishWasabiBrainSlug-vgKp_xy912n5alGf",
+    "BashfulLongStapleCoolStoryBob-V5OcXqmlfNIoptdl",
+    "AwkwardEphemeralFriseeCmonBruh-A_PY6vBzFpkpx8BB"
   ]
 }
