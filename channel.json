@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T15:32:02+00:00",
+  "updated": "2026-11-26T17:02:06+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-26",
   "post_times": [
@@ -17,11 +17,40 @@
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
     "subscribers": 0,
     "subscribers_hidden": false,
-    "views": 333,
-    "videos": 39
+    "views": 358,
+    "videos": 40
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "JCCR_K7A6bM",
+      "title": "KAI WTF (Kai Cenat) 😳",
+      "published": "2026-11-26T17:00:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/JCCR_K7A6bM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/JCCR_K7A6bM",
+      "privacy": "public",
+      "duration": "PT29S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-26"
+    }
+  ],
   "recent": [
+    {
+      "id": "JCCR_K7A6bM",
+      "title": "KAI WTF (Kai Cenat) 😳",
+      "published": "2026-11-26T17:00:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/JCCR_K7A6bM/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/JCCR_K7A6bM",
+      "privacy": "public",
+      "duration": "PT29S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-26"
+    },
     {
       "id": "Z3lQHRysHgc",
       "title": "NAH JYNXZI 😳",
@@ -30,7 +59,7 @@
       "url": "https://youtube.com/shorts/Z3lQHRysHgc",
       "privacy": "public",
       "duration": "PT33S",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -100,7 +129,7 @@
       "url": "https://youtube.com/shorts/C_d0bVYTveM",
       "privacy": "public",
       "duration": "PT33S",
-      "views": 3,
+      "views": 2,
       "likes": 2,
       "comments": 1,
       "streamer": "Jynxzi",
@@ -114,7 +143,7 @@
       "url": "https://youtube.com/shorts/ZKuZ92UVcfU",
       "privacy": "public",
       "duration": "PT26S",
-      "views": 3,
+      "views": 2,
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
@@ -286,20 +315,6 @@
       "likes": 1,
       "comments": 1,
       "streamer": "CaseOh",
-      "day": "2026-11-22"
-    },
-    {
-      "id": "nyW8yvbSMFg",
-      "title": "This Kai Cenat moment is too funny",
-      "published": "2026-11-22T17:00:24Z",
-      "thumbnail": "https://i.ytimg.com/vi/nyW8yvbSMFg/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/nyW8yvbSMFg",
-      "privacy": "public",
-      "duration": "PT59S",
-      "views": 3,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
       "day": "2026-11-22"
     }
   ]
