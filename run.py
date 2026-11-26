@@ -39,7 +39,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "engine"))
-import moments, pipeline, safety, spikes, twitch  # noqa: E402
+import ai, moments, pipeline, safety, spikes, twitch  # noqa: E402
 import state as st  # noqa: E402
 from slots import done_today, enabled_streamers, posted_today, quota_day  # noqa: E402
 
@@ -72,8 +72,8 @@ def context(cfg):
     return cfg["before_s"] + PAD, cfg["after_s"] + PAD
 
 
-def get_segment(m, cfg, tag, streamer=""):
-    """Download the moment, cut to its best part. Returns (video path, chat lines, summary)."""
+def get_segment(m, cfg, tag, streamer="", info=None):
+    """Download the moment, cut to its best part. Returns (video path, chat lines, notes)."""
     os.makedirs(WORK, exist_ok=True)
     seg = os.path.join(WORK, f"seg_{tag}.mp4")
     before, after = cfg["before_s"], cfg["after_s"]
@@ -95,7 +95,7 @@ def get_segment(m, cfg, tag, streamer=""):
             # e.g. subscriber-only VODs: the clip itself is still public
             print(f"  can't download the VOD ({e}); using clip {m.clip_id} itself")
             twitch.download_clip(m.clip_id, seg)
-            return seg, [], ""
+            return seg, [], {}
         chat = None
         try:
             chat_path = os.path.join(WORK, f"chatwin_{tag}.json")
@@ -103,22 +103,29 @@ def get_segment(m, cfg, tag, streamer=""):
             chat = spikes.load_chat(chat_path)
         except Exception as e:
             print(f"  (couldn't get chat for this moment: {e})")
-        cut, a, summary = pipeline.best_window(seg, m.t - start, cfg, chat=chat, seg_start=start,
-                                               clip_ranges=m.clip_ranges, streamer=streamer, workdir=WORK)
+        cut, a, notes = pipeline.best_window(seg, m.t - start, cfg, chat=chat, seg_start=start,
+                                             clip_ranges=m.clip_ranges, streamer=streamer, workdir=WORK,
+                                             info=info)
         msgs = [b for t, b in (chat or []) if start + a <= t <= start + a + before + after + 8] or m.messages
-        return cut, msgs, summary
+        return cut, msgs, notes
     print(f"  the stream's VOD is gone, using clip {m.clip_id} itself")
     twitch.download_clip(m.clip_id, seg)
-    return seg, [], ""
+    return seg, [], {}
 
 
 def run_one(s, m, cfg, state, dry_run=False, slot=None):
     print(f"\n== {s['name']}: {m.describe()}")
     tag = f"{s['login']}_{m.key.replace(':', '_')}_{int(m.t)}"
-    seg, msgs, summary = get_segment(m, cfg, tag, streamer=s["name"])
-    out, meta = pipeline.make_short(s, seg, msgs, cfg, tag, OUT, WORK, clip_title=m.title, summary=summary)
-    if summary:
-        meta["what_happened"] = summary
+    recent = ai.recent_titles(state, s["name"]) + ai.recent_titles(state, n=6)
+    recent = list(dict.fromkeys(recent))
+    info = {"streamer": s["name"], "channel": cfg["channel_name"], "clip_title": m.title,
+            "recent_titles": recent,
+            "forced_layout": s.get("layout") or (cfg.get("layout", {}) or {}).get("force") or s.get("cam")}
+    seg, msgs, notes = get_segment(m, cfg, tag, streamer=s["name"], info=info)
+    out, meta = pipeline.make_short(s, seg, msgs, cfg, tag, OUT, WORK, clip_title=m.title, notes=notes,
+                                    recent=recent, recent_hooks=ai.recent_titles(state, field="hook", n=25))
+    if notes.get("summary"):
+        meta["what_happened"] = notes["summary"]
 
     video_id = None
     if not dry_run:
@@ -131,7 +138,8 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
         video_id = youtube.upload(out, meta, privacy=cfg.get("privacy", "public"))
         print(f"  uploaded: https://youtube.com/shorts/{video_id}")
         st.mark_posted(state, s["name"], m, video_id, meta, slot=slot, quota_day=quota_day(),
-                       extra={"layout": meta.get("layout")})
+                       extra={"layout": meta.get("layout"), "hook": meta.get("hook"),
+                              "written_by": meta.get("written_by", "built-in")})
     return out
 
 
@@ -226,6 +234,11 @@ def main():
             want = left
 
     prune_chats()
+    try:
+        import metadata
+        metadata.refresh_templates(cfg, state)    # at most once a week, see ai.templates_every_days
+    except Exception as e:
+        print(f"(couldn't refresh the title templates: {e})")
     # streamers posted longest ago go first, so everyone gets turns
     # Streamers who are live right now go last: the live watcher may still
     # catch a viral moment of theirs today, which beats a scheduled pick.

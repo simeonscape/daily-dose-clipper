@@ -113,10 +113,13 @@ jobs:
           git config user.email "clipper-bot@users.noreply.github.com"
           # merge with what's on GitHub now (the live watcher may have posted meanwhile)
           cp state.json "$RUNNER_TEMP/mine.json"
+          [ -f ai_state.json ] && cp ai_state.json "$RUNNER_TEMP/mine_ai.json"
           for i in 1 2 3 4; do
             git fetch -q origin main && git reset -q --hard origin/main
             python statemerge.py "$RUNNER_TEMP/mine.json" state.json
+            python statemerge.py --ai "$RUNNER_TEMP/mine_ai.json" ai_state.json
             git add state.json
+            [ -f ai_state.json ] && git add ai_state.json
             git diff --cached --quiet && break
             git commit -qm "Update posted clips (live)" && git push -q origin HEAD:main && break
             sleep $((i * 5))
