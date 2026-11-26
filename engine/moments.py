@@ -10,10 +10,15 @@ Where candidates come from:
 How the winner is picked: the top few candidates get chat fetched around them,
 then engine/virality.py gives each one score from views, how many clips,
 the chat explosion, laughter, CLIP IT spam and how recent it is.
+When the top scores are close and Claude is set up (`ai:` in config.yaml),
+one small call shows Claude the top 2-3 (numbers, the clip title and a few
+chat lines) and lets it pick the one that is actually viral, not just busy.
 """
 import os
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 
+import ai
 import spikes
 import state as st
 import twitch
@@ -151,7 +156,57 @@ def candidates(s, cfg, state, workdir):
     for m in ranked[: vc.get("shortlist", 5)]:
         add_chat(m, workdir)
     ranked = virality.rank(ranked, cfg)
+    ranked = ai_pick(s, ranked, cfg)
     if ranked:
         print(f"{s['name']}: {len(ranked)} candidate moments. Top: "
               + " | ".join(m.describe() for m in ranked[:3]))
     return ranked
+
+
+PICK_PROMPT = """Streamer: {streamer}. Which of these moments from their streams would make the most viral YouTube Short?
+Busy chat alone isn't enough: look for a real funny, shocking, impressive or chaotic moment that a new viewer would get.
+Numbers: views/clips = Twitch clips of it, chat_z = how far chat jumped above normal,
+laugh = share of chat laughing, clip_it = CLIP IT messages, age_h = hours ago.
+<moments>
+{moments}
+</moments>
+Reply: {{"pick": number of the best moment, "why": "max 12 words"}}"""
+
+
+def _age_h(m):
+    try:
+        then = datetime.fromisoformat(m.created_at.replace("Z", "+00:00"))
+        return round((datetime.now(timezone.utc) - then).total_seconds() / 3600)
+    except (AttributeError, ValueError):
+        return "?"
+
+
+def ai_pick(s, ranked, cfg):
+    """Let Claude choose among the top few when the scores are too close to call.
+    Returns `ranked` with Claude's pick first (unchanged if Claude isn't asked)."""
+    a = ai.settings(cfg)
+    top = ranked[: max(2, int(a["pick_top"]))]
+    if len(top) < 2 or not ai.available(cfg, "pick"):
+        return ranked
+    best = top[0].viral or 1e-9
+    top = [m for m in top if m.viral >= best * (1 - float(a["pick_when_within"]))]
+    if len(top) < 2:
+        return ranked          # a clear winner: no need to ask
+    lines = []
+    for i, m in enumerate(top, 1):
+        c = m.chat or {}
+        chat = " / ".join(ai.short(x, 40) for x in (m.messages or [])[:8])
+        lines.append(f'{i}. title="{ai.short(m.title, 80)}" views={m.views} clips={m.clips} '
+                     f'chat_z={c.get("z", 0)} laugh={c.get("lol_share", 0):.0%} clip_it={c.get("clip_it", 0)} '
+                     f'age_h={_age_h(m)} chat: {chat or "(none)"}')
+    prompt = PICK_PROMPT.format(streamer=s["name"], moments="\n".join(lines))
+
+    def check(ans):
+        assert 1 <= int(ans["pick"]) <= len(top)
+
+    ans = ai.ask("pick", prompt, cfg, check=check)
+    if not ans:
+        return ranked
+    win = top[int(ans["pick"]) - 1]
+    print(f"{s['name']}: Claude picked moment {ans['pick']} of {len(top)} ({ai.short(ans.get('why', ''), 80)})")
+    return [win] + [m for m in ranked if m is not win]

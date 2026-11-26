@@ -25,8 +25,9 @@ def cut(src, start, end, out):
     return out
 
 
-def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streamer="", workdir="."):
-    """Cut `seg` down to the Short. Returns (cut video, start in `seg`, summary).
+def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streamer="", workdir=".", info=None):
+    """Cut `seg` down to the Short. Returns (cut video, start in `seg`, notes),
+    notes = {"summary", and "meta"/"layout" when Claude wrote them}.
 
     `m_t` is where we think the moment is (seconds into `seg`), `chat` is
     [(seconds into the VOD, text)], `seg_start` where `seg` starts in the VOD,
@@ -41,11 +42,12 @@ def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streame
             rel_chat = [(t - off, b) for t, b in (chat or [])]
             rel_clips = [(a - off, b - off) for a, b in clip_ranges]
             j = judge.judge(norm, m_t - skip, cfg, chat_rel=rel_chat, clip_ranges=rel_clips,
-                            streamer=streamer, workdir=workdir)
+                            streamer=streamer, workdir=workdir, info=info)
             print(f"  {j['how']}: Short is {j['start']:.1f}-{j['end']:.1f}s of the download "
                   f"(peak {j['peak']:.1f}s, {j['end'] - j['start']:.0f}s long)"
                   + (f"\n  what happened: {j['summary']}" if j["summary"] else ""))
-            return cut(norm, j["start"], j["end"], seg.replace(".mp4", "_cut.mp4")), j["start"] + skip, j["summary"]
+            notes = {k: j[k] for k in ("summary", "meta", "layout") if j.get(k)}
+            return cut(norm, j["start"], j["end"], seg.replace(".mp4", "_cut.mp4")), j["start"] + skip, notes
         except Exception as e:
             print(f"  (smart judge failed: {e}; using the fixed window)")
     before, after = cfg["before_s"], cfg["after_s"]
@@ -59,12 +61,15 @@ def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streame
             print(f"  best window {a:.1f}-{b:.1f}s of the download (peak at {peak:.1f}s, guess was {m_t:.1f}s)")
         except Exception as e:
             print(f"  (couldn't refine the window: {e})")
-    return cut(seg, a, b, seg.replace(".mp4", "_cut.mp4")), a, ""
+    return cut(seg, a, b, seg.replace(".mp4", "_cut.mp4")), a, {}
 
 
-def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title="", summary=""):
+def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title="", notes=None, recent=(), recent_hooks=()):
     """Render the Short for streamer `s` from `seg` (already cut to length).
+    `notes` comes from best_window (Claude's title/layout, if it was asked),
+    `recent` are recently posted titles, so none is reused.
     Returns (video path, metadata dict)."""
+    notes = notes or {}
     seg = editor.normalize(seg)
     os.makedirs(outdir, exist_ok=True)
     out = os.path.join(outdir, f"{tag}.mp4")
@@ -76,18 +81,27 @@ def make_short(s, seg, msgs, cfg, tag, outdir, workdir, clip_title="", summary="
     stream_url = f"https://twitch.tv/{s['login']}"
     meta = metadata.write_metadata(s["name"], "Twitch", stream_url, text, msgs,
                                    channel=cfg["channel_name"], seed=tag, clip_title=clip_title,
-                                   summary=summary)
+                                   summary=notes.get("summary"), ai_meta=notes.get("meta"),
+                                   recent=recent, recent_hooks=recent_hooks, cfg=cfg)
 
     lay = layout.find_layout(seg, override=s.get("cam"), debug_path=out.replace(".mp4", "_camera.jpg"))
     lcfg = dict(cfg.get("layout", {}) or {})
+    for k in ("follow", "game_zoom", "min_cam_width"):
+        if k in s:
+            lcfg[k] = s[k]
     override = s.get("layout") or lcfg.get("force")
+    if not override and notes.get("layout"):
+        # Claude's choice, if this clip's camera check agrees there's a camera to show
+        small = lay.get("cam") and lay["cam"][2] * 1920 / lay["size"][0] < lcfg.get("min_cam_width", 300)
+        if notes["layout"] == "split" and small:
+            print("  (Claude chose split, but the facecam is too small for it; built-in choice)")
+        elif lay.get("cam") or (notes["layout"] == "cam" and lay["mode"] == "cam"):
+            override = notes["layout"]
+            print(f"  Claude chose the {override} layout")
     if override == "game" and lay["mode"] == "split":
         override = "pip"            # old setting: keep the game big, still show the cam
     if override == "cam" and lay["mode"] == "split":
         lay = dict(lay, mode="cam")
-    for k in ("follow", "game_zoom", "min_cam_width"):
-        if k in s:
-            lcfg[k] = s[k]
     p = framing.plan(seg, lay, lcfg, override=override)
     print(f"  layout: {p['mode']} ({p['why']})")
     editor.render(seg, out, meta["hook"], s["name"], words, p, login=s["login"], workdir=workdir)
