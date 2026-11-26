@@ -94,6 +94,9 @@
     ],
     "2935613960": [
       14755.68
+    ],
+    "2940013635": [
+      1076.0
     ]
   },
   "posted": [
@@ -795,6 +798,27 @@
       "layout": "split",
       "hook": "KAI WTF",
       "written_by": "built-in"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2940013635",
+      "t": 1076.0,
+      "score": 8198,
+      "viral": 0.6268,
+      "source": "clips",
+      "video_id": "7UBTW6yC72Y",
+      "title": "CaseOh actually pulled this off \ud83d\udd25",
+      "clip_title": "keys",
+      "clip_ids": [
+        "ProudAbnegatePandaDxAbomb-G6a4OqB58Z2_a779"
+      ],
+      "day": "2026-11-26",
+      "at": "2026-11-26T20:00:01+00:00",
+      "slot": "2026-11-26T20:00:00+00:00",
+      "quota_day": "2026-11-26",
+      "layout": "game",
+      "hook": "THIS IS INSANE",
+      "written_by": "built-in"
     }
   ],
   "used_clips": [
@@ -849,6 +873,7 @@
     "AwkwardEphemeralFriseeCmonBruh-A_PY6vBzFpkpx8BB",
     "LittleBombasticPangolinDoubleRainbow-85e1yrxtRC0l2Gra",
     "VictoriousRamshackleBulgogiDBstyle-VMckbO6J58T9vded",
-    "EnjoyableKawaiiHornetDAESuppy-4qCR_Hz5ttCFY0bs"
+    "EnjoyableKawaiiHornetDAESuppy-4qCR_Hz5ttCFY0bs",
+    "ProudAbnegatePandaDxAbomb-G6a4OqB58Z2_a779"
   ]
 }
