@@ -97,6 +97,9 @@
     ],
     "2940013635": [
       1076.0
+    ],
+    "2934274188": [
+      6828.13
     ]
   },
   "posted": [
@@ -819,6 +822,27 @@
       "layout": "game",
       "hook": "THIS IS INSANE",
       "written_by": "built-in"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2934274188",
+      "t": 6828.13,
+      "score": 2656,
+      "viral": 0.3296,
+      "source": "clips",
+      "video_id": "N8ozSEjjeYU",
+      "title": "Stadium flyby gone wrong (TypicalGamer) \ud83d\ude33",
+      "clip_title": "stadium flyby gone wrong",
+      "clip_ids": [
+        "RamshackleHedonisticChamoisCoolCat-sETUTSMZ78b5Utt-"
+      ],
+      "day": "2026-11-26",
+      "at": "2026-11-26T22:05:48+00:00",
+      "slot": "2026-11-26T22:00:00+00:00",
+      "quota_day": "2026-11-26",
+      "layout": "pip",
+      "hook": "STADIUM FLYBY GONE WRONG",
+      "written_by": "built-in"
     }
   ],
   "used_clips": [
@@ -874,6 +898,7 @@
     "LittleBombasticPangolinDoubleRainbow-85e1yrxtRC0l2Gra",
     "VictoriousRamshackleBulgogiDBstyle-VMckbO6J58T9vded",
     "EnjoyableKawaiiHornetDAESuppy-4qCR_Hz5ttCFY0bs",
-    "ProudAbnegatePandaDxAbomb-G6a4OqB58Z2_a779"
+    "ProudAbnegatePandaDxAbomb-G6a4OqB58Z2_a779",
+    "RamshackleHedonisticChamoisCoolCat-sETUTSMZ78b5Utt-"
   ]
 }
