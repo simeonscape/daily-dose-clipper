@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T10:12:23+00:00",
+  "updated": "2026-11-26T11:26:08+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-26",
   "post_times": [
@@ -58,7 +58,7 @@
       "url": "https://youtube.com/shorts/Nvfeq5up-QI",
       "privacy": "public",
       "duration": "PT30S",
-      "views": 3,
+      "views": 5,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -72,7 +72,7 @@
       "url": "https://youtube.com/shorts/sa8ymSI-aY4",
       "privacy": "public",
       "duration": "PT31S",
-      "views": 11,
+      "views": 12,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -86,8 +86,8 @@
       "url": "https://youtube.com/shorts/1aEoso0KDbI",
       "privacy": "public",
       "duration": "PT55S",
-      "views": 1,
-      "likes": 1,
+      "views": 2,
+      "likes": 0,
       "comments": 1,
       "streamer": "Kai Cenat",
       "day": "2026-11-25"
