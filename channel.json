@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T21:52:25+00:00",
+  "updated": "2026-11-27T22:53:47+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 1,
     "subscribers_hidden": false,
     "views": 414,
-    "videos": 46
+    "videos": 47
   },
   "today_videos": [
+    {
+      "id": "2l-bMTt4Y2E",
+      "title": "TypicalGamer's chat couldn't believe it",
+      "published": "2026-11-27T22:00:26Z",
+      "thumbnail": "https://i.ytimg.com/vi/2l-bMTt4Y2E/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/2l-bMTt4Y2E",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-27"
+    },
     {
       "id": "qIBFO_DjKLU",
       "title": "Oh lord (CaseOh) 😳",
@@ -51,6 +65,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "2l-bMTt4Y2E",
+      "title": "TypicalGamer's chat couldn't believe it",
+      "published": "2026-11-27T22:00:26Z",
+      "thumbnail": "https://i.ytimg.com/vi/2l-bMTt4Y2E/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/2l-bMTt4Y2E",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "TypicalGamer",
+      "day": "2026-11-27"
+    },
     {
       "id": "qIBFO_DjKLU",
       "title": "Oh lord (CaseOh) 😳",
@@ -129,7 +157,7 @@
       "url": "https://youtube.com/shorts/7UBTW6yC72Y",
       "privacy": "public",
       "duration": "PT25S",
-      "views": 9,
+      "views": 8,
       "likes": 1,
       "comments": 1,
       "streamer": "CaseOh",
@@ -315,20 +343,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "ohnepixel",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "oIUG7DtWkug",
-      "title": "No words (TypicalGamer) 😳",
-      "published": "2026-11-23T22:01:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/oIUG7DtWkug/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/oIUG7DtWkug",
-      "privacy": "public",
-      "duration": "PT30S",
-      "views": 3,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "TypicalGamer",
       "day": "2026-11-23"
     }
   ]
