@@ -60,7 +60,8 @@
     ],
     "2935283335": [
       16336.36,
-      11625.0
+      11625.0,
+      43040.2
     ],
     "2936316823": [
       7065.0
@@ -917,6 +918,28 @@
       "hook": "KAI GOT MOTION \ud83e\udd2a",
       "viral_score": null,
       "written_by": "built-in"
+    },
+    {
+      "streamer": "CaseOh",
+      "moment": "2935283335",
+      "t": 43040.2,
+      "score": 24030,
+      "viral": 0.3849,
+      "source": "clips",
+      "video_id": "qIBFO_DjKLU",
+      "title": "Oh lord (CaseOh) \ud83d\ude33",
+      "clip_title": "oh lord",
+      "clip_ids": [
+        "EntertainingArtisticPuffinJKanStyle-sa4sq_vfsuzt0vZI"
+      ],
+      "day": "2026-11-27",
+      "at": "2026-11-27T19:00:02+00:00",
+      "slot": "2026-11-27T19:00:00+00:00",
+      "quota_day": "2026-11-27",
+      "layout": "pip",
+      "hook": "OH LORD",
+      "viral_score": null,
+      "written_by": "built-in"
     }
   ],
   "used_clips": [
@@ -977,7 +1000,8 @@
     "FragileTardySquidAMPEnergyCherry-sWGYVnxAPuBi_y1v",
     "HelplessTransparentVampirePJSugar-i5IJFIkH7MfcZB8l",
     "SwissArtsyLouseSmoocherZ-9SLW1tYMsFNb7Wix",
-    "LaconicConsiderateCaterpillarKippa-gK9T9i4PZk82S-SA"
+    "LaconicConsiderateCaterpillarKippa-gK9T9i4PZk82S-SA",
+    "EntertainingArtisticPuffinJKanStyle-sa4sq_vfsuzt0vZI"
   ],
   "rejected": []
 }
