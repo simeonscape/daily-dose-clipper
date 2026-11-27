@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T01:08:10+00:00",
+  "updated": "2026-11-27T02:35:41+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-26",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 358,
-    "videos": 43
+    "videos": 44
   },
   "today_videos": [
+    {
+      "id": "pjZN_URlSW8",
+      "title": "Jynxzi couldn't stop laughing at this 😂",
+      "published": "2026-11-27T02:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/pjZN_URlSW8/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/pjZN_URlSW8",
+      "privacy": "public",
+      "duration": "PT35S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-26"
+    },
     {
       "id": "1l-JoR839MI",
       "title": "Ohne Bricked Up!! (ohnepixel) 😳",
@@ -79,6 +93,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "pjZN_URlSW8",
+      "title": "Jynxzi couldn't stop laughing at this 😂",
+      "published": "2026-11-27T02:00:22Z",
+      "thumbnail": "https://i.ytimg.com/vi/pjZN_URlSW8/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/pjZN_URlSW8",
+      "privacy": "public",
+      "duration": "PT35S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-26"
+    },
     {
       "id": "1l-JoR839MI",
       "title": "Ohne Bricked Up!! (ohnepixel) 😳",
@@ -185,7 +213,7 @@
       "url": "https://youtube.com/shorts/sa8ymSI-aY4",
       "privacy": "public",
       "duration": "PT31S",
-      "views": 26,
+      "views": 29,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
@@ -344,20 +372,6 @@
       "comments": 1,
       "streamer": "Kai Cenat",
       "day": "2026-11-23"
-    },
-    {
-      "id": "fibO8BE07z0",
-      "title": "Fan sent Jynxzi a hard sock 💀",
-      "published": "2026-11-23T02:00:24Z",
-      "thumbnail": "https://i.ytimg.com/vi/fibO8BE07z0/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/fibO8BE07z0",
-      "privacy": "public",
-      "duration": "PT59S",
-      "views": 7,
-      "likes": 1,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-22"
     }
   ]
 }
