@@ -110,6 +110,9 @@
     ],
     "2936683310": [
       7549.0
+    ],
+    "2937819109": [
+      10955.0
     ]
   },
   "posted": [
@@ -940,6 +943,28 @@
       "hook": "OH LORD",
       "viral_score": null,
       "written_by": "built-in"
+    },
+    {
+      "streamer": "TypicalGamer",
+      "moment": "2937819109",
+      "t": 10955.0,
+      "score": 2328,
+      "viral": 0.3223,
+      "source": "clips",
+      "video_id": "2l-bMTt4Y2E",
+      "title": "TypicalGamer's chat couldn't believe it",
+      "clip_title": "ooops",
+      "clip_ids": [
+        "CogentHorribleRavenBlargNaut-89E8wCkc8RKc452N"
+      ],
+      "day": "2026-11-27",
+      "at": "2026-11-27T22:00:02+00:00",
+      "slot": "2026-11-27T22:00:00+00:00",
+      "quota_day": "2026-11-27",
+      "layout": "split",
+      "hook": "DID THAT JUST HAPPEN?",
+      "viral_score": null,
+      "written_by": "built-in"
     }
   ],
   "used_clips": [
@@ -1001,7 +1026,8 @@
     "HelplessTransparentVampirePJSugar-i5IJFIkH7MfcZB8l",
     "SwissArtsyLouseSmoocherZ-9SLW1tYMsFNb7Wix",
     "LaconicConsiderateCaterpillarKippa-gK9T9i4PZk82S-SA",
-    "EntertainingArtisticPuffinJKanStyle-sa4sq_vfsuzt0vZI"
+    "EntertainingArtisticPuffinJKanStyle-sa4sq_vfsuzt0vZI",
+    "CogentHorribleRavenBlargNaut-89E8wCkc8RKc452N"
   ],
   "rejected": []
 }
