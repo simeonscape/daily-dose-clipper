@@ -106,6 +106,9 @@
     ],
     "2940589417": [
       4363.42
+    ],
+    "2936683310": [
+      7549.0
     ]
   },
   "posted": [
@@ -892,6 +895,28 @@
       "layout": "split",
       "hook": "HE CAN'T STOP LAUGHING",
       "written_by": "built-in"
+    },
+    {
+      "streamer": "Kai Cenat",
+      "moment": "2936683310",
+      "t": 7549.0,
+      "score": 17763,
+      "viral": 0.4014,
+      "source": "clips",
+      "video_id": "Docm4SXAIRY",
+      "title": "KAI GOT MOTION \ud83e\udd2a (Kai Cenat)",
+      "clip_title": "KAI GOT MOTION \ud83e\udd2a",
+      "clip_ids": [
+        "LaconicConsiderateCaterpillarKippa-gK9T9i4PZk82S-SA"
+      ],
+      "day": "2026-11-27",
+      "at": "2026-11-27T17:00:02+00:00",
+      "slot": "2026-11-27T17:00:00+00:00",
+      "quota_day": "2026-11-27",
+      "layout": "pip",
+      "hook": "KAI GOT MOTION \ud83e\udd2a",
+      "viral_score": null,
+      "written_by": "built-in"
     }
   ],
   "used_clips": [
@@ -951,6 +976,8 @@
     "RamshackleHedonisticChamoisCoolCat-sETUTSMZ78b5Utt-",
     "FragileTardySquidAMPEnergyCherry-sWGYVnxAPuBi_y1v",
     "HelplessTransparentVampirePJSugar-i5IJFIkH7MfcZB8l",
-    "SwissArtsyLouseSmoocherZ-9SLW1tYMsFNb7Wix"
-  ]
+    "SwissArtsyLouseSmoocherZ-9SLW1tYMsFNb7Wix",
+    "LaconicConsiderateCaterpillarKippa-gK9T9i4PZk82S-SA"
+  ],
+  "rejected": []
 }
