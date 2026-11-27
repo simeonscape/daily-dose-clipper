@@ -1,11 +1,19 @@
 channel_name: Daily Dose of Streamers
 
-# When the Shorts go live, every day. One Short per time, one streamer each,
-# whoever was posted longest ago goes next. Times are US Eastern (most of these
-# streamers' viewers are in the US); the workflow starts about an hour early,
-# makes the Short, and posts it right on time. Change the times here.
+# When the Shorts go live. One Short per time, one streamer each, whoever was
+# posted longest ago goes next. Times are US Eastern (most of these streamers'
+# viewers are in the US) and daylight saving is handled automatically. The
+# workflow starts about an hour early, makes the Short, and posts it on time.
+# Weekdays: lunch (12-2 PM) and the evening peak (5-9 PM), 2-3 hours apart.
+# Weekends: people are free earlier, so a morning slot replaces the 2 PM one.
+# Keep times on the hour: the workflow checks at :10 past every hour.
 post_timezone: America/New_York
-post_times: ["12:00", "15:00", "17:00", "19:00", "21:00"]
+post_times: ["12:00", "14:00", "17:00", "19:00", "21:00"]           # Monday to Friday
+post_times_weekend: ["10:00", "13:00", "16:00", "18:00", "21:00"]   # Saturday and Sunday
+
+# The channel's country (YouTube Studio > Settings > Channel > Basic info).
+# The first real run sets it through the API if it's different. Remove to leave it alone.
+channel_country: US
 
 # How many Shorts a manual run makes when you don't pick a number.
 clips_per_run: 1
@@ -50,11 +58,12 @@ virality:
 #   edit      - ONE call per Short: the cut, title, hook, first comment and layout
 #   templates - once a week: fresh title/hook patterns for the built-in writer
 # Calls are one turn, no tools, no images, a small model; answers are cached
-# in ai_state.json. Usually 1 to 2 calls per Short, about 5 to 10 a day.
+# in ai_state.json. Usually 1 to 2 calls per Short, about 6 to 10 a day
+# (a moment rated too weak costs one more call for the next try, see `quality:`).
 ai:
   enabled: true
   model: haiku              # haiku uses the least of your plan; sonnet judges better but uses more
-  max_calls_per_day: 12     # hard limit (UTC day); after that, built-in logic only
+  max_calls_per_day: 16     # hard limit (UTC day); after that, built-in logic only (no quality check)
   pick: true
   pick_top: 3               # how many top moments Claude compares
   pick_when_within: 0.25    # only ask when they're within 25% of the top score
@@ -74,11 +83,26 @@ ai:
 smart:
   enabled: true
   ai: true              # let Claude judge when it's set up (see `ai:`)
-  context_before: 75    # seconds downloaded before the moment
-  context_after: 60     # and after it
+  # The download is centred on the HIGHEST chat spike near the moment (chat
+  # within spike_search_s of where the Twitch clip points), about 2 minutes:
+  spike_search_s: 45
+  context_before: 70    # seconds downloaded before the spike
+  context_after: 50     # and after it
   min_len: 20           # Short length range, in seconds
   max_len: 60
   setup_s: 18           # built-in judge: about this much lead-up before the peak
+
+# Quality check: in the same call that cuts the Short (no extra call), Claude
+# rates it 1-10 as a viral Short for people who don't know the streamer.
+# Below min_score the moment is skipped and remembered (never judged again),
+# and the next moment is tried. Fewer, stronger Shorts: if nothing passes,
+# that posting time is left empty. Only works with Claude set up (`ai:`);
+# without it, or once today's calls are used up, Shorts are made as before.
+quality:
+  enabled: true
+  min_score: 6              # out of 10; 7 = only strong moments, 5 = most moments
+  tries_per_streamer: 2     # weak moments tried per streamer before moving on
+  tries_per_run: 3          # weak moments per run before giving up on that posting time
 
 # 18+ content (GTA strip clubs, nude characters...): found with NudeNet, a
 # small free model that runs on GitHub, and only those spots are blurred while

@@ -139,6 +139,38 @@ def chat_features(chat, t, around_s=15.0, bin_s=2.0, window_s=10.0):
     return out
 
 
+def peak_time(chat, t, search_s=45.0, bin_s=2.0, window_s=10.0, min_z=2.0):
+    """The highest chat spike near `t`: the middle of the busiest `window_s`
+    seconds (weighted: CLIP IT and LOL count most) within `search_s` of `t`.
+
+    A Twitch clip only says roughly where a moment is; chat's biggest burst
+    nearby is the real peak. Returns (seconds into the VOD where chat peaked,
+    its z score), or (None, z) when nothing near `t` stands out (z < min_z).
+    Chat reacts a few seconds after the moment, so subtract chat_delay_s."""
+    if not chat:
+        return None, 0.0
+    chat = sorted(chat)
+    t0 = chat[0][0]
+    n = int((chat[-1][0] - t0) // bin_s) + 1
+    bins = [0.0] * n
+    for tt, body in chat:
+        bins[int((tt - t0) // bin_s)] += WEIGHTS[kind(body)]
+    w = max(1, int(window_s // bin_s))
+    act = [sum(bins[i:i + w]) for i in range(n)]
+    ref = sorted(act)
+    med = ref[len(ref) // 2]
+    mad = sorted(abs(x - med) for x in ref)[len(ref) // 2] or 1.0
+    lo = max(0, int((t - search_s - t0) // bin_s))
+    hi = min(n, int((t + search_s + 8 - t0) // bin_s) + 1)
+    if hi <= lo:
+        return None, 0.0
+    i = max(range(lo, hi), key=lambda k: act[k])
+    z = round((act[i] - med) / (1.4826 * mad), 2)
+    if z < min_z:
+        return None, z
+    return round(t0 + i * bin_s + window_s / 2, 2), z
+
+
 def clip_window(spike, before=30.0, after=30.0, chat_delay=6.0, vod_len=None):
     """The clip: 30 s before the spike to 30 s after it.
 

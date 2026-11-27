@@ -40,6 +40,8 @@ def upload(path, meta, privacy="public"):
             "description": description,
             "tags": tags,
             "categoryId": "24",          # Entertainment
+            "defaultLanguage": "en",     # English title/description and audio: helps YouTube
+            "defaultAudioLanguage": "en",  # show it to English-speaking (US) viewers
         },
         "status": {
             "privacyStatus": privacy,
@@ -63,3 +65,25 @@ def upload(path, meta, privacy="public"):
             # Happens while YouTube keeps uploads private (before the API audit).
             print(f"Couldn't post the first comment ({e}). Post it yourself: {meta['first_comment']}")
     return video_id
+
+
+def ensure_country(code):
+    """Set the channel's country (YouTube Studio > Settings > Channel > Basic
+    info) if it isn't `code` yet, e.g. "US". Costs 1 quota unit to check and
+    50 to change, so it's checked once per run. Returns what it did."""
+    code = str(code or "").upper().strip()
+    if not code:
+        return "no channel_country set"
+    yt = client()
+    items = yt.channels().list(part="brandingSettings", mine=True).execute().get("items", [])
+    if not items:
+        return "no channel found for this account"
+    ch = items[0]
+    bs = ch.get("brandingSettings") or {}
+    if (bs.get("channel") or {}).get("country", "").upper() == code:
+        return f"channel country is already {code}"
+    # brandingSettings is replaced as a whole, so send everything back with only the country changed
+    bs.setdefault("channel", {})["country"] = code
+    bs.pop("hints", None)
+    yt.channels().update(part="brandingSettings", body={"id": ch["id"], "brandingSettings": bs}).execute()
+    return f"channel country set to {code}"

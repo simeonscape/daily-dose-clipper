@@ -43,6 +43,7 @@ class Moment:
     live: bool = False           # the VOD is still being recorded
     clip_ranges: list = field(default_factory=list)   # [(start, end)] in the VOD of viewers' clips
     key_override: str = None     # live moments without a VOD: "live:<login>:<stream id>"
+    spike_t: float = None        # seconds into the VOD of the highest chat spike near t (the real peak)
 
     @property
     def key(self):
@@ -109,8 +110,12 @@ def chat_moments(s, cfg, workdir, live_vod=None):
     return out
 
 
-def add_chat(m, workdir, around=180):
-    """Fetch chat a few minutes around a clip's moment and rate chat's reaction."""
+def add_chat(m, workdir, around=180, cfg=None):
+    """Fetch chat a few minutes around a clip's moment, rate chat's reaction
+    and find the highest chat spike near it (`m.spike_t`), which is where the
+    download for the Short gets centred."""
+    if m.source == "chat" and m.spike_t is None:
+        m.spike_t = m.t          # chat-spike moments are already at the peak
     if not m.vod or m.chat:
         return
     a = max(0, int(m.t - around))
@@ -125,6 +130,13 @@ def add_chat(m, workdir, around=180):
         return
     m.chat = spikes.chat_features(chat, m.t)
     m.messages = m.chat.get("messages", [])
+    cfg = cfg or {}
+    peak, z = spikes.peak_time(chat, m.t, search_s=float((cfg.get("smart") or {}).get("spike_search_s", 45)))
+    if peak is not None:
+        m.spike_t = max(0.0, peak - cfg.get("chat_delay_s", 6))
+        if abs(m.spike_t - m.t) >= 3:
+            print(f"  {m.key}: highest chat spike is at {m.spike_t:.0f}s (z {z:.1f}), "
+                  f"{m.spike_t - m.t:+.0f}s from where the clip points")
 
 
 def candidates(s, cfg, state, workdir):
@@ -154,7 +166,7 @@ def candidates(s, cfg, state, workdir):
     ranked = virality.rank(fresh, cfg)
     # chat around the moment for the shortlist, then rank again with it
     for m in ranked[: vc.get("shortlist", 5)]:
-        add_chat(m, workdir)
+        add_chat(m, workdir, cfg=cfg)
     ranked = virality.rank(ranked, cfg)
     ranked = ai_pick(s, ranked, cfg)
     if ranked:

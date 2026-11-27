@@ -21,11 +21,32 @@ Two judges:
      is in, and ends once the excitement has died down after it.
 
 Either way the Short is between `smart.min_len` and `smart.max_len` seconds.
+
+Quality gate (`quality:` in config.yaml): in that same call Claude also rates
+how viral the cut is, 1 to 10. Below `quality.min_score` the moment is skipped
+(TooWeak) and run.py tries the next one, a limited number of times, so fewer
+but stronger Shorts go out. The built-in judge can't tell funny from busy, so
+it doesn't rate; when Claude isn't available the Short is made as before.
 """
 import numpy as np
 
 import ai
 import virality
+
+
+class TooWeak(Exception):
+    """Claude rated the moment below quality.min_score: don't post it."""
+
+    def __init__(self, score, summary="", why=""):
+        self.score, self.summary, self.why = score, summary, why
+        super().__init__(f"viral score {score:g}/10 is below the minimum"
+                         + (f" ({why})" if why else ""))
+
+
+def quality(cfg):
+    q = {"enabled": True, "min_score": 6, "tries_per_streamer": 2, "tries_per_run": 3}
+    q.update((cfg or {}).get("quality") or {})
+    return q
 
 PROMPT = """Streamer: {streamer}. Clip channel: "{channel}".
 Below is a {dur:.0f}-second stretch of a livestream; all times are seconds from its start.
@@ -46,16 +67,21 @@ Some of what chat typed:
 {chat}
 </chat>
 {recent}{layout}
-1. Find the moment that made this go viral and the cut that tells it best: start where the setup
-begins (enough for a new viewer to get it, no dead air), include the payoff, end once the reaction
-is over. Chat reacts a few seconds after things happen. Length {min_len:.0f} to {max_len:.0f} seconds.
-2. Write for that cut: "title" (max 70 characters, includes {streamer}, curiosity-driven but true,
+1. This stretch may hold more than one moment. Find the single most viral one (biggest real
+reaction, clearest payoff) and the cut that tells it best: start where the setup begins (enough for
+a new viewer to get it, no dead air), include the payoff, end once the reaction is over. Chat reacts
+a few seconds after things happen. Length {min_len:.0f} to {max_len:.0f} seconds.
+2. Rate that cut honestly as a YouTube Short for people who don't know the streamer, "viral_score" 1-10:
+9-10 = anyone would share it (huge reaction, shocking/hilarious payoff); 7-8 = strong, clearly funny or
+wild; 5-6 = okay but needs context or the payoff is small; 1-4 = nothing really happens (talking,
+greetings, waiting, ads, chat busy for no visible reason). Be strict: most stretches are 4-6.
+3. Write for that cut: "title" (max 70 characters, includes {streamer}, curiosity-driven but true,
 must not repeat or closely copy a recent title), "hook" (on-screen text for the first 2 seconds,
 max 7 words, all caps, no emoji, no spoilers), "about" (one short line about the moment),
 "first_comment" (a short question that gets replies).
 
 Reply: {{"start": s, "end": s, "peak": s, "what_happened": "one sentence", "confidence": 0 to 1,
-"title": "...", "hook": "...", "about": "...", "first_comment": "..."{layout_key}}}"""
+"viral_score": 1 to 10, "why_score": "max 12 words", "title": "...", "hook": "...", "about": "...", "first_comment": "..."{layout_key}}}"""
 
 LAYOUTS = {
     "split": "facecam on top, the whole screen below (reaction and game both matter)",
@@ -205,7 +231,7 @@ def ask_claude(video, words, chat_rel, clip_ranges, guess, min_len, max_len, cfg
     lay_txt = lay_key = ""
     if opts:
         lay_txt = (f"\nThe stream has a facecam ({opts['cam_w']:.0f}px wide at 1080p; under 300 looks blurry blown up).\n"
-                   "3. Pick the Short's \"layout\": " +
+                   "4. Pick the Short's \"layout\": " +
                    "; ".join(f"{m} = {LAYOUTS[m]}" for m in opts["modes"]) + ".\n")
         lay_key = ', "layout": "' + "|".join(opts["modes"]) + '"'
     recent = info.get("recent_titles") or []
@@ -224,6 +250,8 @@ def ask_claude(video, words, chat_rel, clip_ranges, guess, min_len, max_len, cfg
         start, end = float(ans["start"]), float(ans["end"])
         if not (0 <= start < end <= dur + 1):
             raise ValueError(f"times out of range: {start}-{end}")
+        if ans.get("viral_score") is not None and not 0 <= float(ans["viral_score"]) <= 10:
+            raise ValueError(f"viral_score out of range: {ans['viral_score']}")
 
     ans = ai.ask("edit", prompt, cfg, check=check)
     if not ans:
@@ -231,8 +259,11 @@ def ask_claude(video, words, chat_rel, clip_ranges, guess, min_len, max_len, cfg
     start, end = float(ans["start"]), float(ans["end"])
     peak = float(ans.get("peak", (start + end) / 2))
     s, e, p = _fit(start, end, peak, dur, min_len, max_len)
+    score = float(ans["viral_score"]) if ans.get("viral_score") is not None else None
     out = {"start": s, "end": e, "peak": p, "summary": ai.short(ans.get("what_happened", ""), 300),
-           "how": f"Claude (confidence {ans.get('confidence', '?')})"}
+           "score": score, "why_score": ai.short(ans.get("why_score", ""), 120),
+           "how": f"Claude (viral {score if score is not None else '?'}/10, "
+                  f"confidence {ans.get('confidence', '?')})"}
     meta = {k: ai.short(ans.get(k), 120) for k in ("title", "hook", "about", "first_comment") if ans.get(k)}
     if meta:
         out["meta"] = meta
@@ -248,8 +279,10 @@ def judge(video, guess, cfg, chat_rel=None, clip_ranges=(), streamer="", workdir
     chat_rel    - [(seconds into `video`, text)], as typed (not shifted)
     clip_ranges - [(start, end)] of viewers' Twitch clips, seconds into `video`
     info        - for Claude: streamer, channel, clip_title, recent_titles, forced_layout
-    Returns {start, end, peak, summary, how}, plus "meta" and "layout" when
-    Claude wrote the title and chose the layout."""
+    Returns {start, end, peak, summary, score, how}, plus "meta" and "layout"
+    when Claude wrote the title and chose the layout. `score` is Claude's
+    viral score (1-10, None from the built-in judge). Raises TooWeak when
+    Claude rates it below quality.min_score."""
     sc = cfg.get("smart", {}) or {}
     min_len, max_len = float(sc.get("min_len", 20)), float(sc.get("max_len", 60))
     import editor
@@ -258,9 +291,12 @@ def judge(video, guess, cfg, chat_rel=None, clip_ranges=(), streamer="", workdir
         info = dict(info or {}, streamer=(info or {}).get("streamer") or streamer)
         ans = ask_claude(video, words, chat_rel, list(clip_ranges), guess, min_len, max_len, cfg, info)
         if ans:
+            q = quality(cfg)
+            if q["enabled"] and ans.get("score") is not None and ans["score"] < float(q["min_score"]):
+                raise TooWeak(ans["score"], ans.get("summary", ""), ans.get("why_score", ""))
             return ans
     step = 0.5
     curve, _ = virality.excitement(video, chat_rel, 0.0, cfg.get("chat_delay_s", 6), step)
     s, e, p = builtin(curve, step, words, guess, list(clip_ranges), min_len, max_len,
                       setup=float(sc.get("setup_s", 18)))
-    return {"start": s, "end": e, "peak": p, "summary": "", "how": "built-in judge"}
+    return {"start": s, "end": e, "peak": p, "summary": "", "score": None, "how": "built-in judge"}
