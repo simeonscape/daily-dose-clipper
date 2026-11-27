@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-27T03:56:29+00:00",
+  "updated": "2026-11-27T05:04:13+00:00",
   "timezone": "America/New_York",
-  "today": "2026-11-26",
+  "today": "2026-11-27",
   "post_times": [
     "12:00",
     "15:00",
@@ -20,78 +20,7 @@
     "views": 358,
     "videos": 44
   },
-  "today_videos": [
-    {
-      "id": "pjZN_URlSW8",
-      "title": "Jynxzi couldn't stop laughing at this 😂",
-      "published": "2026-11-27T02:00:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/pjZN_URlSW8/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/pjZN_URlSW8",
-      "privacy": "public",
-      "duration": "PT35S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-26"
-    },
-    {
-      "id": "1l-JoR839MI",
-      "title": "Ohne Bricked Up!! (ohnepixel) 😳",
-      "published": "2026-11-27T00:00:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/1l-JoR839MI/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/1l-JoR839MI",
-      "privacy": "public",
-      "duration": "PT59S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "ohnepixel",
-      "day": "2026-11-26"
-    },
-    {
-      "id": "N8ozSEjjeYU",
-      "title": "Stadium flyby gone wrong (TypicalGamer) 😳",
-      "published": "2026-11-26T22:06:08Z",
-      "thumbnail": "https://i.ytimg.com/vi/N8ozSEjjeYU/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/N8ozSEjjeYU",
-      "privacy": "public",
-      "duration": "PT36S",
-      "views": 0,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "TypicalGamer",
-      "day": "2026-11-26"
-    },
-    {
-      "id": "7UBTW6yC72Y",
-      "title": "CaseOh actually pulled this off 🔥",
-      "published": "2026-11-26T20:00:18Z",
-      "thumbnail": "https://i.ytimg.com/vi/7UBTW6yC72Y/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/7UBTW6yC72Y",
-      "privacy": "public",
-      "duration": "PT25S",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "CaseOh",
-      "day": "2026-11-26"
-    },
-    {
-      "id": "JCCR_K7A6bM",
-      "title": "KAI WTF (Kai Cenat) 😳",
-      "published": "2026-11-26T17:00:20Z",
-      "thumbnail": "https://i.ytimg.com/vi/JCCR_K7A6bM/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/JCCR_K7A6bM",
-      "privacy": "public",
-      "duration": "PT29S",
-      "views": 1,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
-      "day": "2026-11-26"
-    }
-  ],
+  "today_videos": [],
   "recent": [
     {
       "id": "pjZN_URlSW8",
@@ -199,7 +128,7 @@
       "url": "https://youtube.com/shorts/Nvfeq5up-QI",
       "privacy": "public",
       "duration": "PT30S",
-      "views": 8,
+      "views": 10,
       "likes": 0,
       "comments": 1,
       "streamer": "TypicalGamer",
@@ -213,7 +142,7 @@
       "url": "https://youtube.com/shorts/sa8ymSI-aY4",
       "privacy": "public",
       "duration": "PT31S",
-      "views": 30,
+      "views": 29,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
