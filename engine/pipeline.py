@@ -46,8 +46,10 @@ def best_window(seg, m_t, cfg, chat=None, seg_start=0.0, clip_ranges=(), streame
             print(f"  {j['how']}: Short is {j['start']:.1f}-{j['end']:.1f}s of the download "
                   f"(peak {j['peak']:.1f}s, {j['end'] - j['start']:.0f}s long)"
                   + (f"\n  what happened: {j['summary']}" if j["summary"] else ""))
-            notes = {k: j[k] for k in ("summary", "meta", "layout") if j.get(k)}
+            notes = {k: j[k] for k in ("summary", "meta", "layout", "score") if j.get(k) is not None and j.get(k) != ""}
             return cut(norm, j["start"], j["end"], seg.replace(".mp4", "_cut.mp4")), j["start"] + skip, notes
+        except judge.TooWeak:
+            raise
         except Exception as e:
             print(f"  (smart judge failed: {e}; using the fixed window)")
     before, after = cfg["before_s"], cfg["after_s"]

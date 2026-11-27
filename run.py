@@ -18,8 +18,12 @@ How a moment is picked, per streamer (engine/moments.py, engine/virality.py):
   2. Ranking: the top few get chat fetched around them, and every candidate
      gets one virality score from clip views, how many people clipped it, how
      hard chat exploded, laughter, CLIP IT spam and how recent it is.
-  3. The window: a wider piece around the winner is downloaded, and the Short
-     is centred on its loudest, most chat-heavy point, cut at quiet spots.
+  3. The window: chat around the winner is searched for its highest spike, and
+     about 2 minutes around that spike are downloaded. Claude (or the built-in
+     judge) finds the single most viral part in it and cuts the Short there.
+  4. Quality: Claude rates the cut 1-10. Below quality.min_score it's skipped
+     (and remembered, so it's never judged again) and the next moment is tried,
+     a few times at most. Fewer, stronger Shorts.
 A moment that was already posted (same part of the stream, same clip, or same
 clip title) is skipped. With fewer than 5 Shorts, the streamers who were posted
 longest ago go first, so everyone gets their turn.
@@ -39,7 +43,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "engine"))
-import ai, moments, pipeline, safety, spikes, twitch  # noqa: E402
+import ai, judge, moments, pipeline, safety, spikes, twitch  # noqa: E402
 import state as st  # noqa: E402
 from slots import done_today, enabled_streamers, posted_today, quota_day  # noqa: E402
 
@@ -79,8 +83,9 @@ def get_segment(m, cfg, tag, streamer="", info=None):
     before, after = cfg["before_s"], cfg["after_s"]
     if m.vod:
         b, a = context(cfg)
-        start = max(0.0, m.t - b)
-        end = m.t + a
+        center = m.spike_t if m.spike_t is not None else m.t    # the highest chat spike, if we found it
+        start = max(0.0, center - b)
+        end = center + a
         if m.clip_ranges:     # make sure every viewer clip of it is inside, with some room
             start = max(0.0, min(start, min(r[0] for r in m.clip_ranges) - 15))
             end = max(end, max(r[1] for r in m.clip_ranges) + 15)
@@ -103,7 +108,7 @@ def get_segment(m, cfg, tag, streamer="", info=None):
             chat = spikes.load_chat(chat_path)
         except Exception as e:
             print(f"  (couldn't get chat for this moment: {e})")
-        cut, a, notes = pipeline.best_window(seg, m.t - start, cfg, chat=chat, seg_start=start,
+        cut, a, notes = pipeline.best_window(seg, center - start, cfg, chat=chat, seg_start=start,
                                              clip_ranges=m.clip_ranges, streamer=streamer, workdir=WORK,
                                              info=info)
         msgs = [b for t, b in (chat or []) if start + a <= t <= start + a + before + after + 8] or m.messages
@@ -126,6 +131,8 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
                                     recent=recent, recent_hooks=ai.recent_titles(state, field="hook", n=25))
     if notes.get("summary"):
         meta["what_happened"] = notes["summary"]
+    if notes.get("score") is not None:
+        meta["viral_score"] = notes["score"]
 
     video_id = None
     if not dry_run:
@@ -139,6 +146,7 @@ def run_one(s, m, cfg, state, dry_run=False, slot=None):
         print(f"  uploaded: https://youtube.com/shorts/{video_id}")
         st.mark_posted(state, s["name"], m, video_id, meta, slot=slot, quota_day=quota_day(),
                        extra={"layout": meta.get("layout"), "hook": meta.get("hook"),
+                              "viral_score": meta.get("viral_score"),
                               "written_by": meta.get("written_by", "built-in")})
     return out
 
@@ -176,6 +184,12 @@ def clip_live(args, cfg, state):
         run_one(s, m, cfg, state, dry_run=not post)
     except safety.Unsafe as e:
         print(f"Not posting this moment: {e}. The watcher will signal the next one.")
+        return
+    except judge.TooWeak as e:
+        print(f"Not posting this moment: Claude's {e}. The watcher will signal the next one.")
+        if post:
+            st.mark_rejected(state, s["name"], m, e.score, e.why)
+            st.save(state)
         return
     if not post:
         print("Not uploaded (dry run, or live.post is off in config.yaml). The video is in this run's Artifacts.")
@@ -233,6 +247,12 @@ def main():
             print(f"Only {left} more upload(s) fit in today's YouTube quota, making {left}.")
             want = left
 
+    if not args.dry_run and cfg.get("channel_country"):
+        try:
+            import youtube
+            print(youtube.ensure_country(cfg["channel_country"]))
+        except Exception as e:
+            print(f"(couldn't check the channel country: {e}; set it in YouTube Studio > Settings > Channel > Basic info)")
     prune_chats()
     try:
         import metadata
@@ -250,9 +270,14 @@ def main():
         print("Live right now (left for the live watcher if possible): "
               + ", ".join(s["name"] for s in streamers if s["login"].lower() in live_now))
     order = sorted(streamers, key=lambda s: (s["login"].lower() in live_now, last_posted(state, s)))
-    made, errors = [], 0
+    made, errors, weak = [], 0, 0
+    q = judge.quality(cfg)
     for s in order:
         if len(made) >= want:
+            break
+        if q["enabled"] and weak >= int(q["tries_per_run"]):
+            print(f"\n{weak} moments were rated too weak this run; stopping here (quality.tries_per_run). "
+                  "Better no Short than a weak one.")
             break
         try:
             found = moments.candidates(s, cfg, state, WORK)
@@ -261,7 +286,11 @@ def main():
             print(f"Couldn't read {s['name']}'s streams: {e}")
             traceback.print_exc()
             continue
+        weak_here = 0
         for m in found[:3]:                  # if the best one fails, try the next
+            if q["enabled"] and (weak_here >= int(q["tries_per_streamer"]) or weak >= int(q["tries_per_run"])):
+                print(f"No strong enough moment for {s['name']} this time.")
+                break
             try:
                 if run_one(s, m, cfg, state, dry_run=args.dry_run, slot=slot):
                     made.append(s["name"])
@@ -270,6 +299,12 @@ def main():
                     break
             except safety.Unsafe as e:
                 print(f"Skipping this moment for {s['name']}: {e}. Trying the next one.")
+            except judge.TooWeak as e:
+                weak += 1
+                weak_here += 1
+                print(f"Skipping this moment for {s['name']}: Claude's {e}.")
+                if not args.dry_run:
+                    st.mark_rejected(state, s["name"], m, e.score, e.why)
             except Exception as e:
                 errors += 1
                 print(f"Failed for {s['name']}: {e}")

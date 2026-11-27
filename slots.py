@@ -58,13 +58,23 @@ def enabled_streamers(cfg):
     return [s for s in cfg["streamers"] if s.get("platform", "twitch") == "twitch" and s.get("enabled", True)]
 
 
+def times_for(cfg, day):
+    """The posting times (local "HH:MM") for a date: post_times_weekend on
+    Saturday and Sunday when it's set, post_times otherwise."""
+    if day.weekday() >= 5 and cfg.get("post_times_weekend"):
+        return cfg["post_times_weekend"]
+    return cfg.get("post_times", [])
+
+
 def slot_times(cfg, now):
-    """Posting times for yesterday, today and tomorrow, in UTC."""
+    """Posting times for yesterday, today and tomorrow, in UTC.
+    They're local times in post_timezone, so daylight saving is handled here:
+    the hourly UTC cron never needs changing."""
     tz = ZoneInfo(cfg.get("post_timezone", "America/New_York"))
     local = now.astimezone(tz).date()
     out = []
     for d in (local - timedelta(days=1), local, local + timedelta(days=1)):
-        for hm in cfg.get("post_times", []):
+        for hm in times_for(cfg, d):
             h, m = (int(x) for x in str(hm).split(":"))
             out.append(datetime(d.year, d.month, d.day, h, m, tzinfo=tz).astimezone(timezone.utc))
     return sorted(out)
