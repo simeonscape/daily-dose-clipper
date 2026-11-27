@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T05:04:13+00:00",
+  "updated": "2026-11-27T06:28:49+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -15,10 +15,10 @@
     "handle": "@daiiydoseofstreamers",
     "thumbnail": "https://yt3.ggpht.com/Uu6O8X3IEwHtJjxxFUBu73TnciuhwBZyfExiINoKdZ390SkOebQybjR8oGgx3DWCYJLi56u-_2w=s240-c-k-c0x00ffffff-no-rj",
     "url": "https://www.youtube.com/channel/UCi-m2DxOpVMscZFNbVjfibg",
-    "subscribers": 1,
+    "subscribers": 0,
     "subscribers_hidden": false,
     "views": 358,
-    "videos": 44
+    "videos": 43
   },
   "today_videos": [],
   "recent": [
@@ -142,7 +142,7 @@
       "url": "https://youtube.com/shorts/sa8ymSI-aY4",
       "privacy": "public",
       "duration": "PT31S",
-      "views": 29,
+      "views": 34,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
