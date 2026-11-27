@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T06:28:49+00:00",
+  "updated": "2026-11-27T07:56:35+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -18,7 +18,7 @@
     "subscribers": 0,
     "subscribers_hidden": false,
     "views": 358,
-    "videos": 43
+    "videos": 44
   },
   "today_videos": [],
   "recent": [
@@ -44,8 +44,8 @@
       "url": "https://youtube.com/shorts/1l-JoR839MI",
       "privacy": "public",
       "duration": "PT59S",
-      "views": 0,
-      "likes": 0,
+      "views": 3,
+      "likes": 1,
       "comments": 1,
       "streamer": "ohnepixel",
       "day": "2026-11-26"
@@ -72,7 +72,7 @@
       "url": "https://youtube.com/shorts/7UBTW6yC72Y",
       "privacy": "public",
       "duration": "PT25S",
-      "views": 1,
+      "views": 4,
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
