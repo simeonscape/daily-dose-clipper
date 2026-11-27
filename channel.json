@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T16:38:46+00:00",
+  "updated": "2026-11-27T17:51:52+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -18,10 +18,39 @@
     "subscribers": 1,
     "subscribers_hidden": false,
     "views": 414,
-    "videos": 43
+    "videos": 45
   },
-  "today_videos": [],
+  "today_videos": [
+    {
+      "id": "Docm4SXAIRY",
+      "title": "KAI GOT MOTION 🤪 (Kai Cenat)",
+      "published": "2026-11-27T17:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/Docm4SXAIRY/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Docm4SXAIRY",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-27"
+    }
+  ],
   "recent": [
+    {
+      "id": "Docm4SXAIRY",
+      "title": "KAI GOT MOTION 🤪 (Kai Cenat)",
+      "published": "2026-11-27T17:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/Docm4SXAIRY/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/Docm4SXAIRY",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Kai Cenat",
+      "day": "2026-11-27"
+    },
     {
       "id": "pjZN_URlSW8",
       "title": "Jynxzi couldn't stop laughing at this 😂",
@@ -286,20 +315,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "CaseOh",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "w6vpy2HQB_E",
-      "title": "Lucia and Jason in a steamy moment🔥 (Kai Cenat)",
-      "published": "2026-11-23T17:22:06Z",
-      "thumbnail": "https://i.ytimg.com/vi/w6vpy2HQB_E/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/w6vpy2HQB_E",
-      "privacy": "public",
-      "duration": "PT28S",
-      "views": 3,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Kai Cenat",
       "day": "2026-11-23"
     }
   ]
