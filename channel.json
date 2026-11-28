@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-28T01:02:19+00:00",
+  "updated": "2026-11-28T02:31:11+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 1,
     "subscribers_hidden": false,
     "views": 414,
-    "videos": 48
+    "videos": 49
   },
   "today_videos": [
+    {
+      "id": "7sL5nsmj2Aw",
+      "title": "HOLY CHECKMATE (Jynxzi) 😳",
+      "published": "2026-11-28T02:00:29Z",
+      "thumbnail": "https://i.ytimg.com/vi/7sL5nsmj2Aw/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7sL5nsmj2Aw",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-27"
+    },
     {
       "id": "DNDfStMaiQA",
       "title": "ohnepixel did NOT expect this 😳",
@@ -79,6 +93,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "7sL5nsmj2Aw",
+      "title": "HOLY CHECKMATE (Jynxzi) 😳",
+      "published": "2026-11-28T02:00:29Z",
+      "thumbnail": "https://i.ytimg.com/vi/7sL5nsmj2Aw/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/7sL5nsmj2Aw",
+      "privacy": "public",
+      "duration": "PT30S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "Jynxzi",
+      "day": "2026-11-27"
+    },
     {
       "id": "DNDfStMaiQA",
       "title": "ohnepixel did NOT expect this 😳",
@@ -344,20 +372,6 @@
       "comments": 1,
       "streamer": "Kai Cenat",
       "day": "2026-11-24"
-    },
-    {
-      "id": "UBzU4XRhW-4",
-      "title": "Jynxzi is different 🐐",
-      "published": "2026-11-24T02:00:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/UBzU4XRhW-4/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/UBzU4XRhW-4",
-      "privacy": "public",
-      "duration": "PT38S",
-      "views": 5,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "Jynxzi",
-      "day": "2026-11-23"
     }
   ]
 }
