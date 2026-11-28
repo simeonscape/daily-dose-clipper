@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T23:48:47+00:00",
+  "updated": "2026-11-28T01:02:19+00:00",
   "timezone": "America/New_York",
   "today": "2026-11-27",
   "post_times": [
@@ -18,9 +18,23 @@
     "subscribers": 1,
     "subscribers_hidden": false,
     "views": 414,
-    "videos": 47
+    "videos": 48
   },
   "today_videos": [
+    {
+      "id": "DNDfStMaiQA",
+      "title": "ohnepixel did NOT expect this 😳",
+      "published": "2026-11-28T00:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/DNDfStMaiQA/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/DNDfStMaiQA",
+      "privacy": "public",
+      "duration": "PT21S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-27"
+    },
     {
       "id": "2l-bMTt4Y2E",
       "title": "TypicalGamer's chat couldn't believe it",
@@ -65,6 +79,20 @@
     }
   ],
   "recent": [
+    {
+      "id": "DNDfStMaiQA",
+      "title": "ohnepixel did NOT expect this 😳",
+      "published": "2026-11-28T00:00:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/DNDfStMaiQA/mqdefault.jpg",
+      "url": "https://youtube.com/shorts/DNDfStMaiQA",
+      "privacy": "public",
+      "duration": "PT21S",
+      "views": 0,
+      "likes": 0,
+      "comments": 1,
+      "streamer": "ohnepixel",
+      "day": "2026-11-27"
+    },
     {
       "id": "2l-bMTt4Y2E",
       "title": "TypicalGamer's chat couldn't believe it",
@@ -157,7 +185,7 @@
       "url": "https://youtube.com/shorts/7UBTW6yC72Y",
       "privacy": "public",
       "duration": "PT25S",
-      "views": 8,
+      "views": 9,
       "likes": 1,
       "comments": 1,
       "streamer": "CaseOh",
@@ -171,7 +199,7 @@
       "url": "https://youtube.com/shorts/JCCR_K7A6bM",
       "privacy": "public",
       "duration": "PT29S",
-      "views": 3,
+      "views": 4,
       "likes": 1,
       "comments": 1,
       "streamer": "Kai Cenat",
@@ -329,20 +357,6 @@
       "likes": 0,
       "comments": 1,
       "streamer": "Jynxzi",
-      "day": "2026-11-23"
-    },
-    {
-      "id": "Y4hPTd-AX94",
-      "title": "Father of the Year Award (ohnepixel) 😂",
-      "published": "2026-11-24T00:00:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/Y4hPTd-AX94/mqdefault.jpg",
-      "url": "https://youtube.com/shorts/Y4hPTd-AX94",
-      "privacy": "public",
-      "duration": "PT49S",
-      "views": 4,
-      "likes": 0,
-      "comments": 1,
-      "streamer": "ohnepixel",
       "day": "2026-11-23"
     }
   ]
